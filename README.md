@@ -1,2 +1,4 @@
-# badminton-game-scheduler
-Badminton Club Private Game Scheduler
+# badminton-court-member-randomizer
+
+バドミントンサークルなどでコートのメンバーをランダムにアサインするためのツールです。
+
