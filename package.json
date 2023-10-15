@@ -4,7 +4,8 @@
   "workspaces": ["packages/*"],
   "scripts": {
     "format": "biome format . --write",
-    "lint": "biome check ."
+    "lint": "biome check .",
+    "start": "bun --cwd packages/web dev"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.2.2",

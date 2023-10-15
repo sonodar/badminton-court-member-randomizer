@@ -2,7 +2,7 @@ import { calculateEditDistance, pickMaxValueIndex, shuffle, sortInner, splitChun
 
 type MemberId = number;
 type CourtMembers = [MemberId, MemberId, MemberId, MemberId];
-type GameMembers = CourtMembers[];
+export type GameMembers = CourtMembers[];
 type GameCountPerMember = Record<MemberId, number>;
 
 interface IBadmintonCourtMemberRandomizer {
@@ -14,16 +14,18 @@ interface IBadmintonCourtMemberRandomizer {
     readonly gameCounts: GameCountPerMember;
     next(): GameMembers;
     retry(): GameMembers;
-    join(count: number): IBadmintonCourtMemberRandomizer;
-    leave(count: number): IBadmintonCourtMemberRandomizer;
+    join(): IBadmintonCourtMemberRandomizer;
+    leave(...ids: number[]): IBadmintonCourtMemberRandomizer;
 }
 
-type Environment = {
+export type Environment = {
     courtCount: number;
     memberCount: number;
 };
 
-type ShufflerConstructorProps = Environment & {
+type ShufflerConstructorProps = {
+    courtCount: number;
+    members: MemberId[];
     histories?: GameMembers[];
     gameCounts?: GameCountPerMember;
 };
@@ -37,28 +39,22 @@ class BadmintonCourtMemberRandomizer implements IBadmintonCourtMemberRandomizer 
     readonly histories: GameMembers[];
     readonly gameCounts: GameCountPerMember;
 
-    #currentThreashold: number;
-    #currentMaxRetry: number;
+    currentThreshold: number;
+    currentMaxRetry: number;
 
-    constructor({ courtCount, memberCount, histories = [], gameCounts = {} }: ShufflerConstructorProps) {
-        if (memberCount < courtCount * COURT_CAPACITY) {
+    constructor({ courtCount, members, histories = [], gameCounts = {} }: ShufflerConstructorProps) {
+        if (members.length < courtCount * COURT_CAPACITY) {
             throw new Error("参加人数がコートに入れる人数を下回っています");
         }
 
         this.courtCount = courtCount;
-        this.histories = [...histories];
+        this.histories = histories;
 
-        this.members = [];
-        this.gameCounts = {};
+        this.members = members;
+        this.gameCounts = gameCounts;
 
-        for (let i = 0; i < memberCount; i++) {
-            const memberId: MemberId = i + 1;
-            this.members.push(memberId);
-            this.gameCounts[memberId] = gameCounts[memberId] || 0;
-        }
-
-        this.#currentThreashold = this.courtCapacity; // 初期値の根拠はない
-        this.#currentMaxRetry = this.memberCount; // 初期値の根拠はない
+        this.currentThreshold = this.courtCapacity; // 初期値の根拠はない
+        this.currentMaxRetry = this.memberCount; // 初期値の根拠はない
     }
 
     get memberCount() {
@@ -69,61 +65,67 @@ class BadmintonCourtMemberRandomizer implements IBadmintonCourtMemberRandomizer 
         return this.courtCount * COURT_CAPACITY;
     }
 
-    join(count: number): BadmintonCourtMemberRandomizer {
+    join(): BadmintonCourtMemberRandomizer {
+        const newId = Math.max(...this.members) + 1;
         return new BadmintonCourtMemberRandomizer({
             courtCount: this.courtCount,
-            histories: this.histories,
-            gameCounts: this.gameCounts,
-            memberCount: this.memberCount + count,
+            histories: [...this.histories],
+            gameCounts: { ...this.gameCounts, [newId]: 0 },
+            members: [...this.members, newId],
         });
     }
 
-    leave(count: number): BadmintonCourtMemberRandomizer {
+    leave(...ids: number[]): BadmintonCourtMemberRandomizer {
         return new BadmintonCourtMemberRandomizer({
             courtCount: this.courtCount,
-            histories: this.histories,
-            gameCounts: this.gameCounts,
-            memberCount: this.memberCount - count,
+            histories: [...this.histories],
+            gameCounts: { ...this.gameCounts },
+            members: this.members.filter((id) => !ids.includes(id)),
         });
     }
 
     next(): GameMembers {
-        const members = this.#generateRandomMembers();
-        this.histories.push(members);
-        members.flat().forEach((id) => this.gameCounts[id]++);
-        return members;
+        return this.#generateRandomMembers();
     }
 
     retry(): GameMembers {
         const previous = this.histories.pop();
         if (previous) {
             previous.flat().forEach((id) => {
-                this.gameCounts[id] = Math.max(0, this.gameCounts[id] - 1);
+                this.gameCounts[id] = Math.max(0, (this.gameCounts[id] || 0) - 1);
             });
         }
-        return this.next();
+        return this.#generateRandomMembers(false);
     }
 
     // 履歴との最小編集距離が指定した閾値以下になるまでランダムで払い出す
-    #generateRandomMembers(): GameMembers {
+    #generateRandomMembers(ease = true): GameMembers {
         const generates: GameMembers[] = [];
         const minHistory: number[] = [];
 
-        for (let i = 0; i < this.#currentMaxRetry; i++) {
+        for (let i = 0; i <= this.currentMaxRetry; i++) {
             const members = this.#getRandomMembers(); // 適当に払い出す
             const minEditDistance = this.#getMinimumEditDistance(members);
-            if (minEditDistance <= this.#currentThreashold) {
-                return members;
+            if (minEditDistance >= this.currentThreshold) {
+                return this.#addHistory(members);
             }
             generates.push(members);
             minHistory.push(minEditDistance);
         }
 
-        this.#currentMaxRetry++;
-        this.#currentThreashold = Math.max(1, this.#currentThreashold - 1);
+        if (ease) {
+            this.currentMaxRetry++;
+            this.currentThreshold = Math.max(1, this.currentThreshold - 1);
+        }
 
         const maxIndex = pickMaxValueIndex(minHistory);
-        return generates[maxIndex];
+        return this.#addHistory(generates[maxIndex]);
+    }
+
+    #addHistory(members: GameMembers) {
+        this.histories.push(members);
+        members.flat().forEach((id) => (this.gameCounts[id] = (this.gameCounts[id] || 0) + 1));
+        return members;
     }
 
     #getMinimumEditDistance(members: GameMembers): number {
@@ -141,5 +143,6 @@ class BadmintonCourtMemberRandomizer implements IBadmintonCourtMemberRandomizer 
 }
 
 export function create({ courtCount, memberCount }: Environment): IBadmintonCourtMemberRandomizer {
-    return new BadmintonCourtMemberRandomizer({ courtCount, memberCount });
+    const members = Array.from({ length: memberCount }, (_, i) => i + 1);
+    return new BadmintonCourtMemberRandomizer({ courtCount, members });
 }
