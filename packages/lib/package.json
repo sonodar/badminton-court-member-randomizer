@@ -1,5 +1,8 @@
 {
   "name": "@badminton-court-member-randomizer/lib",
   "version": "1.0.0",
-  "main": "index.ts"
+  "main": "index.ts",
+  "scripts": {
+    "format": "bun --cwd ../../ format"
+  }
 }
