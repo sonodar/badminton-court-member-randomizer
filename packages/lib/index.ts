@@ -31,7 +31,13 @@ type ShufflerConstructorProps = {
 };
 
 // 1 コートあたりの収容人数（バドミントンのダブルスなので 4）
-const COURT_CAPACITY = 4;
+export const COURT_CAPACITY = 4;
+
+// コート数の上限 (これ以上必要になることはないはず)
+export const COURT_COUNT_LIMIT = 4;
+
+// メンバー数の上限（これ以上必要になることはないはず）
+export const MEMBER_COUNT_LIMIT = COURT_CAPACITY * COURT_COUNT_LIMIT * 2;
 
 class BadmintonCourtMemberRandomizer implements IBadmintonCourtMemberRandomizer {
     readonly courtCount: number;
@@ -43,8 +49,17 @@ class BadmintonCourtMemberRandomizer implements IBadmintonCourtMemberRandomizer 
     currentMaxRetry: number;
 
     constructor({ courtCount, members, histories = [], gameCounts = {} }: ShufflerConstructorProps) {
+        if (courtCount < 1) {
+            throw new Error("The number of courts must be at least 1");
+        }
+        if (courtCount > COURT_COUNT_LIMIT) {
+            throw new Error("The number of courts exceeds the limit");
+        }
+        if (members.length > MEMBER_COUNT_LIMIT) {
+            throw new Error("The number of members exceeds the limit");
+        }
         if (members.length < courtCount * COURT_CAPACITY) {
-            throw new Error("参加人数がコートに入れる人数を下回っています");
+            throw new Error("The number of participants is less than the number of people who can play in a court");
         }
 
         this.courtCount = courtCount;
@@ -99,6 +114,10 @@ class BadmintonCourtMemberRandomizer implements IBadmintonCourtMemberRandomizer 
     }
 
     // 履歴との最小編集距離が指定した閾値以下になるまでランダムで払い出す
+    // TODO: アルゴリズムを変更する
+    // すべての組み合わせを導出し、その中からランダムで選出する
+    // かつ、すでに履歴にある組み合わせは除外する
+    // また、各メンバーのゲーム回数が均等になるようにする（ゲーム回数の偏りがあると、履歴との編集距離が大きくなる）
     #generateRandomMembers(ease = true): GameMembers {
         const generates: GameMembers[] = [];
         const minHistory: number[] = [];

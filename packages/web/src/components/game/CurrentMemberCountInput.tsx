@@ -1,3 +1,4 @@
+import { MEMBER_COUNT_LIMIT } from "@badminton-court-member-randomizer/lib";
 import { Button, HStack, Input, Spacer } from "@chakra-ui/react";
 import React from "react";
 import { TbUserOff, TbUserPlus } from "react-icons/tb";
@@ -18,7 +19,7 @@ export function CurrentMemberCountInput({ min, value, onIncrement, onDecrement }
                 value={value}
                 step={1}
                 min={min}
-                max={40}
+                max={MEMBER_COUNT_LIMIT}
                 style={{ textAlign: "center" }}
                 width={"14"}
                 readOnly
@@ -30,7 +31,7 @@ export function CurrentMemberCountInput({ min, value, onIncrement, onDecrement }
                 size={"sm"}
                 colorScheme={"teal"}
                 onClick={onIncrement}
-                isDisabled={value >= 40}
+                isDisabled={value >= MEMBER_COUNT_LIMIT}
             >
                 参加
             </Button>

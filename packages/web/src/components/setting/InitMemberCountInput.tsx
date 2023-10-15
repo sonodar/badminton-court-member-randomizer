@@ -1,3 +1,4 @@
+import { MEMBER_COUNT_LIMIT } from "@badminton-court-member-randomizer/lib";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { HStack, IconButton, Input } from "@chakra-ui/react";
 import React from "react";
@@ -23,7 +24,7 @@ export function InitMemberCountInput({ min, value, onChange }: Props) {
                 value={value}
                 step={1}
                 min={min}
-                max={40}
+                max={MEMBER_COUNT_LIMIT}
                 style={{ textAlign: "center" }}
                 width={"20"}
                 onChange={(e) => onChange(parseInt(e.target.value))}
@@ -31,11 +32,11 @@ export function InitMemberCountInput({ min, value, onChange }: Props) {
             <IconButton
                 colorScheme={"blue"}
                 aria-label="increment"
-                isDisabled={value >= 40}
+                isDisabled={value >= MEMBER_COUNT_LIMIT}
                 icon={<AddIcon />}
-                onClick={() => value < 40 && onChange(value + 1)}
+                onClick={() => value < MEMBER_COUNT_LIMIT && onChange(value + 1)}
             />
-            <span>(上限 40 人)</span>
+            <span>(上限 {MEMBER_COUNT_LIMIT} 人)</span>
         </HStack>
     );
 }

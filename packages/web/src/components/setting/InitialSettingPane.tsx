@@ -1,4 +1,4 @@
-import type { Environment } from "@badminton-court-member-randomizer/lib";
+import { COURT_CAPACITY, type Environment } from "@badminton-court-member-randomizer/lib";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Button, Divider, Flex, Heading, Spacer, Stack } from "@chakra-ui/react";
 import { CourtCountInput } from "@components/setting/CourtCountInput.tsx";
@@ -11,11 +11,11 @@ type Props = {
 
 export default function InitialSettingPane({ onStart }: Props) {
     const [courtCount, setCourtCount] = useState(2);
-    const [memberCount, setMemberCount] = useState(8);
+    const [memberCount, setMemberCount] = useState(2 * COURT_CAPACITY);
 
     const onChangeCourtCount = (courtCount: number) => {
         setCourtCount(courtCount);
-        if (memberCount < courtCount * 4) setMemberCount(courtCount * 4);
+        if (memberCount < courtCount * COURT_CAPACITY) setMemberCount(courtCount * COURT_CAPACITY);
     };
 
     return (
@@ -30,7 +30,7 @@ export default function InitialSettingPane({ onStart }: Props) {
             <Heading as="h3" size="lg">
                 開始メンバー数
             </Heading>
-            <InitMemberCountInput min={courtCount * 4} value={memberCount} onChange={setMemberCount} />
+            <InitMemberCountInput min={courtCount * COURT_CAPACITY} value={memberCount} onChange={setMemberCount} />
             <Divider />
             <Flex>
                 <Spacer />

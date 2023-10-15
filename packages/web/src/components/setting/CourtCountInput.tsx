@@ -1,3 +1,4 @@
+import { COURT_COUNT_LIMIT } from "@badminton-court-member-randomizer/lib";
 import { Box, HStack, Stack, useRadio, useRadioGroup } from "@chakra-ui/react";
 import React from "react";
 
@@ -39,7 +40,7 @@ type Props = {
 };
 
 export function CourtCountInput({ value, onChange }: Props) {
-    const numbers = Array.from({ length: 8 }, (_, i) => `${i + 1}`);
+    const numbers = Array.from({ length: COURT_COUNT_LIMIT }, (_, i) => `${i + 1}`);
 
     const { getRootProps, getRadioProps } = useRadioGroup({
         name: "courtCount",
@@ -50,17 +51,7 @@ export function CourtCountInput({ value, onChange }: Props) {
     return (
         <Stack>
             <HStack {...getRootProps()}>
-                {numbers.slice(0, 4).map((value) => {
-                    const radio = getRadioProps({ value });
-                    return (
-                        <CourtCountButton key={value} {...radio}>
-                            {value}
-                        </CourtCountButton>
-                    );
-                })}
-            </HStack>
-            <HStack {...getRootProps()}>
-                {numbers.slice(4, 8).map((value) => {
+                {numbers.map((value) => {
                     const radio = getRadioProps({ value });
                     return (
                         <CourtCountButton key={value} {...radio}>
