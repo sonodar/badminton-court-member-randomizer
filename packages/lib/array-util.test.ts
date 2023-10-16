@@ -1,10 +1,12 @@
 import {
     calculateEditDistance,
+    mode,
     shuffle,
     sortBySumOrFirst,
     sortInner,
     sortMatrix,
     splitChunks,
+    standardDeviation,
     sum,
 } from "./array-util";
 
@@ -75,5 +77,16 @@ describe("array-util", () => {
                 ],
             ),
         ).toEqual(8);
+    });
+
+    test("standardDeviation", () => {
+        expect(standardDeviation([1, 1, 1, 1, 1, 1])).toEqual(0);
+        expect(standardDeviation([2, 2, 2, 2, 2, 2])).toEqual(0);
+        expect(standardDeviation([1, 2, 3, 4, 5])).toEqual(1.4142135623730951);
+    });
+
+    test("mode", () => {
+        expect(mode([1, 2, 1, 2, 4, 3])).toEqual(2);
+        expect(mode([1, 2, 1, 2, 4, 3, 1])).toEqual(1);
     });
 });

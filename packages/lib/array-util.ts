@@ -76,3 +76,35 @@ function _calculateEditDistance(arr1: number[], arr2: number[]): number {
 
     return dp[m][n];
 }
+
+export function average(array: number[]): number {
+    if (!array.length) return 0;
+    return sum(array) / array.length;
+}
+
+export function standardDeviation(array: number[]): number {
+    if (!array.length) return 0;
+    const avg = average(array);
+    const deviation = array.map((x) => (x - avg) ** 2);
+    const variance = average(deviation);
+    return Math.sqrt(variance);
+}
+
+export function mode<T>(array: T[], ifIsEquals: (a: T, b: T) => T = (a, b) => (a > b ? a : b)): T {
+    const counts = array.reduce((acc, item) => acc.set(item, (acc.get(item) || 0) + 1), new Map<T, number>());
+
+    const { maxItem } = Array.from(counts.entries()).reduce(
+        (acc, [item, count]) => {
+            if (acc.maxCount < count) {
+                acc.maxCount = count;
+                acc.maxItem = item;
+            } else if (acc.maxCount === count) {
+                acc.maxItem = ifIsEquals(acc.maxItem, item);
+            }
+            return acc;
+        },
+        { maxCount: 0, maxItem: null },
+    );
+
+    return maxItem;
+}
