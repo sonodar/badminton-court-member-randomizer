@@ -143,7 +143,9 @@ class BadmintonCourtMemberRandomizer implements IBadmintonCourtMemberRandomizer 
 
     #addHistory(members: GameMembers) {
         this.histories.push(members);
-        members.flat().forEach((id) => (this.gameCounts[id] = (this.gameCounts[id] || 0) + 1));
+        members.flat().forEach((id) => {
+            this.gameCounts[id] = (this.gameCounts[id] || 0) + 1;
+        });
         return members;
     }
 

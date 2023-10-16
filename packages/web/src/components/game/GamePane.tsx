@@ -1,12 +1,12 @@
 import type { Environment, GameMembers } from "@badminton-court-member-randomizer/lib";
+import { create } from "@badminton-court-member-randomizer/lib";
 import { RepeatClockIcon } from "@chakra-ui/icons";
 import { Button, Card, HStack, Spacer, Stack, useDisclosure } from "@chakra-ui/react";
+import { SimpleGrid } from "@chakra-ui/react";
 import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput.tsx";
+import { LeaveDialog } from "@components/game/LeaveDialog.tsx";
 import React, { useState } from "react";
 import { MdShuffle } from "react-icons/md";
-import { SimpleGrid } from "@chakra-ui/react";
-import { create } from "@badminton-court-member-randomizer/lib";
-import { LeaveDialog } from "@components/game/LeaveDialog.tsx";
 
 type Props = {
     initialSetting: Environment;

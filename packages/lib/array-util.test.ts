@@ -1,11 +1,11 @@
 import {
-    sum,
-    shuffle,
-    sortInner,
-    splitChunks,
-    sortBySumOrFirst,
-    sortMatrix,
     calculateEditDistance,
+    shuffle,
+    sortBySumOrFirst,
+    sortInner,
+    sortMatrix,
+    splitChunks,
+    sum,
 } from "./array-util";
 
 describe("array-util", () => {

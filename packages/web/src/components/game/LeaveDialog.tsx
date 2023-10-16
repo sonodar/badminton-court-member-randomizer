@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import { Button, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Select, Stack } from "@chakra-ui/react";
+import React, { useState } from "react";
 
 type Props = {
     members: number[];
