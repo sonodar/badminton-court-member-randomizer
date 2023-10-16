@@ -108,3 +108,13 @@ export function mode<T>(array: T[], ifIsEquals: (a: T, b: T) => T = (a, b) => (a
 
     return maxItem;
 }
+
+export function median(array: number[]): number {
+    if (!array.length) return 0;
+    const centerIndex = Math.floor(array.length / 2);
+    const sorted = [...array].sort((a, b) => a - b);
+    if (array.length % 2 === 0) {
+        return (sorted[centerIndex - 1] + sorted[centerIndex]) / 2;
+    }
+    return sorted[centerIndex];
+}

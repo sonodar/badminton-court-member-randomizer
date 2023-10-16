@@ -1,5 +1,6 @@
 import {
     calculateEditDistance,
+    median,
     mode,
     shuffle,
     sortBySumOrFirst,
@@ -88,5 +89,10 @@ describe("array-util", () => {
     test("mode", () => {
         expect(mode([1, 2, 1, 2, 4, 3])).toEqual(2);
         expect(mode([1, 2, 1, 2, 4, 3, 1])).toEqual(1);
+    });
+
+    test("median", () => {
+        expect(median([1, 2, 3, 4, 5])).toEqual(3);
+        expect(median([1, 2, 3, 4, 5, 6])).toEqual(3.5);
     });
 });
