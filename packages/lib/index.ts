@@ -1,4 +1,12 @@
-import { calculateEditDistance, pickMaxValueIndex, shuffle, sortInner, splitChunks } from "./array-util";
+import {
+    average,
+    calculateEditDistance,
+    diffMinToMax,
+    shuffle,
+    sortMatrixItems,
+    splitChunks,
+    standardDeviation,
+} from "./array-util";
 
 type MemberId = number;
 type CourtMembers = [MemberId, MemberId, MemberId, MemberId];
@@ -43,10 +51,11 @@ class BadmintonCourtMemberRandomizer implements IBadmintonCourtMemberRandomizer 
     readonly courtCount: number;
     readonly members: MemberId[];
     readonly histories: GameMembers[];
+    readonly historyKeys: Set<string>;
     readonly gameCounts: GameCountPerMember;
 
-    currentThreshold: number;
-    currentMaxRetry: number;
+    /** コートとメンバーの全組み合わせ数 */
+    readonly combinationCount: number;
 
     constructor({ courtCount, members, histories = [], gameCounts = {} }: ShufflerConstructorProps) {
         if (courtCount < 1) {
@@ -64,12 +73,12 @@ class BadmintonCourtMemberRandomizer implements IBadmintonCourtMemberRandomizer 
 
         this.courtCount = courtCount;
         this.histories = histories;
+        this.historyKeys = new Set(this.histories.map(toHistoryKey));
 
         this.members = members;
         this.gameCounts = gameCounts;
 
-        this.currentThreshold = this.courtCapacity; // 初期値の根拠はない
-        this.currentMaxRetry = this.memberCount; // 初期値の根拠はない
+        this.combinationCount = getCombinationCount(courtCount, members.length);
     }
 
     get memberCount() {
@@ -91,10 +100,15 @@ class BadmintonCourtMemberRandomizer implements IBadmintonCourtMemberRandomizer 
     }
 
     leave(...ids: number[]): BadmintonCourtMemberRandomizer {
+        const gameCounts = { ...this.gameCounts };
+        ids.forEach((id) => {
+            delete gameCounts[id];
+        });
         return new BadmintonCourtMemberRandomizer({
             courtCount: this.courtCount,
-            histories: [...this.histories],
-            gameCounts: { ...this.gameCounts },
+            // 抜けた人が含まれる履歴もすべて削除する
+            histories: dropLeavedMembersHistory(this.histories, ids),
+            gameCounts,
             members: this.members.filter((id) => !ids.includes(id)),
         });
     }
@@ -113,57 +127,131 @@ class BadmintonCourtMemberRandomizer implements IBadmintonCourtMemberRandomizer 
         return this.#generateRandomMembers(false);
     }
 
-    // 履歴との最小編集距離が指定した閾値以下になるまでランダムで払い出す
-    // TODO: アルゴリズムを変更する
-    // すべての組み合わせを導出し、その中からランダムで選出する
-    // かつ、すでに履歴にある組み合わせは除外する
-    // また、各メンバーのゲーム回数が均等になるようにする（ゲーム回数の偏りがあると、履歴との編集距離が大きくなる）
+    // なるべく過去の履歴とかぶらないように組み合わせを払い出す関数
     #generateRandomMembers(ease = true): GameMembers {
-        const generates: GameMembers[] = [];
-        const minHistory: number[] = [];
+        // 履歴がない場合はランダムに選出する
+        if (this.histories.length === 0) {
+            return this.#addHistory(this.#getRandomMembers());
+        }
 
-        for (let i = 0; i <= this.currentMaxRetry; i++) {
-            const members = this.#getRandomMembers(); // 適当に払い出す
-            const minEditDistance = this.#getMinimumEditDistance(members);
-            if (minEditDistance >= this.currentThreshold) {
-                return this.#addHistory(members);
+        // 履歴数が組み合わせ数以上の場合は、これ以上ランダムに選出しても意味がないため
+        // ランダム選出を終了し、履歴を最初から繰り返す
+        if (this.histories.length >= this.combinationCount) {
+            console.log(
+                `履歴数(${this.histories.length})が組み合わせ数(${this.combinationCount})に達したため最も古い履歴を選出`,
+            );
+            const oldest = this.histories.shift();
+            this.histories.push(oldest);
+            return oldest;
+        }
+
+        // ソート用のプロパティを持ったオブジェクトの配列
+        const generatedMembers: { members: GameMembers; dev: number; dist: number; range: number }[] = [];
+
+        // メンバー数の 10 倍か、最大組み合わせ数 - 履歴数のどちらか小さい方の数だけ組み合わせを払い出す (最大 320)
+        const generateSize = Math.min(this.memberCount * 10, this.combinationCount - this.histories.length);
+
+        while (generatedMembers.length < generateSize) {
+            // とりあえず適当に払い出す
+            const members = this.#getRandomMembers();
+
+            // 履歴にすでに同じ組み合わせがあったらやり直し
+            if (this.historyKeys.has(toHistoryKey(members))) {
+                console.log(`${toHistoryKey(members)} は既出のためやり直し`);
+                continue;
             }
-            generates.push(members);
-            minHistory.push(minEditDistance);
+
+            // gameCounts のコピーを作成し、参加メンバーの参加回数を 1 ずつ増やす
+            // あくまで標準偏差などの計算用で、インスタンスの gameCounts は直接増やさない
+            const gameCounts = incrementGameCounts({ ...this.gameCounts }, members);
+
+            // 参加メンバーの参加回数の標準偏差が 1 以上だったらやり直し
+            const dev = standardDeviation(Object.values(gameCounts));
+            if (dev >= 1) continue;
+
+            // 最大値と最小値の差を求めておく（あとでソートに使う）
+            const range = diffMinToMax(Object.values(gameCounts));
+
+            // 編集距離の平均を求めておく（あとでソートに使う）
+            const dist = this.#averageEditDistance(members);
+
+            generatedMembers.push({ members, dev, dist, range });
         }
 
-        if (ease) {
-            this.currentMaxRetry++;
-            this.currentThreshold = Math.max(1, this.currentThreshold - 1);
-        }
+        // 最大最小の差が最小で、編集距離が最大のものを選出する (編集距離が同じ場合は標準偏差が小さいものを選出する)
+        generatedMembers.sort((a, b) => {
+            if (a.range === b.range) {
+                if (a.dist === b.dist) {
+                    return a.dev - b.dev;
+                }
+                return b.dist - a.dist;
+            }
+            return a.range - b.range;
+        });
 
-        const maxIndex = pickMaxValueIndex(minHistory);
-        return this.#addHistory(generates[maxIndex]);
+        return this.#addHistory(generatedMembers[0].members);
+    }
+
+    #averageEditDistance(members: GameMembers): number {
+        return average(this.histories.map((history) => calculateEditDistance(history, members)));
     }
 
     #addHistory(members: GameMembers) {
         this.histories.push(members);
-        members.flat().forEach((id) => {
-            this.gameCounts[id] = (this.gameCounts[id] || 0) + 1;
-        });
+        incrementGameCounts(this.gameCounts, members);
         return members;
-    }
-
-    #getMinimumEditDistance(members: GameMembers): number {
-        return this.histories.reduce(
-            (min, history) => Math.min(min, calculateEditDistance(history, members)),
-            members.length,
-        );
     }
 
     #getRandomMembers(): GameMembers {
         const randomMembers = shuffle(this.members).slice(0, this.courtCapacity);
         const membersPerCourt = splitChunks(randomMembers, COURT_CAPACITY);
-        return sortInner(membersPerCourt) as GameMembers;
+        return sortMatrixItems(membersPerCourt) as GameMembers;
     }
 }
 
 export function create({ courtCount, memberCount }: Environment): IBadmintonCourtMemberRandomizer {
     const members = Array.from({ length: memberCount }, (_, i) => i + 1);
     return new BadmintonCourtMemberRandomizer({ courtCount, members });
+}
+
+function dropLeavedMembersHistory(histories: GameMembers[], ids: number[]): GameMembers[] {
+    return histories.filter((history) => !history.flat().some((id) => ids.includes(id)));
+}
+
+function incrementGameCount(gameCounts: GameCountPerMember, id: MemberId): void {
+    gameCounts[id] = (gameCounts[id] || 0) + 1;
+}
+
+function incrementGameCounts(gameCounts: GameCountPerMember, members: GameMembers): GameCountPerMember {
+    members.flat().forEach((id) => incrementGameCount(gameCounts, id));
+    return gameCounts;
+}
+
+function toHistoryKey(history: GameMembers): string {
+    return JSON.stringify(history);
+}
+
+// コートとメンバーの全組み合わせ数を返す関数
+function getCombinationCount(courtCount: number, memberCount: number): number {
+    // 二項係数を返す関数
+    function binomialCoefficient(n: number, k: number): number {
+        let result = 1;
+        for (let i = 1; i <= k; i++) {
+            result *= n - k + i;
+            result /= i;
+        }
+        return result;
+    }
+
+    let result = 1;
+    for (let i = 0; i < courtCount; i++) {
+        result *=
+            (memberCount - i * COURT_CAPACITY) *
+            (memberCount - i * COURT_CAPACITY - 1) *
+            (memberCount - i * COURT_CAPACITY - 2) *
+            (memberCount - i * COURT_CAPACITY - 3);
+        result /= 24;
+    }
+    result *= binomialCoefficient(memberCount - COURT_CAPACITY * courtCount, memberCount % COURT_CAPACITY);
+    return result;
 }

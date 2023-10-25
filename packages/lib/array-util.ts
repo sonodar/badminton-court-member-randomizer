@@ -1,4 +1,4 @@
-export function shuffle<T>(array: T[]): T[] {
+export function shuffle(array: number[]): number[] {
     const result = [...array];
     for (let i = result.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -7,46 +7,41 @@ export function shuffle<T>(array: T[]): T[] {
     return result;
 }
 
-export function splitChunks<T>(array: T[], chunkSize: number): T[][] {
-    const result: T[][] = [];
+export function splitChunks(array: number[], chunkSize: number): number[][] {
+    const result: number[][] = [];
     for (let i = 0; i < array.length; i += chunkSize) {
         result.push(array.slice(i, i + chunkSize));
     }
     return result;
 }
 
-export function pickMaxValueIndex(array: number[]): number {
-    let biggestIndex = 0;
-    for (let i = 1; i < array.length; i++) {
-        if (array[i] > array[biggestIndex]) biggestIndex = i;
-    }
-    return biggestIndex;
+export function sortMatrixItems(array: number[][]): number[][] {
+    return array.map((items) => [...items].sort((a, b) => a - b));
 }
 
-export function sortInner<T>(array: T[][]): T[][] {
-    return array.map((items) => [...items].sort());
-}
-
-export function sum(array: number[]): number {
+function sum(array: number[]): number {
     return array.reduce((sum, current) => sum + current, 0);
 }
 
-export function sortBySumOrFirst(array: number[][]): number[][] {
-    return array.sort((a, b) => {
-        const sumA = sum(a);
-        const sumB = sum(b);
-        if (sumA === sumB) {
-            return a[0] - b[0];
-        }
-        return sumA - sumB;
-    });
-}
-
-export function sortMatrix(matrix: number[][]): number[][] {
-    return sortBySumOrFirst(sortInner(matrix));
-}
-
+// 二次元配列の編集距離を求める
 export function calculateEditDistance(arr1: number[][], arr2: number[][]): number {
+    // 二次元配列を要素の合計値(合計が同じ場合は先頭値)でソートする
+    function sortMatrixBySumOrFirst(array: number[][]): number[][] {
+        return array.sort((a, b) => {
+            const sumA = sum(a);
+            const sumB = sum(b);
+            if (sumA === sumB) {
+                return a[0] - b[0];
+            }
+            return sumA - sumB;
+        });
+    }
+
+    // 二次元配列をソートする
+    function sortMatrix(matrix: number[][]): number[][] {
+        return sortMatrixBySumOrFirst(sortMatrixItems(matrix));
+    }
+
     return _calculateEditDistance(sortMatrix(arr1).flat(), sortMatrix(arr2).flat());
 }
 
@@ -77,11 +72,7 @@ function _calculateEditDistance(arr1: number[], arr2: number[]): number {
     return dp[m][n];
 }
 
-export function average(array: number[]): number {
-    if (!array.length) return 0;
-    return sum(array) / array.length;
-}
-
+// 標準偏差
 export function standardDeviation(array: number[]): number {
     if (!array.length) return 0;
     const avg = average(array);
@@ -90,8 +81,18 @@ export function standardDeviation(array: number[]): number {
     return Math.sqrt(variance);
 }
 
-export function mode<T>(array: T[], ifIsEquals: (a: T, b: T) => T = (a, b) => (a > b ? a : b)): T {
-    const counts = array.reduce((acc, item) => acc.set(item, (acc.get(item) || 0) + 1), new Map<T, number>());
+// 算術平均を求める (暫定で最頻値、中央値よりもこれ)
+export function average(array: number[]): number {
+    if (!array.length) return 0;
+    return sum(array) / array.length;
+}
+
+// 最頻値を求める (未使用: 平均とどちらがいいか)
+export function mode(
+    array: number[],
+    ifIsEquals: (a: number, b: number) => number = (a, b) => (a > b ? a : b),
+): number {
+    const counts = array.reduce((acc, item) => acc.set(item, (acc.get(item) || 0) + 1), new Map<number, number>());
 
     const { maxItem } = Array.from(counts.entries()).reduce(
         (acc, [item, count]) => {
@@ -109,6 +110,7 @@ export function mode<T>(array: T[], ifIsEquals: (a: T, b: T) => T = (a, b) => (a
     return maxItem;
 }
 
+// 中央値を求める (未使用: 平均とどちらがいいか)
 export function median(array: number[]): number {
     if (!array.length) return 0;
     const centerIndex = Math.floor(array.length / 2);
@@ -117,4 +119,10 @@ export function median(array: number[]): number {
         return (sorted[centerIndex - 1] + sorted[centerIndex]) / 2;
     }
     return sorted[centerIndex];
+}
+
+// 数値配列の最大値と最小値の差を求める
+export function diffMinToMax(array: number[]): number {
+    if (!array.length) return 0;
+    return Math.max(...array) - Math.min(...array);
 }
