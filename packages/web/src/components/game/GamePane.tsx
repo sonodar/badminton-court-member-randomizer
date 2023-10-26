@@ -1,12 +1,13 @@
 import { RepeatClockIcon } from "@chakra-ui/icons";
-import { Button, Card, HStack, Spacer, Stack, useDisclosure } from "@chakra-ui/react";
-import { SimpleGrid } from "@chakra-ui/react";
+import { Button, Card, CardBody, CardFooter, Center, HStack, Spacer, Stack, useDisclosure } from "@chakra-ui/react";
+import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
 import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput.tsx";
+import { HistoryDialog } from "@components/game/HistoryDialog.tsx";
 import { LeaveDialog } from "@components/game/LeaveDialog.tsx";
 import type { Environment, GameMembers } from "@doubles-member-generator/lib";
-import { create } from "@doubles-member-generator/lib";
+import { util, create } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
-import { MdShuffle } from "react-icons/md";
+import { MdNumbers, MdOutlineWatchLater, MdShuffle } from "react-icons/md";
 
 type Props = {
     initialSetting: Environment;
@@ -14,52 +15,71 @@ type Props = {
 
 export default function GamePane({ initialSetting }: Props) {
     const courtCount = initialSetting.courtCount;
-    const courtIds = [...Array(courtCount).keys()].map((i) => i);
+    const courtIds = util.array.generate(courtCount, 0);
 
     const [manager, setManager] = useState(create(initialSetting));
     const { isOpen: isLeaveOpen, onOpen: onLeaveOpen, onClose: onLeaveClose } = useDisclosure();
     const [latestMembers, setLatestMembers] = useState<GameMembers>([]);
 
+    const { isOpen: isHistoryOpen, onOpen: onHistoryOpen, onClose: onHistoryClose } = useDisclosure();
+
     const handleGenerate = () => setLatestMembers(manager.next());
     const handleRetry = () => setLatestMembers(manager.retry());
 
     return (
-        <Stack spacing={6}>
-            <CurrentMemberCountInput
-                value={manager.memberCount}
-                min={courtCount * 4}
-                onIncrement={() => setManager(manager.join())}
-                onDecrement={onLeaveOpen}
-            />
-            <LeaveDialog
-                members={manager.members}
-                isOpen={isLeaveOpen}
-                onClose={onLeaveClose}
-                onLeave={(id) => setManager(manager.leave(id))}
-            />
-            <HStack>
-                <Button colorScheme={"blue"} leftIcon={<MdShuffle />} onClick={handleGenerate}>
-                    払い出し
+        <Card my={1} py={4} height={"100vh"}>
+            <CardBody>
+                <Center>
+                    <Stack spacing={6}>
+                        <CurrentMemberCountInput
+                            value={manager.memberCount}
+                            min={courtCount * 4}
+                            onIncrement={() => setManager(manager.join())}
+                            onDecrement={onLeaveOpen}
+                        />
+                        <LeaveDialog
+                            members={manager.members}
+                            isOpen={isLeaveOpen}
+                            onClose={onLeaveClose}
+                            onLeave={(id) => setManager(manager.leave(id))}
+                        />
+                        <HStack>
+                            <Button colorScheme={"blue"} leftIcon={<MdShuffle />} onClick={handleGenerate}>
+                                払い出し
+                            </Button>
+                            <Spacer />
+                            <Button
+                                colorScheme={"red"}
+                                leftIcon={<RepeatClockIcon />}
+                                size={"xs"}
+                                onClick={handleRetry}
+                            >
+                                やり直し
+                            </Button>
+                        </HStack>
+                        <CourtMembersPane members={latestMembers} courtIds={courtIds} />
+                    </Stack>
+                </Center>
+            </CardBody>
+            <CardFooter>
+                <Button
+                    leftIcon={<MdOutlineWatchLater />}
+                    isDisabled={manager.histories.length === 0}
+                    onClick={onHistoryOpen}
+                >
+                    履歴
                 </Button>
                 <Spacer />
-                <Button colorScheme={"red"} leftIcon={<RepeatClockIcon />} size={"xs"} onClick={handleRetry}>
-                    やり直し
+                <Button leftIcon={<MdNumbers />} isDisabled={manager.histories.length === 0}>
+                    回数
                 </Button>
-            </HStack>
-            <SimpleGrid columns={2} spacing={6}>
-                {latestMembers.length > 0 &&
-                    courtIds.map((id) => (
-                        <Card key={id} minW={"50%"} p={2}>
-                            コート {id + 1}
-                            <hr />
-                            <HStack spacing={6}>
-                                {latestMembers[id].map((member) => (
-                                    <span key={member}>{member}</span>
-                                ))}
-                            </HStack>
-                        </Card>
-                    ))}
-            </SimpleGrid>
-        </Stack>
+            </CardFooter>
+            <HistoryDialog
+                courtCount={manager.courtCount}
+                histories={manager.histories}
+                isOpen={isHistoryOpen}
+                onClose={onHistoryClose}
+            />
+        </Card>
     );
 }

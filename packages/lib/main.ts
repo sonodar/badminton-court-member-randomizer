@@ -146,9 +146,8 @@ export class BadmintonDoublesMemberGenerator implements DoublesMemberGenerator {
                 .filter(([id]) => this.members.includes(Number(id)))
                 .map(([_, count]) => count);
 
-            // 参加メンバーの参加回数の標準偏差が 1 以上だったらやり直し
+            // 参加メンバーの参加回数の標準偏差を算出（あとでソートに使う）
             const dev = array.standardDeviation(gameCountsWithoutLeavedMember);
-            if (dev >= 1) continue;
 
             // 最大値と最小値の差を求めておく（あとでソートに使う）
             const range = array.range(gameCountsWithoutLeavedMember);

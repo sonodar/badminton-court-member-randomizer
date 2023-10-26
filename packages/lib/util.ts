@@ -13,8 +13,8 @@ export const array = {
     range,
 };
 
-function generate(length: number): number[] {
-    return Array.from({ length }, (_, i) => i + 1);
+function generate(length: number, offset = 1): number[] {
+    return Array.from({ length }, (_, i) => i + offset);
 }
 
 function shuffle(array: number[]): number[] {
