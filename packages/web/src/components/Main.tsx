@@ -1,8 +1,8 @@
-import type { Environment } from "@badminton-court-member-randomizer/lib";
 import { Center, ChakraProvider, Stack } from "@chakra-ui/react";
 import { Container } from "@chakra-ui/react";
 import GamePane from "@components/game/GamePane.tsx";
 import InitialSettingPane from "@components/setting/InitialSettingPane.tsx";
+import type { Environment } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
 
 type PanelState = "init" | "game" | "history";

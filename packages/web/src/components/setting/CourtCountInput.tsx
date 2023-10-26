@@ -1,5 +1,5 @@
-import { COURT_COUNT_LIMIT } from "@badminton-court-member-randomizer/lib";
 import { Box, HStack, Stack, useRadio, useRadioGroup } from "@chakra-ui/react";
+import { COURT_COUNT_LIMIT } from "@doubles-member-generator/lib";
 import React from "react";
 
 function CourtCountButton(props: Parameters<typeof useRadio>[0] & { children: React.ReactNode }) {
@@ -36,7 +36,7 @@ function CourtCountButton(props: Parameters<typeof useRadio>[0] & { children: Re
 
 type Props = {
     value: number;
-    onChange: (i: number) => void | Promise<void>;
+    onChange: (i: number) => void;
 };
 
 export function CourtCountInput({ value, onChange }: Props) {

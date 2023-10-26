@@ -1,13 +1,13 @@
-import { MEMBER_COUNT_LIMIT } from "@badminton-court-member-randomizer/lib";
 import { Button, HStack, Input, Spacer } from "@chakra-ui/react";
+import { MEMBER_COUNT_LIMIT } from "@doubles-member-generator/lib";
 import React from "react";
 import { TbUserOff, TbUserPlus } from "react-icons/tb";
 
 type Props = {
     min: number;
     value: number;
-    onIncrement: () => void | Promise<void>;
-    onDecrement: () => void | Promise<void>;
+    onIncrement: () => void;
+    onDecrement: () => void;
 };
 
 export function CurrentMemberCountInput({ min, value, onIncrement, onDecrement }: Props) {

@@ -1,5 +1,5 @@
 {
-  "name": "@badminton-court-member-randomizer/web",
+  "name": "@doubles-member-generator/web",
   "private": true,
   "scripts": {
     "dev": "astro dev",
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^3.0.3",
-    "@badminton-court-member-randomizer/lib": "workspace:*",
+    "@doubles-member-generator/lib": "workspace:*",
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.1",
     "@emotion/react": "^11.11.1",

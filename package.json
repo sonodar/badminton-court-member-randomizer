@@ -1,14 +1,14 @@
 {
-  "name": "badminton-court-member-randomizer",
+  "name": "doubles-member-generator",
+  "devDependencies": {
+    "@biomejs/biome": "^1.2.2",
+    "bun-types": "^1.0.3"
+  },
   "private": true,
-  "workspaces": ["packages/*"],
   "scripts": {
     "format": "biome format . --write",
     "lint": "biome check .",
     "start": "bun --cwd packages/web dev"
   },
-  "devDependencies": {
-    "@biomejs/biome": "^1.2.2",
-    "bun-types": "^1.0.3"
-  }
+  "workspaces": ["packages/*"]
 }

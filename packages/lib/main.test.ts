@@ -1,6 +1,6 @@
+import { describe, expect, test } from "bun:test";
 import { BadmintonDoublesMemberGenerator } from "./main";
 import { array } from "./util";
-import { describe, expect, test } from "bun:test";
 
 describe("main", () => {
     test("properties", () => {

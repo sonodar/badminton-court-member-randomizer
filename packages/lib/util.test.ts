@@ -1,5 +1,5 @@
-import { array } from "./util";
 import { describe, expect, test } from "bun:test";
+import { array } from "./util";
 
 describe("array util", () => {
     test("split chunks", () => {

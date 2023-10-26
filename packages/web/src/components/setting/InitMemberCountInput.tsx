@@ -1,12 +1,12 @@
-import { MEMBER_COUNT_LIMIT } from "@badminton-court-member-randomizer/lib";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { HStack, IconButton, Input } from "@chakra-ui/react";
+import { MEMBER_COUNT_LIMIT } from "@doubles-member-generator/lib";
 import React from "react";
 
 type Props = {
     min: number;
     value: number;
-    onChange: (i: number) => void | Promise<void>;
+    onChange: (i: number) => void;
 };
 
 export function InitMemberCountInput({ min, value, onChange }: Props) {

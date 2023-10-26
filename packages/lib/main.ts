@@ -205,7 +205,9 @@ function incrementGameCount(gameCounts: PlayCountPerMember, id: MemberId): void 
 }
 
 function incrementGameCounts(gameCounts: PlayCountPerMember, members: GameMembers): PlayCountPerMember {
-    members.flat().forEach((id) => incrementGameCount(gameCounts, id));
+    for (const id of members.flat()) {
+        incrementGameCount(gameCounts, id);
+    }
     return gameCounts;
 }
 
@@ -214,7 +216,9 @@ function decrementGameCount(gameCounts: PlayCountPerMember, id: MemberId): void 
 }
 
 function decrementGameCounts(gameCounts: PlayCountPerMember, members: GameMembers): PlayCountPerMember {
-    members.flat().forEach((id) => decrementGameCount(gameCounts, id));
+    for (const id of members.flat()) {
+        decrementGameCount(gameCounts, id);
+    }
     return gameCounts;
 }
 

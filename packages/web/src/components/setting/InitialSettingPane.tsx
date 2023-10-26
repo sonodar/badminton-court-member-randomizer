@@ -1,12 +1,12 @@
-import { COURT_CAPACITY, type Environment } from "@badminton-court-member-randomizer/lib";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Button, Divider, Flex, Heading, Spacer, Stack } from "@chakra-ui/react";
 import { CourtCountInput } from "@components/setting/CourtCountInput.tsx";
 import { InitMemberCountInput } from "@components/setting/InitMemberCountInput.tsx";
+import { COURT_CAPACITY, type Environment } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
 
 type Props = {
-    onStart: (env: Environment) => void | Promise<void>;
+    onStart: (env: Environment) => Promise<void>;
 };
 
 export default function InitialSettingPane({ onStart }: Props) {

@@ -4,8 +4,8 @@ import React, { useState } from "react";
 type Props = {
     members: number[];
     isOpen: boolean;
-    onClose: () => void | Promise<void>;
-    onLeave(id: number): void | Promise<void>;
+    onClose: () => void;
+    onLeave(id: number): void;
 };
 
 export function LeaveDialog({ members, isOpen, onClose, onLeave }: Props) {
