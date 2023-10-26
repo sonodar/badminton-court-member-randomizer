@@ -19,7 +19,7 @@ export default function InitialSettingPane({ onStart }: Props) {
     };
 
     return (
-        <Card my={1} py={4} height={"100vh"}>
+        <Card my={1} py={4} height={"100dvh"}>
             <CardBody>
                 <Center>
                     <Stack spacing={6}>
