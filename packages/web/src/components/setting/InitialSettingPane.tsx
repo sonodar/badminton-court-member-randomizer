@@ -38,7 +38,7 @@ export default function InitialSettingPane({ onStart }: Props) {
                 <Center>
                     <Stack spacing={6}>
                         <Heading as="h1" size="sm">
-                            ダブルスメンバー決めくん
+                            ダブルスメンバー決めるくん
                         </Heading>
                         <Heading as="h2" size="xl">
                             初期設定
