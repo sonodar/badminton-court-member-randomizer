@@ -17,6 +17,7 @@ import { InitMemberCountInput } from "@components/setting/InitMemberCountInput.t
 import { COURT_CAPACITY, type Environment } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
 import { ImGithub } from "react-icons/im";
+import { GiShuttlecock } from "react-icons/gi";
 
 type Props = {
     onStart: (env: Environment) => void;
@@ -36,14 +37,17 @@ export default function InitialSettingPane({ onStart }: Props) {
             <CardBody>
                 <Center>
                     <Stack spacing={6}>
-                        <Heading as="h1" size="xl">
-                            環境設定
+                        <Heading as="h1" size="sm">
+                            ダブルスメンバー決めくん
                         </Heading>
-                        <Heading as="h3" size="lg">
-                            コート数
+                        <Heading as="h2" size="xl">
+                            初期設定
+                        </Heading>
+                        <Heading as="h3" size="md">
+                            コート数（後から変更不可）
                         </Heading>
                         <CourtCountInput value={courtCount} onChange={onChangeCourtCount} />
-                        <Heading as="h3" size="lg">
+                        <Heading as="h3" size="md">
                             開始メンバー数
                         </Heading>
                         <InitMemberCountInput
@@ -61,6 +65,7 @@ export default function InitialSettingPane({ onStart }: Props) {
                             </Link>
                             <Spacer />
                             <Button
+                                leftIcon={<GiShuttlecock />}
                                 rightIcon={<ArrowForwardIcon />}
                                 colorScheme="teal"
                                 variant="outline"

@@ -17,7 +17,6 @@ export function LeaveDialog({ members, isOpen, onClose, onLeave }: Props) {
 
     const handleLeave = () => {
         if (value !== 0) onLeave(value);
-        window.alert(value);
         onClose();
     };
 

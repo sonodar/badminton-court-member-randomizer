@@ -20,11 +20,11 @@ export function HistoryDialog({ courtCount, histories, isOpen, onClose }: Props)
                 <ModalBody py={4}>
                     <Stack>
                         {histories.map((history, index) => (
-                            <>
+                            <div key={history.members.flat().join(",")}>
                                 {index !== 0 && <Divider mt={2} />}
                                 {index + 1}
                                 <CourtMembersPane members={history.members} courtIds={courtIds} />
-                            </>
+                            </div>
                         ))}
                     </Stack>
                 </ModalBody>

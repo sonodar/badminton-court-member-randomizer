@@ -7,7 +7,9 @@ import { LeaveDialog } from "@components/game/LeaveDialog.tsx";
 import type { Environment, GameMembers } from "@doubles-member-generator/lib";
 import { util, create } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
-import { MdNumbers, MdOutlineWatchLater, MdShuffle } from "react-icons/md";
+import { IoDiceOutline } from "react-icons/io5";
+import { MdOutlineWatchLater } from "react-icons/md";
+import { TbUsers } from "react-icons/tb";
 
 type Props = {
     initialSetting: Environment;
@@ -44,8 +46,8 @@ export default function GamePane({ initialSetting }: Props) {
                             onLeave={(id) => setManager(manager.leave(id))}
                         />
                         <HStack>
-                            <Button colorScheme={"blue"} leftIcon={<MdShuffle />} onClick={handleGenerate}>
-                                払い出し
+                            <Button colorScheme={"blue"} leftIcon={<IoDiceOutline />} onClick={handleGenerate}>
+                                メンバー決め
                             </Button>
                             <Spacer />
                             <Button
@@ -70,8 +72,8 @@ export default function GamePane({ initialSetting }: Props) {
                     履歴
                 </Button>
                 <Spacer />
-                <Button leftIcon={<MdNumbers />} isDisabled={manager.histories.length === 0}>
-                    回数
+                <Button leftIcon={<TbUsers />} isDisabled={manager.histories.length === 0}>
+                    メンバー
                 </Button>
             </CardFooter>
             <HistoryDialog
