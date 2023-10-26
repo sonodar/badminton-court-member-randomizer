@@ -1,18 +1,7 @@
-import {
-    calculateEditDistance,
-    median,
-    mode,
-    shuffle,
-    sortBySumOrFirst,
-    sortInner,
-    sortMatrix,
-    splitChunks,
-    standardDeviation,
-    sum,
-} from "./array-util";
+import { calculateEditDistance, shuffle, sortMatrixItems, splitChunks } from "./array-util";
 
 describe("array-util", () => {
-    test("chunk", () => {
+    test("splitChunks", () => {
         const array = [...Array(9).keys()].map((_, i) => i + 1);
         const chunks = splitChunks(array, 4);
         expect(chunks).toEqual([[1, 2, 3, 4], [5, 6, 7, 8], [9]]);
@@ -24,48 +13,30 @@ describe("array-util", () => {
         expect(shuffled).not.toEqual(array);
     });
 
-    test("sum", () => {
-        expect(sum([1, 2, 3])).toEqual(6);
-    });
-
-    test("sortBySumOrFirst", () => {
-        const matrix = shuffle([
-            [5, 6, 7, 8],
-            [1, 2, 3, 9],
-            [3, 3, 3, 6],
-        ]);
-        expect(sortBySumOrFirst(matrix)).toEqual([
-            [1, 2, 3, 9],
-            [3, 3, 3, 6],
-            [5, 6, 7, 8],
-        ]);
-    });
-
-    test("sortInner", () => {
+    test("sortMatrixItems", () => {
         const array = [
             [5, 4, 3, 2],
             [9, 8, 7, 1],
         ];
-        expect(sortInner(array)).toEqual([
+        expect(sortMatrixItems(array)).toEqual([
             [2, 3, 4, 5],
             [1, 7, 8, 9],
         ]);
     });
 
-    test("sortMatrix", () => {
-        const matrix = shuffle([
-            [8, 5, 6, 7],
-            [3, 9, 1, 2],
-            [3, 6, 3, 3],
-        ]);
-        expect(sortMatrix(matrix)).toEqual([
-            [1, 2, 3, 9],
-            [3, 3, 3, 6],
-            [5, 6, 7, 8],
-        ]);
-    });
-
     test("calculateEditDistance", () => {
+        expect(
+            calculateEditDistance(
+                [
+                    [1, 2, 3, 4],
+                    [5, 6, 7, 8],
+                ],
+                [
+                    [5, 6, 7, 8],
+                    [1, 2, 3, 4],
+                ],
+            ),
+        ).toEqual(0);
         expect(
             calculateEditDistance(
                 [
@@ -78,21 +49,5 @@ describe("array-util", () => {
                 ],
             ),
         ).toEqual(8);
-    });
-
-    test("standardDeviation", () => {
-        expect(standardDeviation([1, 1, 1, 1, 1, 1])).toEqual(0);
-        expect(standardDeviation([2, 2, 2, 2, 2, 2])).toEqual(0);
-        expect(standardDeviation([1, 2, 3, 4, 5])).toEqual(1.4142135623730951);
-    });
-
-    test("mode", () => {
-        expect(mode([1, 2, 1, 2, 4, 3])).toEqual(2);
-        expect(mode([1, 2, 1, 2, 4, 3, 1])).toEqual(1);
-    });
-
-    test("median", () => {
-        expect(median([1, 2, 3, 4, 5])).toEqual(3);
-        expect(median([1, 2, 3, 4, 5, 6])).toEqual(3.5);
     });
 });
