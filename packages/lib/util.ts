@@ -1,4 +1,5 @@
 export const array = {
+    generate,
     shuffle,
     chunks,
     sortInnerItems,
@@ -10,6 +11,10 @@ export const array = {
     sum,
     range,
 };
+
+function generate(length: number): number[] {
+    return Array.from({ length }, (_, i) => i + 1);
+}
 
 function shuffle(array: number[]): number[] {
     const result = [...array];
