@@ -1,4 +1,4 @@
-import { Card, CardBody, CardFooter, CardHeader, Divider, HStack, SimpleGrid, Stack } from "@chakra-ui/react";
+import { Card, CardBody, CardFooter, CardHeader, Center, Divider, HStack, SimpleGrid, Stack } from "@chakra-ui/react";
 import type { CourtMembers, GameMembers } from "@doubles-member-generator/lib";
 import React from "react";
 
@@ -11,15 +11,17 @@ function CourtCard({
 }) {
     return (
         <Card p={2}>
-            <Stack>
-                <div>コート {id + 1}</div>
-                <Divider />
-                <HStack spacing={6}>
-                    {members.map((member) => (
-                        <span key={member}>{member}</span>
-                    ))}
-                </HStack>
-            </Stack>
+            <Center>
+                <Stack>
+                    <Center>コート {id + 1}</Center>
+                    <Divider />
+                    <HStack spacing={6}>
+                        {members.map((member) => (
+                            <span key={member}>{member}</span>
+                        ))}
+                    </HStack>
+                </Stack>
+            </Center>
         </Card>
     );
 }
