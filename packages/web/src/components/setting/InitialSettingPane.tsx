@@ -1,9 +1,22 @@
 import { ArrowForwardIcon } from "@chakra-ui/icons";
-import { Button, Card, CardBody, Center, Divider, Flex, Heading, Spacer, Stack } from "@chakra-ui/react";
+import {
+    Button,
+    Card,
+    CardBody,
+    Center,
+    Divider,
+    Flex,
+    Heading,
+    IconButton,
+    Link,
+    Spacer,
+    Stack,
+} from "@chakra-ui/react";
 import { CourtCountInput } from "@components/setting/CourtCountInput.tsx";
 import { InitMemberCountInput } from "@components/setting/InitMemberCountInput.tsx";
 import { COURT_CAPACITY, type Environment } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
+import { ImGithub } from "react-icons/im";
 
 type Props = {
     onStart: (env: Environment) => void;
@@ -40,6 +53,12 @@ export default function InitialSettingPane({ onStart }: Props) {
                         />
                         <Divider />
                         <Flex>
+                            <Link
+                                target={"_blank"}
+                                href={"https://github.com/sonodar/badminton-court-member-randomizer"}
+                            >
+                                <IconButton aria-label={"github"} icon={<ImGithub />} />
+                            </Link>
                             <Spacer />
                             <Button
                                 rightIcon={<ArrowForwardIcon />}
