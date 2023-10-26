@@ -1,5 +1,16 @@
 import { RepeatClockIcon } from "@chakra-ui/icons";
-import { Button, Card, CardBody, CardFooter, Center, HStack, Spacer, Stack, useDisclosure } from "@chakra-ui/react";
+import {
+    Button,
+    Card,
+    CardBody,
+    CardFooter,
+    Center,
+    HStack,
+    Spacer,
+    Stack,
+    useDisclosure,
+    useToast,
+} from "@chakra-ui/react";
 import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
 import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput.tsx";
 import { HistoryDialog } from "@components/game/HistoryDialog.tsx";
@@ -30,6 +41,17 @@ export default function GamePane({ initialSetting }: Props) {
     const handleGenerate = () => setLatestMembers(manager.next());
     const handleRetry = () => setLatestMembers(manager.retry());
 
+    const toast = useToast();
+    const onLeave = (id: number) => {
+        setManager(manager.leave(id));
+        toast({
+            title: `メンバー ${id} が離脱しました`,
+            status: "warning",
+            duration: 2000,
+            isClosable: true,
+        });
+    };
+
     return (
         <Card my={1} py={4} height={"100dvh"}>
             <CardBody>
@@ -45,7 +67,7 @@ export default function GamePane({ initialSetting }: Props) {
                             members={manager.members}
                             isOpen={isLeaveOpen}
                             onClose={onLeaveClose}
-                            onLeave={(id) => setManager(manager.leave(id))}
+                            onLeave={onLeave}
                         />
                         <HStack>
                             <Button colorScheme={"blue"} leftIcon={<IoDiceOutline />} onClick={handleGenerate}>
