@@ -1,6 +1,11 @@
 import { BadmintonDoublesMemberGenerator } from "./main";
-import { DoublesMemberGenerator, Environment } from "./types";
+import { DoublesMemberGenerator } from "./types";
 import { array } from "./util";
+
+export type Environment = {
+    courtCount: number;
+    memberCount: number;
+};
 
 export function create({ courtCount, memberCount }: Environment): DoublesMemberGenerator {
     const members = array.generate(memberCount);
@@ -8,3 +13,6 @@ export function create({ courtCount, memberCount }: Environment): DoublesMemberG
 }
 
 export const util = { array };
+export * from "./consts";
+
+export type { GameMembers, History } from "./types";

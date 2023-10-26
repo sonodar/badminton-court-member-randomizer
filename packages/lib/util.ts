@@ -3,6 +3,7 @@ export const array = {
     shuffle,
     chunks,
     sortInnerItems,
+    sortMatrix,
     editDistance2D,
     standardDeviation,
     average,
@@ -41,25 +42,21 @@ function sum(array: number[]): number {
     return array.reduce((sum, current) => sum + current, 0);
 }
 
+// 二次元配列をソートする
+function sortMatrix(matrix: number[][]): number[][] {
+    // まずすべての要素をソートした後、要素の合計値(合計が同じ場合は先頭値)でソートする
+    return sortInnerItems(matrix).sort((a, b) => {
+        const sumA = sum(a);
+        const sumB = sum(b);
+        if (sumA === sumB) {
+            return a[0] - b[0];
+        }
+        return sumA - sumB;
+    });
+}
+
 // 二次元配列の編集距離を求める
 function editDistance2D(arr1: number[][], arr2: number[][]): number {
-    // 二次元配列を要素の合計値(合計が同じ場合は先頭値)でソートする
-    function sortMatrixBySumOrFirst(array: number[][]): number[][] {
-        return array.sort((a, b) => {
-            const sumA = sum(a);
-            const sumB = sum(b);
-            if (sumA === sumB) {
-                return a[0] - b[0];
-            }
-            return sumA - sumB;
-        });
-    }
-
-    // 二次元配列をソートする
-    function sortMatrix(matrix: number[][]): number[][] {
-        return sortMatrixBySumOrFirst(sortInnerItems(matrix));
-    }
-
     return editDistance(sortMatrix(arr1).flat(), sortMatrix(arr2).flat());
 }
 

@@ -8,6 +8,7 @@ export interface DoublesMemberGenerator {
     readonly courtCount: number;
     readonly courtCapacity: number;
     readonly members: MemberId[];
+    readonly memberCount: number;
     readonly histories: History[];
     readonly gameCounts: PlayCountPerMember;
     next(): GameMembers;
@@ -15,8 +16,3 @@ export interface DoublesMemberGenerator {
     join(): DoublesMemberGenerator;
     leave(...ids: number[]): DoublesMemberGenerator;
 }
-
-export type Environment = {
-    courtCount: number;
-    memberCount: number;
-};

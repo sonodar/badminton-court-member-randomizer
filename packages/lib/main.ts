@@ -1,3 +1,4 @@
+import { COURT_CAPACITY, COURT_COUNT_LIMIT, MEMBER_COUNT_LIMIT } from "./consts";
 import { DoublesMemberGenerator, GameMembers, History, MemberId, PlayCountPerMember } from "./types";
 import { array } from "./util";
 
@@ -7,15 +8,6 @@ type ConstructorProps = {
     histories?: History[];
     gameCounts?: PlayCountPerMember;
 };
-
-// 1 コートあたりの収容人数（バドミントンのダブルスなので 4）
-export const COURT_CAPACITY = 4;
-
-// コート数の上限 (これ以上必要になることはないはず)
-export const COURT_COUNT_LIMIT = 4;
-
-// メンバー数の上限（これ以上必要になることはないはず）
-export const MEMBER_COUNT_LIMIT = COURT_CAPACITY * COURT_COUNT_LIMIT * 2;
 
 // ソート用のプロパティを持ったオブジェクトの配列
 type SortableMembers = { members: GameMembers; dev: number; dist: number; range: number };
@@ -56,7 +48,7 @@ export class BadmintonDoublesMemberGenerator implements DoublesMemberGenerator {
 
         this.courtCount = courtCount;
         this.histories = histories;
-        this.historyKeys = new Set(this.histories.map(toHistoryKey));
+        this.historyKeys = new Set(this.histories.map((history) => toHistoryKey(history.members)));
 
         this.members = members;
         this.gameCounts = gameCounts;
@@ -105,7 +97,7 @@ export class BadmintonDoublesMemberGenerator implements DoublesMemberGenerator {
         const members = this.#generateRandomMembers();
 
         // 同じだったらリトライの意味がないので再帰
-        if (toHistoryKey(latestHistory) === toHistoryKey({ members })) {
+        if (toHistoryKey(latestHistory.members) === toHistoryKey(members)) {
             return this.retry();
         }
 
@@ -140,8 +132,8 @@ export class BadmintonDoublesMemberGenerator implements DoublesMemberGenerator {
             const members = this.#getRandomMembers();
 
             // 履歴にすでに同じ組み合わせがあったらやり直し
-            if (this.historyKeys.has(toHistoryKey({ members }))) {
-                console.log(`${toHistoryKey({ members })} は既出のためやり直し`);
+            if (this.historyKeys.has(toHistoryKey(members))) {
+                console.log(`${JSON.stringify(members)} は既出のためやり直し`);
                 continue;
             }
 
@@ -151,7 +143,7 @@ export class BadmintonDoublesMemberGenerator implements DoublesMemberGenerator {
 
             // すでにいない人のカウントは参照しないように除外
             const gameCountsWithoutLeavedMember = Object.entries(gameCounts)
-                .filter(([id, count]) => this.members.includes(Number(id)))
+                .filter(([id]) => this.members.includes(Number(id)))
                 .map(([_, count]) => count);
 
             // 参加メンバーの参加回数の標準偏差が 1 以上だったらやり直し
@@ -183,7 +175,7 @@ export class BadmintonDoublesMemberGenerator implements DoublesMemberGenerator {
 
     #addHistory(members: GameMembers) {
         this.histories.push({ members });
-        this.historyKeys.add(toHistoryKey({ members }));
+        this.historyKeys.add(toHistoryKey(members));
         incrementGameCounts(this.gameCounts, members);
         return members;
     }
@@ -191,7 +183,7 @@ export class BadmintonDoublesMemberGenerator implements DoublesMemberGenerator {
     #removeLatestHistory() {
         const latestHistory = this.histories.pop();
         decrementGameCounts(this.gameCounts, latestHistory.members);
-        this.historyKeys.delete(toHistoryKey(latestHistory));
+        this.historyKeys.delete(toHistoryKey(latestHistory.members));
         return latestHistory;
     }
 
@@ -226,8 +218,8 @@ function decrementGameCounts(gameCounts: PlayCountPerMember, members: GameMember
     return gameCounts;
 }
 
-function toHistoryKey(history: History): string {
-    return JSON.stringify(history.members);
+function toHistoryKey(members: GameMembers): string {
+    return array.sortMatrix(members).flat().join(",");
 }
 
 // コートとメンバーの全組み合わせ数を返す関数
