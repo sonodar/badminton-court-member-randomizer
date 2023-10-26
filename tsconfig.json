@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "target": "ESNext",
+    "esModuleInterop": true,
+    "types": ["bun-types"]
+  }
+}
