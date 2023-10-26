@@ -13,7 +13,7 @@ export function InitMemberCountInput({ min, value, onChange }: Props) {
     return (
         <HStack maxW="320px">
             <IconButton
-                colorScheme={"red"}
+                colorScheme={"blue"}
                 aria-label="decrement"
                 isDisabled={value <= min}
                 icon={<MinusIcon />}

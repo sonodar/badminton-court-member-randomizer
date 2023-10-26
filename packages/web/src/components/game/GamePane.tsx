@@ -1,5 +1,16 @@
 import { RepeatClockIcon } from "@chakra-ui/icons";
-import { Button, Card, CardBody, CardFooter, Center, HStack, Spacer, Stack, useDisclosure } from "@chakra-ui/react";
+import {
+    Button,
+    Card,
+    CardBody,
+    CardFooter,
+    Center,
+    HStack,
+    Spacer,
+    Stack,
+    useDisclosure,
+    useToast,
+} from "@chakra-ui/react";
 import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
 import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput.tsx";
 import { HistoryDialog } from "@components/game/HistoryDialog.tsx";
@@ -7,7 +18,10 @@ import { LeaveDialog } from "@components/game/LeaveDialog.tsx";
 import type { Environment, GameMembers } from "@doubles-member-generator/lib";
 import { util, create } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
-import { MdNumbers, MdOutlineWatchLater, MdShuffle } from "react-icons/md";
+import { IoDiceOutline } from "react-icons/io5";
+import { MdOutlineWatchLater } from "react-icons/md";
+import { TbUsers } from "react-icons/tb";
+import { MemberDialog } from "./MemberDialog";
 
 type Props = {
     initialSetting: Environment;
@@ -22,9 +36,21 @@ export default function GamePane({ initialSetting }: Props) {
     const [latestMembers, setLatestMembers] = useState<GameMembers>([]);
 
     const { isOpen: isHistoryOpen, onOpen: onHistoryOpen, onClose: onHistoryClose } = useDisclosure();
+    const { isOpen: isMemberOpen, onOpen: onMemberOpen, onClose: onMemberClose } = useDisclosure();
 
     const handleGenerate = () => setLatestMembers(manager.next());
     const handleRetry = () => setLatestMembers(manager.retry());
+
+    const toast = useToast();
+    const onLeave = (id: number) => {
+        setManager(manager.leave(id));
+        toast({
+            title: `メンバー ${id} が離脱しました`,
+            status: "warning",
+            duration: 2000,
+            isClosable: true,
+        });
+    };
 
     return (
         <Card my={1} py={4} height={"100dvh"}>
@@ -41,11 +67,11 @@ export default function GamePane({ initialSetting }: Props) {
                             members={manager.members}
                             isOpen={isLeaveOpen}
                             onClose={onLeaveClose}
-                            onLeave={(id) => setManager(manager.leave(id))}
+                            onLeave={onLeave}
                         />
                         <HStack>
-                            <Button colorScheme={"blue"} leftIcon={<MdShuffle />} onClick={handleGenerate}>
-                                払い出し
+                            <Button colorScheme={"blue"} leftIcon={<IoDiceOutline />} onClick={handleGenerate}>
+                                メンバー決め
                             </Button>
                             <Spacer />
                             <Button
@@ -70,8 +96,8 @@ export default function GamePane({ initialSetting }: Props) {
                     履歴
                 </Button>
                 <Spacer />
-                <Button leftIcon={<MdNumbers />} isDisabled={manager.histories.length === 0}>
-                    回数
+                <Button leftIcon={<TbUsers />} isDisabled={manager.histories.length === 0} onClick={onMemberOpen}>
+                    メンバー
                 </Button>
             </CardFooter>
             <HistoryDialog
@@ -79,6 +105,12 @@ export default function GamePane({ initialSetting }: Props) {
                 histories={manager.histories}
                 isOpen={isHistoryOpen}
                 onClose={onHistoryClose}
+            />
+            <MemberDialog
+                members={manager.members}
+                gameCounts={manager.gameCounts}
+                isOpen={isMemberOpen}
+                onClose={onMemberClose}
             />
         </Card>
     );
