@@ -1,4 +1,5 @@
 import { calculateEditDistance, shuffle, sortMatrixItems, splitChunks } from "./array-util";
+import { describe, test, expect } from "bun:test";
 
 describe("array-util", () => {
     test("splitChunks", () => {
