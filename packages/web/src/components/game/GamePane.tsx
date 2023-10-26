@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { IoDiceOutline } from "react-icons/io5";
 import { MdOutlineWatchLater } from "react-icons/md";
 import { TbUsers } from "react-icons/tb";
+import { MemberDialog } from "./MemberDialog";
 
 type Props = {
     initialSetting: Environment;
@@ -24,6 +25,7 @@ export default function GamePane({ initialSetting }: Props) {
     const [latestMembers, setLatestMembers] = useState<GameMembers>([]);
 
     const { isOpen: isHistoryOpen, onOpen: onHistoryOpen, onClose: onHistoryClose } = useDisclosure();
+    const { isOpen: isMemberOpen, onOpen: onMemberOpen, onClose: onMemberClose } = useDisclosure();
 
     const handleGenerate = () => setLatestMembers(manager.next());
     const handleRetry = () => setLatestMembers(manager.retry());
@@ -72,7 +74,7 @@ export default function GamePane({ initialSetting }: Props) {
                     履歴
                 </Button>
                 <Spacer />
-                <Button leftIcon={<TbUsers />} isDisabled={manager.histories.length === 0}>
+                <Button leftIcon={<TbUsers />} isDisabled={manager.histories.length === 0} onClick={onMemberOpen}>
                     メンバー
                 </Button>
             </CardFooter>
@@ -81,6 +83,12 @@ export default function GamePane({ initialSetting }: Props) {
                 histories={manager.histories}
                 isOpen={isHistoryOpen}
                 onClose={onHistoryClose}
+            />
+            <MemberDialog
+                members={manager.members}
+                gameCounts={manager.gameCounts}
+                isOpen={isMemberOpen}
+                onClose={onMemberClose}
             />
         </Card>
     );

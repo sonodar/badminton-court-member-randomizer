@@ -15,4 +15,4 @@ export function create({ courtCount, memberCount }: Environment): DoublesMemberG
 export const util = { array };
 export * from "./consts";
 
-export type { CourtMembers, GameMembers, History } from "./types";
+export type { CourtMembers, GameMembers, History, PlayCountPerMember } from "./types";
