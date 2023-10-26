@@ -1,33 +1,33 @@
-import { calculateEditDistance, shuffle, sortMatrixItems, splitChunks } from "./array-util";
+import { array } from "./util";
 import { describe, test, expect } from "bun:test";
 
-describe("array-util", () => {
-    test("splitChunks", () => {
-        const array = [...Array(9).keys()].map((_, i) => i + 1);
-        const chunks = splitChunks(array, 4);
+describe("array util", () => {
+    test("split chunks", () => {
+        const nums = [...Array(9).keys()].map((_, i) => i + 1);
+        const chunks = array.chunks(nums, 4);
         expect(chunks).toEqual([[1, 2, 3, 4], [5, 6, 7, 8], [9]]);
     });
 
     test("shuffle", () => {
-        const array = [...Array(9).keys()].map((_, i) => i + 1);
-        const shuffled = shuffle(array);
-        expect(shuffled).not.toEqual(array);
+        const nums = [...Array(9).keys()].map((_, i) => i + 1);
+        const shuffled = array.shuffle(nums);
+        expect(shuffled).not.toEqual(nums);
     });
 
-    test("sortMatrixItems", () => {
-        const array = [
+    test("sort inner items", () => {
+        const nums = [
             [5, 4, 3, 2],
             [9, 8, 7, 1],
         ];
-        expect(sortMatrixItems(array)).toEqual([
+        expect(array.sortInnerItems(nums)).toEqual([
             [2, 3, 4, 5],
             [1, 7, 8, 9],
         ]);
     });
 
-    test("calculateEditDistance", () => {
+    test("calculate edit distance for 2D", () => {
         expect(
-            calculateEditDistance(
+            array.editDistance2D(
                 [
                     [1, 2, 3, 4],
                     [5, 6, 7, 8],
@@ -39,7 +39,7 @@ describe("array-util", () => {
             ),
         ).toEqual(0);
         expect(
-            calculateEditDistance(
+            array.editDistance2D(
                 [
                     [1, 2, 3, 4],
                     [5, 6, 7, 8],

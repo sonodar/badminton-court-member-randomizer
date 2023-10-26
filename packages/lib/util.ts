@@ -1,4 +1,17 @@
-export function shuffle(array: number[]): number[] {
+export const array = {
+    shuffle,
+    chunks,
+    sortInnerItems,
+    editDistance2D,
+    standardDeviation,
+    average,
+    mode,
+    median,
+    sum,
+    range,
+};
+
+function shuffle(array: number[]): number[] {
     const result = [...array];
     for (let i = result.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -7,15 +20,15 @@ export function shuffle(array: number[]): number[] {
     return result;
 }
 
-export function splitChunks(array: number[], chunkSize: number): number[][] {
+function chunks(array: number[], size: number): number[][] {
     const result: number[][] = [];
-    for (let i = 0; i < array.length; i += chunkSize) {
-        result.push(array.slice(i, i + chunkSize));
+    for (let i = 0; i < array.length; i += size) {
+        result.push(array.slice(i, i + size));
     }
     return result;
 }
 
-export function sortMatrixItems(array: number[][]): number[][] {
+function sortInnerItems(array: number[][]): number[][] {
     return array.map((items) => [...items].sort((a, b) => a - b));
 }
 
@@ -24,7 +37,7 @@ function sum(array: number[]): number {
 }
 
 // 二次元配列の編集距離を求める
-export function calculateEditDistance(arr1: number[][], arr2: number[][]): number {
+function editDistance2D(arr1: number[][], arr2: number[][]): number {
     // 二次元配列を要素の合計値(合計が同じ場合は先頭値)でソートする
     function sortMatrixBySumOrFirst(array: number[][]): number[][] {
         return array.sort((a, b) => {
@@ -39,13 +52,13 @@ export function calculateEditDistance(arr1: number[][], arr2: number[][]): numbe
 
     // 二次元配列をソートする
     function sortMatrix(matrix: number[][]): number[][] {
-        return sortMatrixBySumOrFirst(sortMatrixItems(matrix));
+        return sortMatrixBySumOrFirst(sortInnerItems(matrix));
     }
 
-    return _calculateEditDistance(sortMatrix(arr1).flat(), sortMatrix(arr2).flat());
+    return editDistance(sortMatrix(arr1).flat(), sortMatrix(arr2).flat());
 }
 
-function _calculateEditDistance(arr1: number[], arr2: number[]): number {
+function editDistance(arr1: number[], arr2: number[]): number {
     const m = arr1.length;
     const n = arr2.length;
     const dp: number[][] = [];
@@ -73,7 +86,7 @@ function _calculateEditDistance(arr1: number[], arr2: number[]): number {
 }
 
 // 標準偏差
-export function standardDeviation(array: number[]): number {
+function standardDeviation(array: number[]): number {
     if (!array.length) return 0;
     const avg = average(array);
     const deviation = array.map((x) => (x - avg) ** 2);
@@ -82,16 +95,13 @@ export function standardDeviation(array: number[]): number {
 }
 
 // 算術平均を求める (暫定で最頻値、中央値よりもこれ)
-export function average(array: number[]): number {
+function average(array: number[]): number {
     if (!array.length) return 0;
     return sum(array) / array.length;
 }
 
 // 最頻値を求める (未使用: 平均とどちらがいいか)
-export function mode(
-    array: number[],
-    ifIsEquals: (a: number, b: number) => number = (a, b) => (a > b ? a : b),
-): number {
+function mode(array: number[], ifIsEquals: (a: number, b: number) => number = (a, b) => (a > b ? a : b)): number {
     const counts = array.reduce((acc, item) => acc.set(item, (acc.get(item) || 0) + 1), new Map<number, number>());
 
     const { maxItem } = Array.from(counts.entries()).reduce(
@@ -111,7 +121,7 @@ export function mode(
 }
 
 // 中央値を求める (未使用: 平均とどちらがいいか)
-export function median(array: number[]): number {
+function median(array: number[]): number {
     if (!array.length) return 0;
     const centerIndex = Math.floor(array.length / 2);
     const sorted = [...array].sort((a, b) => a - b);
@@ -122,7 +132,7 @@ export function median(array: number[]): number {
 }
 
 // 数値配列の最大値と最小値の差を求める
-export function diffMinToMax(array: number[]): number {
+function range(array: number[]): number {
     if (!array.length) return 0;
     return Math.max(...array) - Math.min(...array);
 }

@@ -1,29 +1,20 @@
-import {
-    average,
-    calculateEditDistance,
-    diffMinToMax,
-    shuffle,
-    sortMatrixItems,
-    splitChunks,
-    standardDeviation,
-} from "./array-util";
+import { array } from "./util";
 
 type MemberId = number;
 type CourtMembers = [MemberId, MemberId, MemberId, MemberId];
 export type GameMembers = CourtMembers[];
-type GameCountPerMember = Record<MemberId, number>;
+type PlayCountPerMember = Record<MemberId, number>;
 
-interface IBadmintonCourtMemberRandomizer {
+interface DoublesMemberGenerator {
     readonly courtCount: number;
     readonly courtCapacity: number;
     readonly members: MemberId[];
-    readonly memberCount: number;
     readonly histories: GameMembers[];
-    readonly gameCounts: GameCountPerMember;
+    readonly gameCounts: PlayCountPerMember;
     next(): GameMembers;
     retry(): GameMembers;
-    join(): IBadmintonCourtMemberRandomizer;
-    leave(...ids: number[]): IBadmintonCourtMemberRandomizer;
+    join(): DoublesMemberGenerator;
+    leave(...ids: number[]): DoublesMemberGenerator;
 }
 
 export type Environment = {
@@ -35,7 +26,7 @@ type ShufflerConstructorProps = {
     courtCount: number;
     members: MemberId[];
     histories?: GameMembers[];
-    gameCounts?: GameCountPerMember;
+    gameCounts?: PlayCountPerMember;
 };
 
 // 1 コートあたりの収容人数（バドミントンのダブルスなので 4）
@@ -47,12 +38,12 @@ export const COURT_COUNT_LIMIT = 4;
 // メンバー数の上限（これ以上必要になることはないはず）
 export const MEMBER_COUNT_LIMIT = COURT_CAPACITY * COURT_COUNT_LIMIT * 2;
 
-class BadmintonCourtMemberRandomizer implements IBadmintonCourtMemberRandomizer {
+class BadmintonCourtMemberRandomizer implements DoublesMemberGenerator {
     readonly courtCount: number;
     readonly members: MemberId[];
     readonly histories: GameMembers[];
     readonly historyKeys: Set<string>;
-    readonly gameCounts: GameCountPerMember;
+    readonly gameCounts: PlayCountPerMember;
 
     /** コートとメンバーの全組み合わせ数 */
     readonly combinationCount: number;
@@ -166,11 +157,11 @@ class BadmintonCourtMemberRandomizer implements IBadmintonCourtMemberRandomizer 
             const gameCounts = incrementGameCounts({ ...this.gameCounts }, members);
 
             // 参加メンバーの参加回数の標準偏差が 1 以上だったらやり直し
-            const dev = standardDeviation(Object.values(gameCounts));
+            const dev = array.standardDeviation(Object.values(gameCounts));
             if (dev >= 1) continue;
 
             // 最大値と最小値の差を求めておく（あとでソートに使う）
-            const range = diffMinToMax(Object.values(gameCounts));
+            const range = array.range(Object.values(gameCounts));
 
             // 編集距離の平均を求めておく（あとでソートに使う）
             const dist = this.#averageEditDistance(members);
@@ -193,7 +184,7 @@ class BadmintonCourtMemberRandomizer implements IBadmintonCourtMemberRandomizer 
     }
 
     #averageEditDistance(members: GameMembers): number {
-        return average(this.histories.map((history) => calculateEditDistance(history, members)));
+        return array.average(this.histories.map((history) => array.editDistance2D(history, members)));
     }
 
     #addHistory(members: GameMembers) {
@@ -203,13 +194,13 @@ class BadmintonCourtMemberRandomizer implements IBadmintonCourtMemberRandomizer 
     }
 
     #getRandomMembers(): GameMembers {
-        const randomMembers = shuffle(this.members).slice(0, this.courtCapacity);
-        const membersPerCourt = splitChunks(randomMembers, COURT_CAPACITY);
-        return sortMatrixItems(membersPerCourt) as GameMembers;
+        const randomMembers = array.shuffle(this.members).slice(0, this.courtCapacity);
+        const membersPerCourt = array.chunks(randomMembers, COURT_CAPACITY);
+        return array.sortInnerItems(membersPerCourt) as GameMembers;
     }
 }
 
-export function create({ courtCount, memberCount }: Environment): IBadmintonCourtMemberRandomizer {
+export function create({ courtCount, memberCount }: Environment): DoublesMemberGenerator {
     const members = Array.from({ length: memberCount }, (_, i) => i + 1);
     return new BadmintonCourtMemberRandomizer({ courtCount, members });
 }
@@ -218,11 +209,11 @@ function dropLeavedMembersHistory(histories: GameMembers[], ids: number[]): Game
     return histories.filter((history) => !history.flat().some((id) => ids.includes(id)));
 }
 
-function incrementGameCount(gameCounts: GameCountPerMember, id: MemberId): void {
+function incrementGameCount(gameCounts: PlayCountPerMember, id: MemberId): void {
     gameCounts[id] = (gameCounts[id] || 0) + 1;
 }
 
-function incrementGameCounts(gameCounts: GameCountPerMember, members: GameMembers): GameCountPerMember {
+function incrementGameCounts(gameCounts: PlayCountPerMember, members: GameMembers): PlayCountPerMember {
     members.flat().forEach((id) => incrementGameCount(gameCounts, id));
     return gameCounts;
 }
