@@ -251,6 +251,12 @@ function getCombinationCount(courtCount: number, memberCount: number): number {
             (memberCount - i * COURT_CAPACITY - 3);
         result /= 24;
     }
+
+    // 1000 超えたらあんまり意味ないので早々に return
+    if (result >= 1000) {
+        return result;
+    }
+
     result *= binomialCoefficient(memberCount - COURT_CAPACITY * courtCount, memberCount % COURT_CAPACITY);
     return result;
 }
