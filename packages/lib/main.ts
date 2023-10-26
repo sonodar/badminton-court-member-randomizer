@@ -78,7 +78,7 @@ export class BadmintonDoublesMemberGenerator implements DoublesMemberGenerator {
         return new BadmintonDoublesMemberGenerator({
             courtCount: this.courtCount,
             // 抜けた人が含まれる履歴に削除マークをつける
-            histories: markLeavedMembersHistory(this.histories, ids),
+            histories: markLeftMembersHistory(this.histories, ids),
             gameCounts: { ...this.gameCounts },
             members: this.members.filter((id) => !ids.includes(id)),
         });
@@ -142,15 +142,15 @@ export class BadmintonDoublesMemberGenerator implements DoublesMemberGenerator {
             const gameCounts = incrementGameCounts({ ...this.gameCounts }, members);
 
             // すでにいない人のカウントは参照しないように除外
-            const gameCountsWithoutLeavedMember = Object.entries(gameCounts)
+            const gameCountsWithoutLeftMember = Object.entries(gameCounts)
                 .filter(([id]) => this.members.includes(Number(id)))
                 .map(([_, count]) => count);
 
             // 参加メンバーの参加回数の標準偏差を算出（あとでソートに使う）
-            const dev = array.standardDeviation(gameCountsWithoutLeavedMember);
+            const dev = array.standardDeviation(gameCountsWithoutLeftMember);
 
             // 最大値と最小値の差を求めておく（あとでソートに使う）
-            const range = array.range(gameCountsWithoutLeavedMember);
+            const range = array.range(gameCountsWithoutLeftMember);
 
             // 編集距離の平均を求めておく（あとでソートに使う）
             const dist = this.#averageEditDistance(members);
@@ -193,7 +193,7 @@ export class BadmintonDoublesMemberGenerator implements DoublesMemberGenerator {
     }
 }
 
-function markLeavedMembersHistory(histories: History[], ids: number[]): History[] {
+function markLeftMembersHistory(histories: History[], ids: number[]): History[] {
     return histories.map((history) =>
         history.members.flat().some((id) => ids.includes(id)) ? { ...history, deleted: true } : history,
     );

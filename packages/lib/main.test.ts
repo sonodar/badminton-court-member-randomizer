@@ -52,12 +52,12 @@ describe("main", () => {
         expect(added.histories[0]).toStrictEqual({ members });
 
         const leaveMemberId = added.histories[0].members[0][0];
-        const leaved = added.leave(leaveMemberId);
+        const left = added.leave(leaveMemberId);
 
         // メンバーが減っていること
-        expect(leaved.memberCount).toBe(12);
+        expect(left.memberCount).toBe(12);
 
         // 除隊したメンバーの履歴に削除マーカーが立っていること
-        expect(leaved.histories[0].deleted).toBe(true);
+        expect(left.histories[0].deleted).toBe(true);
     });
 });
