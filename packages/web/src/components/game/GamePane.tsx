@@ -70,12 +70,11 @@ export default function GamePane({ initialSetting }: Props) {
                             onLeave={onLeave}
                         />
                         <HStack>
-                            <Button colorScheme={"blue"} leftIcon={<IoDiceOutline />} onClick={handleGenerate}>
+                            <Button colorScheme={"brand"} leftIcon={<IoDiceOutline />} onClick={handleGenerate}>
                                 メンバー決め
                             </Button>
                             <Spacer />
                             <Button
-                                colorScheme={"red"}
                                 leftIcon={<RepeatClockIcon />}
                                 size={"xs"}
                                 onClick={handleRetry}

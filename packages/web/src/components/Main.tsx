@@ -4,6 +4,7 @@ import GamePane from "@components/game/GamePane.tsx";
 import InitialSettingPane from "@components/setting/InitialSettingPane.tsx";
 import type { Environment } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
+import customTheme from "@components/theme.ts";
 
 type PanelState = "init" | "game" | "history";
 
@@ -17,7 +18,7 @@ export default function Main() {
     };
 
     return (
-        <ChakraProvider>
+        <ChakraProvider theme={customTheme}>
             <Container maxW="sm">
                 {panelState === "init" && <InitialSettingPane onStart={onStart} />}
                 {panelState === "game" && environment && <GamePane initialSetting={environment} />}

@@ -67,7 +67,7 @@ export default function InitialSettingPane({ onStart }: Props) {
                             <Button
                                 leftIcon={<GiShuttlecock />}
                                 rightIcon={<ArrowForwardIcon />}
-                                colorScheme="teal"
+                                colorScheme={"brand"}
                                 variant="outline"
                                 onClick={() => onStart({ courtCount, memberCount })}
                             >

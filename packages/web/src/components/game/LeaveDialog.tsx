@@ -33,7 +33,7 @@ export function LeaveDialog({ members, isOpen, onClose, onLeave }: Props) {
                                 </option>
                             ))}
                         </Select>
-                        <Button colorScheme="orange" size={"sm"} onClick={handleLeave}>
+                        <Button colorScheme="accent" size={"sm"} onClick={handleLeave}>
                             離脱
                         </Button>
                     </HStack>
