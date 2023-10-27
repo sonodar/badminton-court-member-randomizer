@@ -13,7 +13,7 @@ export function InitMemberCountInput({ min, value, onChange }: Props) {
     return (
         <HStack maxW="320px">
             <IconButton
-                colorScheme={"secondary"}
+                colorScheme={"primary"}
                 aria-label="decrement"
                 isDisabled={value <= min}
                 icon={<MinusIcon />}
@@ -30,7 +30,7 @@ export function InitMemberCountInput({ min, value, onChange }: Props) {
                 onChange={(e) => onChange(parseInt(e.target.value))}
             />
             <IconButton
-                colorScheme={"secondary"}
+                colorScheme={"primary"}
                 aria-label="increment"
                 isDisabled={value >= MEMBER_COUNT_LIMIT}
                 icon={<AddIcon />}

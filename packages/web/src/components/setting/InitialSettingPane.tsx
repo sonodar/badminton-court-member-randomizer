@@ -16,8 +16,8 @@ import { CourtCountInput } from "@components/setting/CourtCountInput.tsx";
 import { InitMemberCountInput } from "@components/setting/InitMemberCountInput.tsx";
 import { COURT_CAPACITY, type Environment } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
-import { ImGithub } from "react-icons/im";
 import { GiShuttlecock } from "react-icons/gi";
+import { ImGithub } from "react-icons/im";
 
 type Props = {
     onStart: (env: Environment) => void;

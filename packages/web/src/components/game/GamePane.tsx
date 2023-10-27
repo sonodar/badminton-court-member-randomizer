@@ -49,6 +49,8 @@ export default function GamePane({ initialSetting }: Props) {
             status: "warning",
             duration: 2000,
             isClosable: true,
+            colorScheme: "accent",
+            variant: "subtle",
         });
     };
 
@@ -75,6 +77,7 @@ export default function GamePane({ initialSetting }: Props) {
                             </Button>
                             <Spacer />
                             <Button
+                                variant={"outline"}
                                 leftIcon={<RepeatClockIcon />}
                                 size={"xs"}
                                 onClick={handleRetry}

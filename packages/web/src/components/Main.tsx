@@ -2,9 +2,9 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Container } from "@chakra-ui/react";
 import GamePane from "@components/game/GamePane.tsx";
 import InitialSettingPane from "@components/setting/InitialSettingPane.tsx";
+import customTheme from "@components/theme.ts";
 import type { Environment } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
-import customTheme from "@components/theme.ts";
 
 type PanelState = "init" | "game" | "history";
 
