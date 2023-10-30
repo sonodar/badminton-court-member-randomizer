@@ -66,10 +66,14 @@ export class BadmintonDoublesMemberGenerator implements DoublesMemberGenerator {
 
     join(): BadmintonDoublesMemberGenerator {
         const newId = Math.max(...this.members) + 1;
+
+        // 参加時点での最頻プレイ回数を補正値として保持する
+        const baseCount = array.mode(Object.values(this.gameCounts).map(({ playCount }) => playCount));
+
         return new BadmintonDoublesMemberGenerator({
             courtCount: this.courtCount,
             histories: [...this.histories],
-            gameCounts: { ...this.gameCounts, [newId]: 0 },
+            gameCounts: { ...this.gameCounts, [newId]: { playCount: 0, baseCount } },
             members: [...this.members, newId],
         });
     }
@@ -142,9 +146,10 @@ export class BadmintonDoublesMemberGenerator implements DoublesMemberGenerator {
             const gameCounts = incrementGameCounts({ ...this.gameCounts }, members);
 
             // すでにいない人のカウントは参照しないように除外
+            // 遅れて参加したメンバーには補正値を加算する
             const gameCountsWithoutLeftMember = Object.entries(gameCounts)
                 .filter(([id]) => this.members.includes(Number(id)))
-                .map(([_, count]) => count);
+                .map(([_, { playCount, baseCount }]) => baseCount + playCount);
 
             // 参加メンバーの参加回数の標準偏差を算出（あとでソートに使う）
             const dev = array.standardDeviation(gameCountsWithoutLeftMember);
@@ -200,7 +205,7 @@ function markLeftMembersHistory(histories: History[], ids: number[]): History[] 
 }
 
 function incrementGameCount(gameCounts: PlayCountPerMember, id: MemberId): void {
-    gameCounts[id] = (gameCounts[id] || 0) + 1;
+    gameCounts[id] = { playCount: (gameCounts[id]?.playCount || 0) + 1, baseCount: gameCounts[id]?.baseCount || 0 };
 }
 
 function incrementGameCounts(gameCounts: PlayCountPerMember, members: GameMembers): PlayCountPerMember {
@@ -211,7 +216,10 @@ function incrementGameCounts(gameCounts: PlayCountPerMember, members: GameMember
 }
 
 function decrementGameCount(gameCounts: PlayCountPerMember, id: MemberId): void {
-    gameCounts[id] = Math.max(0, (gameCounts[id] || 0) - 1);
+    gameCounts[id] = {
+        playCount: Math.max(0, (gameCounts[id]?.playCount || 0) - 1),
+        baseCount: gameCounts[id]?.baseCount || 0,
+    };
 }
 
 function decrementGameCounts(gameCounts: PlayCountPerMember, members: GameMembers): PlayCountPerMember {

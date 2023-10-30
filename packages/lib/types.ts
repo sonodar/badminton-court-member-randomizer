@@ -2,7 +2,8 @@ export type MemberId = number;
 export type CourtMembers = [MemberId, MemberId, MemberId, MemberId];
 export type GameMembers = CourtMembers[];
 export type History = { members: GameMembers; deleted?: true };
-export type PlayCountPerMember = Record<MemberId, number>;
+export type PlayCount = { playCount: number; baseCount: number };
+export type PlayCountPerMember = Record<MemberId, PlayCount>;
 
 export interface DoublesMemberGenerator {
     readonly courtCount: number;

@@ -43,7 +43,7 @@ describe("main", () => {
         // メンバーが増えていること、履歴が変わらないこと
         expect(added.memberCount).toBe(13);
         expect(added.histories).toStrictEqual(initial.histories);
-        expect(added.gameCounts).toStrictEqual({ ...initial.gameCounts, 13: 0 });
+        expect(added.gameCounts).toStrictEqual({ ...initial.gameCounts, 13: { playCount: 0, baseCount: 1 } });
 
         added.next();
 
