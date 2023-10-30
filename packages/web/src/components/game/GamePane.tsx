@@ -41,7 +41,7 @@ export default function GamePane({ settings, onReset }: Props) {
 
     const [manager, setManager] = useState(create(settings));
     const { isOpen: isLeaveOpen, onOpen: onLeaveOpen, onClose: onLeaveClose } = useDisclosure();
-    const [latestMembers, setLatestMembers] = useState<GameMembers>([]);
+    const [latestMembers, setLatestMembers] = useState<GameMembers>(settings.histories?.pop()?.members || []);
 
     const { isOpen: isHistoryOpen, onOpen: onHistoryOpen, onClose: onHistoryClose } = useDisclosure();
     const { isOpen: isMemberOpen, onOpen: onMemberOpen, onClose: onMemberClose } = useDisclosure();
