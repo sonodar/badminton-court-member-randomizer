@@ -1,5 +1,11 @@
 import { RepeatClockIcon } from "@chakra-ui/icons";
 import {
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogOverlay,
     Button,
     Card,
     CardBody,
@@ -11,39 +17,58 @@ import {
     useDisclosure,
     useToast,
 } from "@chakra-ui/react";
+import ConfirmDialog from "@components/ConfirmDialog.tsx";
 import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
 import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput.tsx";
 import { HistoryDialog } from "@components/game/HistoryDialog.tsx";
 import { LeaveDialog } from "@components/game/LeaveDialog.tsx";
-import type { Environment, GameMembers } from "@doubles-member-generator/lib";
+import type { CurrentSettings, GameMembers } from "@doubles-member-generator/lib";
 import { util, create } from "@doubles-member-generator/lib";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { IoDiceOutline } from "react-icons/io5";
-import { MdOutlineWatchLater } from "react-icons/md";
+import { MdOutlineDeleteOutline, MdOutlineWatchLater } from "react-icons/md";
 import { TbUsers } from "react-icons/tb";
 import { MemberDialog } from "./MemberDialog";
 
 type Props = {
-    initialSetting: Environment;
+    settings: CurrentSettings;
+    onReset: () => void;
 };
 
-export default function GamePane({ initialSetting }: Props) {
-    const courtCount = initialSetting.courtCount;
+export default function GamePane({ settings, onReset }: Props) {
+    const courtCount = settings.courtCount;
     const courtIds = util.array.generate(courtCount, 0);
 
-    const [manager, setManager] = useState(create(initialSetting));
+    const [manager, setManager] = useState(create(settings));
     const { isOpen: isLeaveOpen, onOpen: onLeaveOpen, onClose: onLeaveClose } = useDisclosure();
     const [latestMembers, setLatestMembers] = useState<GameMembers>([]);
 
     const { isOpen: isHistoryOpen, onOpen: onHistoryOpen, onClose: onHistoryClose } = useDisclosure();
     const { isOpen: isMemberOpen, onOpen: onMemberOpen, onClose: onMemberClose } = useDisclosure();
+    const { isOpen: isAlertOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure();
+    const alertCancelRef = useRef();
 
-    const handleGenerate = () => setLatestMembers(manager.next());
-    const handleRetry = () => setLatestMembers(manager.retry());
+    const saveSettings = () => {
+        window.sessionStorage.setItem("currentSettings", JSON.stringify({ ...manager }));
+    };
+
+    const onJoin = () => {
+        setManager(manager.join());
+        saveSettings();
+    };
+    const handleGenerate = () => {
+        setLatestMembers(manager.next());
+        saveSettings();
+    };
+    const handleRetry = () => {
+        setLatestMembers(manager.retry());
+        saveSettings();
+    };
 
     const toast = useToast();
     const onLeave = (id: number) => {
         setManager(manager.leave(id));
+        saveSettings();
         toast({
             title: `メンバー ${id} が離脱しました`,
             status: "warning",
@@ -54,6 +79,11 @@ export default function GamePane({ initialSetting }: Props) {
         });
     };
 
+    const clear = () => {
+        window.sessionStorage.removeItem("currentSettings");
+        onReset();
+    };
+
     return (
         <Card my={1} py={4} height={"100dvh"}>
             <CardBody>
@@ -62,7 +92,7 @@ export default function GamePane({ initialSetting }: Props) {
                         <CurrentMemberCountInput
                             value={manager.memberCount}
                             min={courtCount * 4}
-                            onIncrement={() => setManager(manager.join())}
+                            onIncrement={onJoin}
                             onDecrement={onLeaveOpen}
                         />
                         <LeaveDialog
@@ -91,6 +121,7 @@ export default function GamePane({ initialSetting }: Props) {
             </CardBody>
             <CardFooter>
                 <Button
+                    size={"sm"}
                     leftIcon={<MdOutlineWatchLater />}
                     isDisabled={manager.histories.length === 0}
                     onClick={onHistoryOpen}
@@ -98,8 +129,17 @@ export default function GamePane({ initialSetting }: Props) {
                     履歴
                 </Button>
                 <Spacer />
-                <Button leftIcon={<TbUsers />} isDisabled={manager.histories.length === 0} onClick={onMemberOpen}>
+                <Button
+                    size={"sm"}
+                    leftIcon={<TbUsers />}
+                    isDisabled={manager.histories.length === 0}
+                    onClick={onMemberOpen}
+                >
                     メンバー
+                </Button>
+                <Spacer />
+                <Button size={"sm"} colorScheme={"red"} leftIcon={<MdOutlineDeleteOutline />} onClick={onAlertOpen}>
+                    削除
                 </Button>
             </CardFooter>
             <HistoryDialog
@@ -114,6 +154,18 @@ export default function GamePane({ initialSetting }: Props) {
                 isOpen={isMemberOpen}
                 onClose={onMemberClose}
             />
+            <ConfirmDialog
+                isOpen={isAlertOpen}
+                onCancel={onAlertClose}
+                onOk={() => {
+                    onAlertClose();
+                    clear();
+                }}
+                cancelRef={alertCancelRef}
+                title={"初期化の確認"}
+            >
+                設定および履歴を削除して最初からやり直します。本当によろしいですか？
+            </ConfirmDialog>
         </Card>
     );
 }

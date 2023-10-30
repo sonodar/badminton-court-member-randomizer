@@ -1,13 +1,6 @@
 import { COURT_CAPACITY, COURT_COUNT_LIMIT, MEMBER_COUNT_LIMIT } from "./consts";
-import { DoublesMemberGenerator, GameMembers, History, MemberId, PlayCountPerMember } from "./types";
+import { CurrentSettings, DoublesMemberGenerator, GameMembers, History, MemberId, PlayCountPerMember } from "./types";
 import { array } from "./util";
-
-type ConstructorProps = {
-    courtCount: number;
-    members: MemberId[];
-    histories?: History[];
-    gameCounts?: PlayCountPerMember;
-};
 
 // ソート用のプロパティを持ったオブジェクトの配列
 type SortableMembers = { members: GameMembers; dev: number; dist: number; range: number };
@@ -32,7 +25,7 @@ export class BadmintonDoublesMemberGenerator implements DoublesMemberGenerator {
     /** コートとメンバーの全組み合わせ数 */
     readonly combinationCount: number;
 
-    constructor({ courtCount, members, histories = [], gameCounts = {} }: ConstructorProps) {
+    constructor({ courtCount, members, histories = [], gameCounts = {} }: CurrentSettings) {
         if (courtCount < 1) {
             throw new Error("The number of courts must be at least 1");
         }

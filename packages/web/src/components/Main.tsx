@@ -3,25 +3,32 @@ import { Container } from "@chakra-ui/react";
 import GamePane from "@components/game/GamePane.tsx";
 import InitialSettingPane from "@components/setting/InitialSettingPane.tsx";
 import customTheme from "@components/theme.ts";
-import type { Environment } from "@doubles-member-generator/lib";
+import type { CurrentSettings } from "@doubles-member-generator/lib";
+import { util } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
 
-type PanelState = "init" | "game" | "history";
-
 export default function Main() {
-    const [panelState, setPanelState] = useState<PanelState>("init");
-    const [environment, setEnvironment] = useState<Environment | null>(null);
+    let initialSettings: CurrentSettings | null = null;
 
-    const onStart = (env: Environment) => {
-        setEnvironment(env);
-        setPanelState("game");
+    const settingsJson = window.sessionStorage.getItem("currentSettings");
+    if (settingsJson) {
+        initialSettings = JSON.parse(settingsJson);
+    }
+
+    const [settings, setSettings] = useState(initialSettings);
+
+    const onStart = ({ courtCount, memberCount }: { courtCount: number; memberCount: number }) => {
+        const members = util.array.generate(memberCount);
+        setSettings({ courtCount, members, histories: [], gameCounts: {} });
     };
+
+    const onReset = () => setSettings(null);
 
     return (
         <ChakraProvider theme={customTheme}>
             <Container maxW="sm">
-                {panelState === "init" && <InitialSettingPane onStart={onStart} />}
-                {panelState === "game" && environment && <GamePane initialSetting={environment} />}
+                {settings === null && <InitialSettingPane onStart={onStart} />}
+                {settings !== null && <GamePane settings={settings} onReset={onReset} />}
             </Container>
         </ChakraProvider>
     );

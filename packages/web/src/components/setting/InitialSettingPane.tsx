@@ -14,13 +14,13 @@ import {
 } from "@chakra-ui/react";
 import { CourtCountInput } from "@components/setting/CourtCountInput.tsx";
 import { InitMemberCountInput } from "@components/setting/InitMemberCountInput.tsx";
-import { COURT_CAPACITY, type Environment } from "@doubles-member-generator/lib";
+import { COURT_CAPACITY } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
 import { GiShuttlecock } from "react-icons/gi";
 import { ImGithub } from "react-icons/im";
 
 type Props = {
-    onStart: (env: Environment) => void;
+    onStart: (env: { courtCount: number; memberCount: number }) => void;
 };
 
 export default function InitialSettingPane({ onStart }: Props) {

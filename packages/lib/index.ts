@@ -1,18 +1,12 @@
 import { BadmintonDoublesMemberGenerator } from "./main";
-import { DoublesMemberGenerator } from "./types";
+import { CurrentSettings, DoublesMemberGenerator } from "./types";
 import { array } from "./util";
 
-export type Environment = {
-    courtCount: number;
-    memberCount: number;
-};
-
-export function create({ courtCount, memberCount }: Environment): DoublesMemberGenerator {
-    const members = array.generate(memberCount);
-    return new BadmintonDoublesMemberGenerator({ courtCount, members });
+export function create(settings: CurrentSettings): DoublesMemberGenerator {
+    return new BadmintonDoublesMemberGenerator({ ...settings });
 }
 
 export const util = { array };
 export * from "./consts";
 
-export type { CourtMembers, GameMembers, History, PlayCountPerMember } from "./types";
+export type { CurrentSettings, CourtMembers, GameMembers, History, PlayCountPerMember } from "./types";
