@@ -46,7 +46,7 @@ export default function GamePane({ settings, onReset }: Props) {
     const { isOpen: isHistoryOpen, onOpen: onHistoryOpen, onClose: onHistoryClose } = useDisclosure();
     const { isOpen: isMemberOpen, onOpen: onMemberOpen, onClose: onMemberClose } = useDisclosure();
     const { isOpen: isAlertOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure();
-    const alertCancelRef = useRef();
+    const alertCancelRef = useRef<HTMLButtonElement | null>(null);
 
     const saveSettings = () => {
         window.sessionStorage.setItem("currentSettings", JSON.stringify({ ...manager }));
@@ -111,6 +111,7 @@ export default function GamePane({ settings, onReset }: Props) {
                                 leftIcon={<RepeatClockIcon />}
                                 size={"xs"}
                                 onClick={handleRetry}
+                                isDisabled={manager.histories.length === 0}
                             >
                                 やり直し
                             </Button>

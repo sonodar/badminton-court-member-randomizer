@@ -13,7 +13,7 @@ type Props = {
     isOpen: boolean;
     onCancel: () => void;
     onOk: () => void;
-    cancelRef: RefObject<unknown>;
+    cancelRef: RefObject<HTMLButtonElement>;
     title: string;
     children: ReactNode;
     okButtonText?: string;
