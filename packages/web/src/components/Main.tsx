@@ -10,7 +10,7 @@ import React, { useState } from "react";
 export default function Main() {
     let initialSettings: CurrentSettings | null = null;
 
-    const settingsJson = window.sessionStorage.getItem("currentSettings");
+    const settingsJson = window.localStorage.getItem("currentSettings");
     if (settingsJson) {
         initialSettings = JSON.parse(settingsJson);
     }
@@ -26,7 +26,7 @@ export default function Main() {
 
     return (
         <ChakraProvider theme={customTheme}>
-            <Container maxW="sm">
+            <Container maxW="sm" minW={"sm"}>
                 {settings === null && <InitialSettingPane onStart={onStart} />}
                 {settings !== null && <GamePane settings={settings} onReset={onReset} />}
             </Container>

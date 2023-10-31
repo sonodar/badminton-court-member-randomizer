@@ -1,18 +1,21 @@
-import { Button, HStack, Input, Spacer } from "@chakra-ui/react";
+import { Button, HStack, Input, Spacer, useDisclosure } from "@chakra-ui/react";
+import { LeaveDialog } from "@components/game/LeaveDialog.tsx";
 import { MEMBER_COUNT_LIMIT } from "@doubles-member-generator/lib";
 import React from "react";
 import { TbUserOff, TbUserPlus } from "react-icons/tb";
 
 type Props = {
+    members: number[];
     min: number;
     value: number;
     onIncrement: () => void;
-    onDecrement: () => void;
+    onDecrement: (id: number) => void;
 };
 
-export function CurrentMemberCountInput({ min, value, onIncrement, onDecrement }: Props) {
+export function CurrentMemberCountInput({ members, min, value, onIncrement, onDecrement }: Props) {
+    const { isOpen, onOpen, onClose } = useDisclosure();
     return (
-        <HStack maxW="320px">
+        <HStack maxW={"320px"} minW={"320px"}>
             <span>現在</span>
             <Input
                 type={"number"}
@@ -40,11 +43,12 @@ export function CurrentMemberCountInput({ min, value, onIncrement, onDecrement }
                 size={"sm"}
                 variant={"outline"}
                 colorScheme={"primary"}
-                onClick={onDecrement}
+                onClick={onOpen}
                 isDisabled={value <= min}
             >
                 離脱
             </Button>
+            <LeaveDialog members={members} isOpen={isOpen} onClose={onClose} onLeave={onDecrement} />
         </HStack>
     );
 }

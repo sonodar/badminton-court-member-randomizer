@@ -29,7 +29,9 @@ export default function InitialSettingPane({ onStart }: Props) {
 
     const onChangeCourtCount = (courtCount: number) => {
         setCourtCount(courtCount);
-        if (memberCount < courtCount * COURT_CAPACITY) setMemberCount(courtCount * COURT_CAPACITY);
+        if (memberCount < courtCount * COURT_CAPACITY) {
+            setMemberCount(courtCount * COURT_CAPACITY);
+        }
     };
 
     return (

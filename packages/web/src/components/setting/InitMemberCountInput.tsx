@@ -11,7 +11,7 @@ type Props = {
 
 export function InitMemberCountInput({ min, value, onChange }: Props) {
     return (
-        <HStack maxW="320px">
+        <HStack maxW={"320px"} minW={"320px"}>
             <IconButton
                 colorScheme={"primary"}
                 aria-label="decrement"

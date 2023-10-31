@@ -1,34 +1,14 @@
 import { RepeatClockIcon } from "@chakra-ui/icons";
-import {
-    AlertDialog,
-    AlertDialogBody,
-    AlertDialogContent,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogOverlay,
-    Button,
-    Card,
-    CardBody,
-    CardFooter,
-    Center,
-    HStack,
-    Spacer,
-    Stack,
-    useDisclosure,
-    useToast,
-} from "@chakra-ui/react";
-import ConfirmDialog from "@components/ConfirmDialog.tsx";
+import { Button, Card, CardBody, CardFooter, Center, HStack, Spacer, Stack, useToast } from "@chakra-ui/react";
 import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
 import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput.tsx";
-import { HistoryDialog } from "@components/game/HistoryDialog.tsx";
-import { LeaveDialog } from "@components/game/LeaveDialog.tsx";
+import { HistoryButton } from "@components/game/HistoryButton.tsx";
+import { MemberButton } from "@components/game/MemberButton.tsx";
+import { ResetButton } from "@components/game/ResetButton.tsx";
 import type { CurrentSettings, GameMembers } from "@doubles-member-generator/lib";
-import { util, create } from "@doubles-member-generator/lib";
-import React, { useRef, useState } from "react";
+import { create } from "@doubles-member-generator/lib";
+import React, { useState } from "react";
 import { IoDiceOutline } from "react-icons/io5";
-import { MdOutlineDeleteOutline, MdOutlineWatchLater } from "react-icons/md";
-import { TbUsers } from "react-icons/tb";
-import { MemberDialog } from "./MemberDialog";
 
 type Props = {
     settings: CurrentSettings;
@@ -37,21 +17,14 @@ type Props = {
 
 export default function GamePane({ settings, onReset }: Props) {
     const courtCount = settings.courtCount;
-    const courtIds = util.array.generate(courtCount, 0);
 
     const [manager, setManager] = useState(create(settings));
-    const { isOpen: isLeaveOpen, onOpen: onLeaveOpen, onClose: onLeaveClose } = useDisclosure();
     const [latestMembers, setLatestMembers] = useState<GameMembers>(
-        settings.histories[settings.histories.length - 1]?.members || [],
+        manager.histories[manager.histories.length - 1]?.members || [],
     );
 
-    const { isOpen: isHistoryOpen, onOpen: onHistoryOpen, onClose: onHistoryClose } = useDisclosure();
-    const { isOpen: isMemberOpen, onOpen: onMemberOpen, onClose: onMemberClose } = useDisclosure();
-    const { isOpen: isAlertOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure();
-    const alertCancelRef = useRef<HTMLButtonElement | null>(null);
-
     const saveSettings = () => {
-        window.sessionStorage.setItem("currentSettings", JSON.stringify({ ...manager }));
+        window.localStorage.setItem("currentSettings", JSON.stringify({ ...manager }));
     };
 
     const onJoin = () => {
@@ -82,7 +55,7 @@ export default function GamePane({ settings, onReset }: Props) {
     };
 
     const clear = () => {
-        window.sessionStorage.removeItem("currentSettings");
+        window.localStorage.removeItem("currentSettings");
         onReset();
     };
 
@@ -92,16 +65,11 @@ export default function GamePane({ settings, onReset }: Props) {
                 <Center>
                     <Stack spacing={6}>
                         <CurrentMemberCountInput
+                            members={manager.members}
                             value={manager.memberCount}
                             min={courtCount * 4}
                             onIncrement={onJoin}
-                            onDecrement={onLeaveOpen}
-                        />
-                        <LeaveDialog
-                            members={manager.members}
-                            isOpen={isLeaveOpen}
-                            onClose={onLeaveClose}
-                            onLeave={onLeave}
+                            onDecrement={onLeave}
                         />
                         <HStack>
                             <Button colorScheme={"brand"} leftIcon={<IoDiceOutline />} onClick={handleGenerate}>
@@ -118,57 +86,17 @@ export default function GamePane({ settings, onReset }: Props) {
                                 やり直し
                             </Button>
                         </HStack>
-                        <CourtMembersPane members={latestMembers} courtIds={courtIds} />
+                        <CourtMembersPane members={latestMembers} />
                     </Stack>
                 </Center>
             </CardBody>
             <CardFooter>
-                <Button
-                    size={"sm"}
-                    leftIcon={<MdOutlineWatchLater />}
-                    isDisabled={manager.histories.length === 0}
-                    onClick={onHistoryOpen}
-                >
-                    履歴
-                </Button>
+                <HistoryButton {...manager} />
                 <Spacer />
-                <Button
-                    size={"sm"}
-                    leftIcon={<TbUsers />}
-                    isDisabled={manager.histories.length === 0}
-                    onClick={onMemberOpen}
-                >
-                    メンバー
-                </Button>
+                <MemberButton {...manager} />
                 <Spacer />
-                <Button size={"sm"} colorScheme={"red"} leftIcon={<MdOutlineDeleteOutline />} onClick={onAlertOpen}>
-                    削除
-                </Button>
+                <ResetButton onReset={clear} />
             </CardFooter>
-            <HistoryDialog
-                courtCount={manager.courtCount}
-                histories={manager.histories}
-                isOpen={isHistoryOpen}
-                onClose={onHistoryClose}
-            />
-            <MemberDialog
-                members={manager.members}
-                gameCounts={manager.gameCounts}
-                isOpen={isMemberOpen}
-                onClose={onMemberClose}
-            />
-            <ConfirmDialog
-                isOpen={isAlertOpen}
-                onCancel={onAlertClose}
-                onOk={() => {
-                    onAlertClose();
-                    clear();
-                }}
-                cancelRef={alertCancelRef}
-                title={"初期化の確認"}
-            >
-                設定および履歴を削除して最初からやり直します。本当によろしいですか？
-            </ConfirmDialog>
         </Card>
     );
 }

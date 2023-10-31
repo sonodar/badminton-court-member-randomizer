@@ -35,7 +35,7 @@ export default function ConfirmDialog({
     return (
         <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onCancel}>
             <AlertDialogOverlay>
-                <AlertDialogContent maxW={"xs"}>
+                <AlertDialogContent maxW={"350px"}>
                     <AlertDialogHeader fontSize="lg" fontWeight="bold">
                         {title}
                     </AlertDialogHeader>

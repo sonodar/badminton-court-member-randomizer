@@ -1,23 +1,23 @@
-import { Card, CardBody, CardFooter, CardHeader, Center, Divider, HStack, SimpleGrid, Stack } from "@chakra-ui/react";
+import { Card, Center, Divider, HStack, Heading, SimpleGrid, Stack } from "@chakra-ui/react";
 import type { CourtMembers, GameMembers } from "@doubles-member-generator/lib";
+import { util } from "@doubles-member-generator/lib";
 import React from "react";
 
-function CourtCard({
-    id,
-    members,
-}: {
-    id: number;
-    members: CourtMembers;
-}) {
+function CourtCard({ id, members, single }: { id: number; members: CourtMembers; single?: boolean }) {
+    const w = single ? "300px" : "150px";
+    const s = single ? 12 : 4;
+
     return (
-        <Card p={2}>
+        <Card p={2} maxW={w} minW={w}>
             <Center>
                 <Stack>
-                    <Center>コート {id + 1}</Center>
+                    <Center>
+                        <Heading as={"label"} size={"sm"} color={"gray.600"}>{`コート${id + 1}`}</Heading>
+                    </Center>
                     <Divider />
-                    <HStack spacing={6}>
+                    <HStack spacing={s} color={"secondary.900"}>
                         {members.map((member) => (
-                            <span key={member}>{member}</span>
+                            <strong key={member}>{member}</strong>
                         ))}
                     </HStack>
                 </Stack>
@@ -28,13 +28,15 @@ function CourtCard({
 
 type Props = {
     members: GameMembers;
-    courtIds: number[];
+    single?: boolean;
 };
 
-export default function CourtMembersPane({ members, courtIds }: Props) {
+export default function CourtMembersPane({ members, single = true }: Props) {
+    const courtIds = util.array.generate(members.length, 0);
     return (
-        <SimpleGrid columns={2} spacing={2}>
-            {members.length > 0 && courtIds.map((id) => <CourtCard key={id} id={id} members={members[id]} />)}
+        <SimpleGrid columns={single ? 1 : 2} spacing={4} justifyItems={"center"}>
+            {members.length > 0 &&
+                courtIds.map((id) => <CourtCard key={id} id={id} members={members[id]} single={single} />)}
         </SimpleGrid>
     );
 }
