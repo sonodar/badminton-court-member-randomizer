@@ -16,5 +16,8 @@
                 "useImportRestrictions": "error"
             }
         }
+    },
+    "files": {
+        "ignore": ["dist"]
     }
 }

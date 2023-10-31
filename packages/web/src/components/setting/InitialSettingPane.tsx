@@ -1,7 +1,6 @@
 import logo from "@assets/logo.svg";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
-    Image,
     Button,
     Card,
     CardBody,
@@ -11,6 +10,7 @@ import {
     HStack,
     Heading,
     IconButton,
+    Image,
     Link,
     Spacer,
     Stack,
@@ -43,7 +43,7 @@ export default function InitialSettingPane({ onStart }: Props) {
                 <Center>
                     <Stack spacing={6}>
                         <HStack>
-                            <Image src={logo.src} width={"28px"} height={"28px"} />
+                            <Image src={logo.src} boxSize="28px" borderRadius={"md"} />
                             <Heading as="h1" size="sm">
                                 ダブルスメンバー決めるくん
                             </Heading>
