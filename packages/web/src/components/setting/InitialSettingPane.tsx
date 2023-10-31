@@ -1,11 +1,14 @@
+import logo from "@assets/logo.svg";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
+    Avatar,
     Button,
     Card,
     CardBody,
     Center,
     Divider,
     Flex,
+    HStack,
     Heading,
     IconButton,
     Link,
@@ -39,9 +42,12 @@ export default function InitialSettingPane({ onStart }: Props) {
             <CardBody>
                 <Center>
                     <Stack spacing={6}>
-                        <Heading as="h1" size="sm">
-                            ダブルスメンバー決めるくん
-                        </Heading>
+                        <HStack>
+                            <Avatar src={logo.src} size={"xs"} />
+                            <Heading as="h1" size="sm">
+                                ダブルスメンバー決めるくん
+                            </Heading>
+                        </HStack>
                         <Heading as="h2" size="xl">
                             初期設定
                         </Heading>
