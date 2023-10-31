@@ -1,0 +1,18 @@
+{
+    "theme_color": "#3182CE",
+    "background_color": "#EBF6FA",
+    "icons": [
+        { "purpose": "maskable", "sizes": "512x512", "src": "pwa-512x512-maskable.png", "type": "image/png" },
+        { "purpose": "any", "sizes": "512x512", "src": "pwa-512x512-rounded.png", "type": "image/png" }
+    ],
+    "orientation": "portrait",
+    "display": "standalone",
+    "dir": "auto",
+    "lang": "ja",
+    "name": "ダブルスメンバー決めるくん",
+    "short_name": "ダブメンくん",
+    "start_url": "https://badminton.sonodar.net/",
+    "scope": "https://badminton.sonodar.net/",
+    "id": "https://badminton.sonodar.net",
+    "description": "コートにダブルスメンバーをランダムで割り当てるアプリです"
+}

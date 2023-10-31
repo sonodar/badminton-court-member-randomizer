@@ -1,7 +1,5 @@
 import { extendTheme } from "@chakra-ui/react";
 
-const blandColor = "#3182CE";
-
 const customTheme = extendTheme({
     colors: {
         brand: {
