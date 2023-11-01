@@ -1,6 +1,11 @@
 import { extendTheme } from "@chakra-ui/react";
 
 const customTheme = extendTheme({
+    fonts: {
+        heading: `'Kosugi Maru'`,
+        body: `'M PLUS 1p'`,
+        mono: `'M PLUS 1p'`,
+    },
     colors: {
         brand: {
             50: "#D1E3F5",
