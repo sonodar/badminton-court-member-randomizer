@@ -2,8 +2,8 @@
     "name": "ダブルスメンバー決めるくん",
     "short_name": "ダブメンくん",
     "description": "コートにダブルスメンバーをランダムで割り当てるアプリです",
-    "theme_color": "#5C9DDB",
-    "background_color": "#EBF6FA",
+    "theme_color": "#89A6E2",
+    "background_color": "#E8EFF6",
     "icons": [
         {
             "purpose": "maskable",
