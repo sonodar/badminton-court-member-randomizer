@@ -19,7 +19,7 @@ import { CourtCountInput } from "@components/setting/CourtCountInput.tsx";
 import { InitMemberCountInput } from "@components/setting/InitMemberCountInput.tsx";
 import { COURT_CAPACITY } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
-import { GiShuttlecock } from "react-icons/gi";
+import { GiTennisCourt } from "react-icons/gi";
 import { ImGithub } from "react-icons/im";
 
 type Props = {
@@ -51,9 +51,12 @@ export default function InitialSettingPane({ onStart }: Props) {
                         <Heading as="h2" size="xl">
                             初期設定
                         </Heading>
-                        <Heading as="h3" size="md">
-                            コート数（後から変更不可）
-                        </Heading>
+                        <HStack spacing={0}>
+                            <Heading as="h3" size="md">
+                                コート数
+                            </Heading>
+                            <span>（後から変更不可）</span>
+                        </HStack>
                         <CourtCountInput value={courtCount} onChange={onChangeCourtCount} />
                         <Heading as="h3" size="md">
                             開始メンバー数
@@ -73,7 +76,7 @@ export default function InitialSettingPane({ onStart }: Props) {
                             </Link>
                             <Spacer />
                             <Button
-                                leftIcon={<GiShuttlecock />}
+                                leftIcon={<GiTennisCourt />}
                                 rightIcon={<ArrowForwardIcon />}
                                 colorScheme={"brand"}
                                 variant="outline"
