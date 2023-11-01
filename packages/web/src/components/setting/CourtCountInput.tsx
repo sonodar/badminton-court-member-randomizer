@@ -21,9 +21,9 @@ function CourtCountButton(props: Parameters<typeof useRadio>[0] & { children: Re
                     "--chakra-shadows-outline": "0 0 0 3px rgba(120, 170, 199, 0.6)",
                 }}
                 _checked={{
-                    bg: "tertiary.500",
-                    color: "black",
-                    borderColor: "tertiary.500",
+                    bg: "brand.500",
+                    color: "white",
+                    borderColor: "brand.500",
                 }}
                 _focus={{
                     boxShadow: "outline",

@@ -49,7 +49,7 @@ export default function GamePane({ settings, onReset }: Props) {
             status: "warning",
             duration: 2000,
             isClosable: true,
-            colorScheme: "accent",
+            colorScheme: "brand",
             variant: "subtle",
         });
     };

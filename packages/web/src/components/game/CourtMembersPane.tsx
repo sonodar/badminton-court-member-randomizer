@@ -15,7 +15,7 @@ function CourtCard({ id, members, single }: { id: number; members: CourtMembers;
                         <Heading as={"label"} size={"sm"} color={"gray.600"}>{`コート${id + 1}`}</Heading>
                     </Center>
                     <Divider />
-                    <HStack spacing={s} color={"secondary.900"}>
+                    <HStack spacing={s} color={"primary.900"}>
                         {members.map((member) => (
                             <strong key={member}>{member}</strong>
                         ))}

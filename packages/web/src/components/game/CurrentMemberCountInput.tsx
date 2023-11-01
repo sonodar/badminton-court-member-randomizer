@@ -32,7 +32,8 @@ export function CurrentMemberCountInput({ members, min, value, onIncrement, onDe
             <Button
                 leftIcon={<TbUserPlus />}
                 size={"sm"}
-                colorScheme={"primary"}
+                colorScheme={"brand"}
+                variant={"solid"}
                 onClick={onIncrement}
                 isDisabled={value >= MEMBER_COUNT_LIMIT}
             >
@@ -42,7 +43,7 @@ export function CurrentMemberCountInput({ members, min, value, onIncrement, onDe
                 leftIcon={<TbUserOff />}
                 size={"sm"}
                 variant={"outline"}
-                colorScheme={"primary"}
+                colorScheme={"brand"}
                 onClick={onOpen}
                 isDisabled={value <= min}
             >
