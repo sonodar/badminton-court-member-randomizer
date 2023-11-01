@@ -2,9 +2,9 @@ import { extendTheme } from "@chakra-ui/react";
 
 const customTheme = extendTheme({
     fonts: {
-        heading: `"M PLUS 1p",-apple-system,sans-serif`,
-        body: `"M PLUS 1p",-apple-system,sans-serif`,
-        mono: `"M PLUS 1p",monospace`,
+        heading: `"Zen Maru Gothic",-apple-system,sans-serif`,
+        body: `"Zen Maru Gothic",-apple-system,sans-serif`,
+        mono: `"Zen Maru Gothic",monospace`,
     },
     colors: {
         brand: {
