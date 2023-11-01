@@ -8,7 +8,7 @@ export function ResetButton({ onReset }: { onReset: () => void }) {
     const cancelRef = useRef<HTMLButtonElement | null>(null);
     return (
         <Fragment>
-            <Button size={"sm"} colorScheme={"red"} leftIcon={<MdClose />} onClick={onOpen}>
+            <Button size={"sm"} colorScheme={"danger"} leftIcon={<MdClose />} onClick={onOpen}>
                 終了
             </Button>
             <ConfirmDialog
@@ -18,6 +18,7 @@ export function ResetButton({ onReset }: { onReset: () => void }) {
                     onClose();
                     onReset();
                 }}
+                okColorScheme={"danger"}
                 cancelRef={cancelRef}
                 title={"本当に終了しますか？"}
             >

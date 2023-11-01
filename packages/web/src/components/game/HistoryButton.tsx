@@ -9,6 +9,7 @@ export function HistoryButton(settings: CurrentSettings) {
     return (
         <Fragment>
             <Button
+                w={"90px"}
                 size={"sm"}
                 leftIcon={<MdOutlineWatchLater />}
                 isDisabled={settings.histories.length === 0}

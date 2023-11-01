@@ -8,7 +8,13 @@ export function MemberButton(settings: CurrentSettings) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     return (
         <Fragment>
-            <Button size={"sm"} leftIcon={<TbUsers />} isDisabled={settings.histories.length === 0} onClick={onOpen}>
+            <Button
+                w={"100px"}
+                size={"sm"}
+                leftIcon={<TbUsers />}
+                isDisabled={settings.histories.length === 0}
+                onClick={onOpen}
+            >
                 メンバー
             </Button>
             <MemberDialog {...settings} isOpen={isOpen} onClose={onClose} />

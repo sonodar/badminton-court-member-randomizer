@@ -1,6 +1,13 @@
 import { extendTheme } from "@chakra-ui/react";
 
+export const prittyFont = { fontFamily: `"Zen Maru Gothic",-apple-system,sans-serif` };
+
 const customTheme = extendTheme({
+    fonts: {
+        heading: `"Zen Maru Gothic",-apple-system,sans-serif`,
+        // body: `"Zen Maru Gothic",-apple-system,sans-serif`,
+        // mono: `"Zen Maru Gothic",monospace`,
+    },
     colors: {
         brand: {
             50: "#D1E3F5",
@@ -25,6 +32,18 @@ const customTheme = extendTheme({
             700: "#3653B9",
             800: "#314BA8",
             900: "#2D4499",
+        },
+        danger: {
+            50: "#FCF6F8",
+            100: "#FBE5EE",
+            200: "#FAD4E4",
+            300: "#F7B1CF",
+            400: "#F58EBA",
+            500: "#F26BA5",
+            600: "#DC6196",
+            700: "#C85888",
+            800: "#B6507C",
+            900: "#A54971",
         },
     },
 });
