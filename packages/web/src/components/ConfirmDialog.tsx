@@ -42,7 +42,7 @@ export default function ConfirmDialog({
                     </AlertDialogHeader>
                     <AlertDialogBody>{children}</AlertDialogBody>
                     <AlertDialogFooter>
-                        <Button ref={cancelRef} onClick={onCancel}>
+                        <Button ref={cancelRef} onClick={onCancel} variant={"outline"}>
                             {cancelButtonText}
                         </Button>
                         <Button colorScheme={okColorScheme} onClick={onOk} ml={3}>
