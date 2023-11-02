@@ -7,14 +7,13 @@ import {
     AlertDialogOverlay,
     Button,
 } from "@chakra-ui/react";
-import React, { type ReactNode, type RefObject } from "react";
+import React, { useRef, type ReactNode } from "react";
 import { prittyFont } from "./theme";
 
 type Props = {
     isOpen: boolean;
     onCancel: () => void;
     onOk: () => void;
-    cancelRef: RefObject<HTMLButtonElement>;
     title: string;
     children: ReactNode;
     okButtonText?: string;
@@ -26,15 +25,15 @@ export default function ConfirmDialog({
     isOpen,
     onCancel,
     onOk,
-    cancelRef,
     title,
     children,
     cancelButtonText = "キャンセル",
     okButtonText = "OK",
-    okColorScheme = "red",
+    okColorScheme = "brand",
 }: Props) {
+    const cancel = useRef<HTMLButtonElement | null>(null);
     return (
-        <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onCancel}>
+        <AlertDialog isOpen={isOpen} leastDestructiveRef={cancel} onClose={onCancel}>
             <AlertDialogOverlay>
                 <AlertDialogContent maxW={"350px"}>
                     <AlertDialogHeader fontSize="lg" fontWeight="bold" {...prittyFont}>
@@ -42,7 +41,7 @@ export default function ConfirmDialog({
                     </AlertDialogHeader>
                     <AlertDialogBody>{children}</AlertDialogBody>
                     <AlertDialogFooter>
-                        <Button ref={cancelRef} onClick={onCancel} variant={"outline"}>
+                        <Button ref={cancel} onClick={onCancel} variant={"outline"}>
                             {cancelButtonText}
                         </Button>
                         <Button colorScheme={okColorScheme} onClick={onOk} ml={3}>
