@@ -59,7 +59,7 @@ export default function InitialSettingPane({ onStart }: Props) {
                         </HStack>
                         <CourtCountInput value={courtCount} onChange={onChangeCourtCount} />
                         <Heading as="h3" size="md">
-                            開始メンバー数
+                            メンバー数
                         </Heading>
                         <InitMemberCountInput
                             min={courtCount * COURT_CAPACITY}
