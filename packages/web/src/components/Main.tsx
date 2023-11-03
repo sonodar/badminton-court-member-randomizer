@@ -1,11 +1,10 @@
-import { ChakraProvider } from "@chakra-ui/react";
-import { Container } from "@chakra-ui/react";
-import GamePane from "@components/game/GamePane.tsx";
-import InitialSettingPane from "@components/setting/InitialSettingPane.tsx";
-import customTheme from "@components/theme.ts";
+import { ChakraProvider, Container } from "@chakra-ui/react";
 import type { CurrentSettings } from "@doubles-member-generator/lib";
 import { util } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
+import GamePane from "@components/game/GamePane.tsx";
+import InitialSettingPane from "@components/setting/InitialSettingPane.tsx";
+import customTheme from "@components/theme.ts";
 
 export default function Main() {
   let initialSettings: CurrentSettings | null = null;

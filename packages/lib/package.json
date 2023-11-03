@@ -4,7 +4,7 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "jest",
-    "lint": "eslint",
+    "lint": "eslint .",
     "format": "prettier --write '**/*.{js,ts,md,json}'",
     "typecheck": "tsc --noEmit"
   }

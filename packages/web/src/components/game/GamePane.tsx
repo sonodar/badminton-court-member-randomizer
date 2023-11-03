@@ -10,11 +10,6 @@ import {
   Stack,
   useToast,
 } from "@chakra-ui/react";
-import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
-import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput.tsx";
-import { HistoryButton } from "@components/game/HistoryButton.tsx";
-import { MemberButton } from "@components/game/MemberButton.tsx";
-import { ResetButton } from "@components/game/ResetButton.tsx";
 import type {
   CurrentSettings,
   GameMembers,
@@ -22,6 +17,11 @@ import type {
 import { create } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
 import { IoDiceOutline } from "react-icons/io5";
+import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
+import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput.tsx";
+import { HistoryButton } from "@components/game/HistoryButton.tsx";
+import { MemberButton } from "@components/game/MemberButton.tsx";
+import { ResetButton } from "@components/game/ResetButton.tsx";
 
 type Props = {
   settings: CurrentSettings;
