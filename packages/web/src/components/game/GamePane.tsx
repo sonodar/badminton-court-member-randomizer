@@ -18,6 +18,7 @@ import type {
 import { create } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
 import { IoDiceOutline } from "react-icons/io5";
+import { ShareButton } from "./ShareButton";
 import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
 import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput.tsx";
 import { HistoryButton } from "@components/game/HistoryButton.tsx";
@@ -36,6 +37,13 @@ export default function GamePane({ settings, onReset }: Props) {
   const [latestMembers, setLatestMembers] = useState<GameMembers>(
     manager.histories[manager.histories.length - 1]?.members || [],
   );
+
+  const [environmentId, setEnvironmentId] = useState("");
+
+  const issueShareLink = async () => {
+    const environmentId = crypto.randomUUID(); // TODO: サーバーサイドで発行
+    setEnvironmentId(environmentId);
+  };
 
   const saveSettings = () => {
     window.localStorage.setItem(
@@ -116,6 +124,8 @@ export default function GamePane({ settings, onReset }: Props) {
         <HistoryButton {...manager} />
         <Spacer />
         <MemberButton {...manager} />
+        <Spacer />
+        <ShareButton sharedId={environmentId} onIssue={issueShareLink} />
         <Spacer />
         <ResetButton onReset={clear} />
       </CardFooter>
