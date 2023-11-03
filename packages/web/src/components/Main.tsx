@@ -31,7 +31,7 @@ export default function Main() {
 
   return (
     <ChakraProvider theme={customTheme}>
-      <Container maxW="sm" minW={"sm"}>
+      <Container maxW={"sm"} minW={"sm"}>
         {settings === null && <InitialSettingPane onStart={onStart} />}
         {settings !== null && (
           <GamePane settings={settings} onReset={onReset} />

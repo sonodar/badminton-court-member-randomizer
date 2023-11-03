@@ -1,5 +1,5 @@
 import { SmallCloseIcon } from "@chakra-ui/icons";
-import { Button, useDisclosure } from "@chakra-ui/react";
+import { IconButton, useDisclosure } from "@chakra-ui/react";
 import React, { Fragment } from "react";
 import ConfirmDialog from "@components/ConfirmDialog.tsx";
 
@@ -7,14 +7,15 @@ export function ResetButton({ onReset }: { onReset: () => void }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Fragment>
-      <Button
-        size={"sm"}
+      <IconButton
         colorScheme={"danger"}
-        leftIcon={<SmallCloseIcon />}
+        size={"sm"}
+        mt={1}
+        fontSize={"lg"}
+        aria-label="メンバー"
+        icon={<SmallCloseIcon />}
         onClick={onOpen}
-      >
-        終了
-      </Button>
+      />
       <ConfirmDialog
         isOpen={isOpen}
         onCancel={onClose}

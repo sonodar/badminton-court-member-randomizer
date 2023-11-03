@@ -5,6 +5,7 @@ import {
   CardBody,
   CardFooter,
   Center,
+  Divider,
   HStack,
   Spacer,
   Stack,
@@ -110,7 +111,8 @@ export default function GamePane({ settings, onReset }: Props) {
           </Stack>
         </Center>
       </CardBody>
-      <CardFooter>
+      <Divider color={"gray.300"} />
+      <CardFooter px={10} py={2}>
         <HistoryButton {...manager} />
         <Spacer />
         <MemberButton {...manager} />
