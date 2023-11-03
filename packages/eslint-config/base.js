@@ -2,29 +2,46 @@ const { resolve } = require("node:path");
 
 const project = resolve(process.cwd(), "tsconfig.json");
 
-/*
- * This is a custom ESLint configuration for use with
- * typescript packages.
- *
- * This config extends the Vercel Engineering Style Guide.
- * For more information, see https://github.com/vercel/style-guide
- *
- */
-
 module.exports = {
+  parser: "@typescript-eslint/parser",
   extends: [
-    "@vercel/style-guide/eslint/node",
-    "@vercel/style-guide/eslint/typescript",
-  ].map(require.resolve),
-  parserOptions: {
-    project,
-  },
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "prettier",
+    "turbo",
+  ],
+  parserOptions: { project },
+  plugins: ["@typescript-eslint", "import", "unused-imports", "turbo"],
   settings: {
     "import/resolver": {
-      typescript: {
-        project,
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
       },
+      typescript: { project },
     },
   },
-  ignorePatterns: ["node_modules/"],
+  ignorePatterns: ["node_modules/", "coverage/", ".eslintrc.js"],
+  rules: {
+    "import/no-named-as-default": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        args: "all",
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+        destructuredArrayIgnorePattern: "^_",
+      },
+    ],
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        prefer: "type-imports",
+        fixStyle: "separate-type-imports",
+      },
+    ],
+    "import/order": "error",
+    "unused-imports/no-unused-imports": "error",
+  },
 };

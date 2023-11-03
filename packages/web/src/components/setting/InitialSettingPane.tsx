@@ -1,4 +1,3 @@
-import logo from "@assets/logo.svg";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -15,12 +14,13 @@ import {
   Spacer,
   Stack,
 } from "@chakra-ui/react";
-import { CourtCountInput } from "@components/setting/CourtCountInput.tsx";
-import { InitMemberCountInput } from "@components/setting/InitMemberCountInput.tsx";
 import { COURT_CAPACITY } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
 import { GiTennisCourt } from "react-icons/gi";
 import { ImGithub } from "react-icons/im";
+import { InitMemberCountInput } from "@components/setting/InitMemberCountInput.tsx";
+import { CourtCountInput } from "@components/setting/CourtCountInput.tsx";
+import logo from "@assets/logo.svg";
 
 type Props = {
   onStart: (env: { courtCount: number; memberCount: number }) => void;

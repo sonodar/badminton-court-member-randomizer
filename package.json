@@ -1,7 +1,7 @@
 {
   "name": "doubles-member-generator",
   "license": "MIT",
-  "packageManager": "pnpm@8.10.0",
+  "packageManager": "pnpm@8.10.2",
   "scripts": {
     "dev": "turbo run dev",
     "format": "turbo run format",

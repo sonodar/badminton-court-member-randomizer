@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Box,
   Center,
@@ -11,10 +12,9 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react";
+import type { CurrentSettings } from "@doubles-member-generator/lib";
 import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
 import { prittyFont } from "@components/theme";
-import type { CurrentSettings } from "@doubles-member-generator/lib";
-import React from "react";
 
 type Props = CurrentSettings & {
   isOpen: boolean;

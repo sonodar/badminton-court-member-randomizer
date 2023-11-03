@@ -6,10 +6,10 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { prittyFont } from "@components/theme";
 import type { PlayCountPerMember } from "@doubles-member-generator/lib";
 import React from "react";
 import MemberCountPane from "./MemberCountPane";
+import { prittyFont } from "@components/theme";
 
 type Props = {
   members: number[];
