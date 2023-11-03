@@ -1,0 +1,17 @@
+{
+  "providers": [
+    "awscloudformation"
+  ],
+  "projectName": "DoublesMemberGenerat",
+  "version": "3.1",
+  "frontend": "javascript",
+  "javascript": {
+    "framework": "react",
+    "config": {
+      "SourceDir": "packages/web/src",
+      "DistributionDir": "packages/web/dist",
+      "BuildCommand": "pnpm run build",
+      "StartCommand": "pnpm run dev"
+    }
+  }
+}

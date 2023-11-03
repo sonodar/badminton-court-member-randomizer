@@ -8,5 +8,11 @@ module.exports = {
   settings: {
     react: { version: "detect" },
   },
-  ignorePatterns: ["node_modules/", "coverage/", "**/*.js"],
+  ignorePatterns: [
+    "node_modules/",
+    "coverage/",
+    "**/*.js",
+    "src/api/index.ts",
+    "src/graphql/*.ts",
+  ],
 };
