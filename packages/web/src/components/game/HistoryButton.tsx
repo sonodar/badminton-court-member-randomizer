@@ -5,19 +5,19 @@ import React, { Fragment } from "react";
 import { MdOutlineWatchLater } from "react-icons/md";
 
 export function HistoryButton(settings: CurrentSettings) {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    return (
-        <Fragment>
-            <Button
-                w={"90px"}
-                size={"sm"}
-                leftIcon={<MdOutlineWatchLater />}
-                isDisabled={settings.histories.length === 0}
-                onClick={onOpen}
-            >
-                履歴
-            </Button>
-            <HistoryDialog {...settings} isOpen={isOpen} onClose={onClose} />
-        </Fragment>
-    );
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  return (
+    <Fragment>
+      <Button
+        w={"90px"}
+        size={"sm"}
+        leftIcon={<MdOutlineWatchLater />}
+        isDisabled={settings.histories.length === 0}
+        onClick={onOpen}
+      >
+        履歴
+      </Button>
+      <HistoryDialog {...settings} isOpen={isOpen} onClose={onClose} />
+    </Fragment>
+  );
 }
