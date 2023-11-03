@@ -14,22 +14,22 @@
 ### Usage:
 
 ```typescript
-const provider = create({ courtCount: 2, memberCount: 12 })
+const provider = create({ courtCount: 2, memberCount: 12 });
 
 // next関数でランダムに組み合わせを出力する。各数字はメンバーの ID を表す。
 // ただし、すでに出た組み合わせとなるべく被らないようにする（そのための履歴を内部に保持している）。
-console.log(provider.next()) // [[1, 2, 3, 4], [5, 6, 7, 8]]
-console.log(provider.next()) // [[9, 10, 11, 12], [1, 3, 5, 7]]
-console.log(provider.next()) // [[2, 4, 6, 8], [9, 11, 5, 7]]
+console.log(provider.next()); // [[1, 2, 3, 4], [5, 6, 7, 8]]
+console.log(provider.next()); // [[9, 10, 11, 12], [1, 3, 5, 7]]
+console.log(provider.next()); // [[2, 4, 6, 8], [9, 11, 5, 7]]
 
 // メンバーが途中参加する場合（引数は参加するメンバーの人数）
-provider.join(2) 
-console.log(provider.memberCount) // 14
+provider.join(2);
+console.log(provider.memberCount); // 14
 
 // メンバーが途中離脱する場合（引数は離脱するメンバーの人数）
-provider.leave(1)
-console.log(provider.memberCount) // 13
+provider.leave(1);
+console.log(provider.memberCount); // 13
 
 // メンバーの増減を考慮してランダムに組み合わせを出力する
-console.log(provider.next()) // [[1, 5, 6, 9], [2, 4, 11, 13]]
+console.log(provider.next()); // [[1, 5, 6, 9], [2, 4, 11, 13]]
 ```

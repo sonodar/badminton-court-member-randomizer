@@ -1,0 +1,11 @@
+{
+  "name": "@doubles-member-generator/tsconfig",
+  "version": "0.0.0",
+  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "format": "prettier --write '**/*.{js,md,json}'"
+  }
+}

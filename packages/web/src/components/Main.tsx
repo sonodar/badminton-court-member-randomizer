@@ -8,28 +8,36 @@ import { util } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
 
 export default function Main() {
-    let initialSettings: CurrentSettings | null = null;
+  let initialSettings: CurrentSettings | null = null;
 
-    const settingsJson = window.localStorage.getItem("currentSettings");
-    if (settingsJson) {
-        initialSettings = JSON.parse(settingsJson);
-    }
+  const settingsJson = window.localStorage.getItem("currentSettings");
+  if (settingsJson) {
+    initialSettings = JSON.parse(settingsJson);
+  }
 
-    const [settings, setSettings] = useState(initialSettings);
+  const [settings, setSettings] = useState(initialSettings);
 
-    const onStart = ({ courtCount, memberCount }: { courtCount: number; memberCount: number }) => {
-        const members = util.array.generate(memberCount);
-        setSettings({ courtCount, members, histories: [], gameCounts: {} });
-    };
+  const onStart = ({
+    courtCount,
+    memberCount,
+  }: {
+    courtCount: number;
+    memberCount: number;
+  }) => {
+    const members = util.array.generate(memberCount);
+    setSettings({ courtCount, members, histories: [], gameCounts: {} });
+  };
 
-    const onReset = () => setSettings(null);
+  const onReset = () => setSettings(null);
 
-    return (
-        <ChakraProvider theme={customTheme}>
-            <Container maxW="sm" minW={"sm"}>
-                {settings === null && <InitialSettingPane onStart={onStart} />}
-                {settings !== null && <GamePane settings={settings} onReset={onReset} />}
-            </Container>
-        </ChakraProvider>
-    );
+  return (
+    <ChakraProvider theme={customTheme}>
+      <Container maxW="sm" minW={"sm"}>
+        {settings === null && <InitialSettingPane onStart={onStart} />}
+        {settings !== null && (
+          <GamePane settings={settings} onReset={onReset} />
+        )}
+      </Container>
+    </ChakraProvider>
+  );
 }
