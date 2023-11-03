@@ -1,11 +1,10 @@
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { Button, useDisclosure } from "@chakra-ui/react";
 import ConfirmDialog from "@components/ConfirmDialog.tsx";
-import React, { Fragment, useRef } from "react";
+import React, { Fragment } from "react";
 
 export function ResetButton({ onReset }: { onReset: () => void }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const cancelRef = useRef<HTMLButtonElement | null>(null);
     return (
         <Fragment>
             <Button size={"sm"} colorScheme={"danger"} leftIcon={<SmallCloseIcon />} onClick={onOpen}>
@@ -19,7 +18,6 @@ export function ResetButton({ onReset }: { onReset: () => void }) {
                     onReset();
                 }}
                 okColorScheme={"danger"}
-                cancelRef={cancelRef}
                 title={"本当に終了しますか？"}
             >
                 コート、メンバー、履歴を削除して初期設定に戻ります。

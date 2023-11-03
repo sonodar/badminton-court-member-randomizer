@@ -1,0 +1,14 @@
+{
+  "name": "@doubles-member-generator/eslint-config",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write '**/*.{js,md,json}'"
+  },
+  "dependencies": {
+    "@vercel/style-guide": "^5.0.0",
+    "eslint-config-turbo": "^1.10.12",
+    "eslint": "^8.48.0",
+    "prettier": "^3.0.3"
+  }
+}

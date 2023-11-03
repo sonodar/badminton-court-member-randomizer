@@ -1,8 +1,11 @@
 {
   "name": "@doubles-member-generator/lib",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
-    "format": "bun --cwd ../../ format"
+    "test": "jest",
+    "lint": "eslint",
+    "format": "prettier --write '**/*.{js,ts,md,json}'",
+    "typecheck": "tsc --noEmit"
   }
 }
