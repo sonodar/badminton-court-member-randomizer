@@ -12,7 +12,7 @@ module.exports = {
     "node_modules/",
     "coverage/",
     "**/*.js",
-    "src/api/index.ts",
+    "src/api/API.ts",
     "src/graphql/*.ts",
   ],
 };
