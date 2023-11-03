@@ -94,6 +94,9 @@ importers:
       framer-motion:
         specifier: ^10.16.4
         version: 10.16.4(react-dom@18.2.0)(react@18.2.0)
+      ms:
+        specifier: 2.1.3
+        version: 2.1.3
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -103,7 +106,13 @@ importers:
       react-icons:
         specifier: ^4.11.0
         version: 4.11.0(react@18.2.0)
+      zod:
+        specifier: 3.22.4
+        version: 3.22.4
     devDependencies:
+      '@types/ms':
+        specifier: 0.7.33
+        version: 0.7.33
       eslint-import-resolver-typescript:
         specifier: 3.6.1
         version: 3.6.1(eslint-plugin-import@2.27.5)(eslint@8.48.0)
@@ -5854,7 +5863,6 @@ packages:
 
   /@types/ms@0.7.33:
     resolution: {integrity: sha512-AuHIyzR5Hea7ij0P9q7vx7xu4z0C28ucwjAZC0ja7JhINyCnOw8/DnvAPQQ9TfOlCtZAmCERKQX9+o1mgQhuOQ==}
-    dev: false
 
   /@types/nlcst@1.0.3:
     resolution: {integrity: sha512-cpO6PPMz4E++zxP2Vhp/3KVl2Nbtj+Iksb25rlRinG7mphu2zmCIKWWlqdsx1NwJEISogR2eeZTD7JqLOCzaiw==}

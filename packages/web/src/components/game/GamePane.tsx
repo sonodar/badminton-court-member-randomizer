@@ -18,19 +18,22 @@ import type {
 import { create } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
 import { IoDiceOutline } from "react-icons/io5";
+import storage from "../../store/settingsStorage";
 import { ShareButton } from "./ShareButton";
 import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
 import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput.tsx";
 import { HistoryButton } from "@components/game/HistoryButton.tsx";
 import { MemberButton } from "@components/game/MemberButton.tsx";
 import { ResetButton } from "@components/game/ResetButton.tsx";
+import { environments } from "src/api";
 
 type Props = {
   settings: CurrentSettings;
   onReset: () => void;
+  shareId?: string | null;
 };
 
-export default function GamePane({ settings, onReset }: Props) {
+export default function GamePane({ settings, onReset, shareId }: Props) {
   const courtCount = settings.courtCount;
 
   const [manager, setManager] = useState(create(settings));
@@ -38,18 +41,19 @@ export default function GamePane({ settings, onReset }: Props) {
     manager.histories[manager.histories.length - 1]?.members || [],
   );
 
-  const [environmentId, setEnvironmentId] = useState("");
+  const [environmentId, setEnvironmentId] = useState(shareId || undefined);
 
   const issueShareLink = async () => {
-    const environmentId = crypto.randomUUID(); // TODO: サーバーサイドで発行
-    setEnvironmentId(environmentId);
+    const { id } = await environments.create(manager);
+    window.localStorage.setItem("shareId", id);
+    setEnvironmentId(id);
   };
 
-  const saveSettings = () => {
-    window.localStorage.setItem(
-      "currentSettings",
-      JSON.stringify({ ...manager }),
-    );
+  const saveSettings = async (): Promise<void> => {
+    storage.save({ ...manager });
+    if (environmentId) {
+      await environments.update(environmentId, manager);
+    }
   };
 
   const onJoin = () => {
@@ -80,7 +84,11 @@ export default function GamePane({ settings, onReset }: Props) {
   };
 
   const clear = () => {
-    window.localStorage.removeItem("currentSettings");
+    storage.clear();
+    window.localStorage.removeItem("shareId");
+    if (environmentId) {
+      environments.remove(environmentId);
+    }
     onReset();
   };
 

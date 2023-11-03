@@ -1,8 +1,11 @@
 import type { CurrentSettings } from "@doubles-member-generator/lib";
 import { API } from "aws-amplify";
+import ms from "ms";
 import type { CreateEnvironmentMutation, GetEnvironmentQuery } from "./API";
 import { createEnvironment, updateEnvironment } from "src/graphql/mutations";
 import { getEnvironment } from "src/graphql/queries";
+
+const ttl = (lifetime: number) => Math.floor((Date.now() + lifetime) / 1000);
 
 const find = async (id: string) => {
   const { data } = (await API.graphql({
@@ -12,14 +15,14 @@ const find = async (id: string) => {
   return data.getEnvironment;
 };
 
-const create = async (settings: CurrentSettings, ttl: number) => {
+const create = async (settings: CurrentSettings) => {
   const { data } = (await API.graphql({
     query: createEnvironment,
     variables: {
       input: {
         version: 0,
         data: JSON.stringify({ ...settings }),
-        ttl,
+        ttl: ttl(ms("7d")),
       },
     },
   })) as { data: CreateEnvironmentMutation };
@@ -36,12 +39,13 @@ const update = async (id: string, settings: CurrentSettings) => {
         id,
         version: entity.version + 1,
         data: JSON.stringify({ ...settings }),
+        ttl: ttl(ms("7d")),
       },
     },
   });
 };
 
-const remove = async (id: string, ttl: number) => {
+const remove = async (id: string) => {
   const entity = await find(id);
   if (!entity) return;
   await API.graphql({
@@ -51,10 +55,9 @@ const remove = async (id: string, ttl: number) => {
         id,
         version: entity?.version + 1,
         finishedAt: new Date().toISOString(),
-        ttl,
       },
     },
   });
 };
 
-export const environmentsRepository = { find, create, update, remove };
+export const environments = { find, create, update, remove };
