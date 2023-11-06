@@ -1,22 +1,34 @@
 import type { CurrentSettings } from "@doubles-member-generator/lib";
 import { API } from "aws-amplify";
 import ms from "ms";
-import type { CreateEnvironmentMutation, GetEnvironmentQuery } from "./API";
+import type { GraphQLQuery } from "@aws-amplify/api";
+import type {
+  CreateEnvironmentMutation,
+  GetEnvironmentQuery,
+  UpdateEnvironmentMutation,
+} from "./API";
 import { createEnvironment, updateEnvironment } from "src/graphql/mutations";
 import { getEnvironment } from "src/graphql/queries";
 
 const ttl = (lifetime: number) => Math.floor((Date.now() + lifetime) / 1000);
 
 const find = async (id: string) => {
-  const { data } = (await API.graphql({
-    query: getEnvironment,
-    variables: { input: { id } },
-  })) as { data: GetEnvironmentQuery };
-  return data.getEnvironment;
+  const { data, errors } = await API.graphql<GraphQLQuery<GetEnvironmentQuery>>(
+    {
+      query: getEnvironment,
+      variables: { id },
+    },
+  );
+  if (errors?.length) {
+    throw new Error(errors.map((e) => e.message).join(", "));
+  }
+  return data?.getEnvironment;
 };
 
 const create = async (settings: CurrentSettings) => {
-  const { data } = (await API.graphql({
+  const { data, errors } = await API.graphql<
+    GraphQLQuery<CreateEnvironmentMutation>
+  >({
     query: createEnvironment,
     variables: {
       input: {
@@ -25,14 +37,19 @@ const create = async (settings: CurrentSettings) => {
         ttl: ttl(ms("7d")),
       },
     },
-  })) as { data: CreateEnvironmentMutation };
-  return data.createEnvironment!;
+  });
+  if (errors?.length) {
+    throw new Error(errors.map((e) => e.message).join(", "));
+  }
+  return data!.createEnvironment!;
 };
 
 const update = async (id: string, settings: CurrentSettings) => {
   const entity = await find(id);
   if (!entity) return;
-  await API.graphql({
+  const { data, errors } = await API.graphql<
+    GraphQLQuery<UpdateEnvironmentMutation>
+  >({
     query: updateEnvironment,
     variables: {
       input: {
@@ -43,21 +60,30 @@ const update = async (id: string, settings: CurrentSettings) => {
       },
     },
   });
+  if (errors?.length) {
+    throw new Error(errors.map((e) => e.message).join(", "));
+  }
+  return data!.updateEnvironment!;
 };
 
 const remove = async (id: string) => {
   const entity = await find(id);
   if (!entity) return;
-  await API.graphql({
-    query: updateEnvironment,
-    variables: {
-      input: {
-        id,
-        version: entity?.version + 1,
-        finishedAt: new Date().toISOString(),
+  const { errors } = await API.graphql<GraphQLQuery<UpdateEnvironmentMutation>>(
+    {
+      query: updateEnvironment,
+      variables: {
+        input: {
+          id,
+          version: entity?.version + 1,
+          finishedAt: new Date().toISOString(),
+        },
       },
     },
-  });
+  );
+  if (errors?.length) {
+    throw new Error(errors.map((e) => e.message).join(", "));
+  }
 };
 
 export const environments = { find, create, update, remove };

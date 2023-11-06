@@ -10,6 +10,7 @@ type Props = {
   value: number;
   onIncrement: () => void;
   onDecrement: (id: number) => void;
+  isDisabled?: boolean;
 };
 
 export function CurrentMemberCountInput({
@@ -18,6 +19,7 @@ export function CurrentMemberCountInput({
   value,
   onIncrement,
   onDecrement,
+  isDisabled,
 }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
@@ -41,7 +43,7 @@ export function CurrentMemberCountInput({
         colorScheme={"brand"}
         variant={"solid"}
         onClick={onIncrement}
-        isDisabled={value >= MEMBER_COUNT_LIMIT}
+        isDisabled={isDisabled || value >= MEMBER_COUNT_LIMIT}
       >
         参加
       </Button>
@@ -51,7 +53,7 @@ export function CurrentMemberCountInput({
         variant={"outline"}
         colorScheme={"brand"}
         onClick={onOpen}
-        isDisabled={value <= min}
+        isDisabled={isDisabled || value <= min}
       >
         離脱
       </Button>

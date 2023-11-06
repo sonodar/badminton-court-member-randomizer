@@ -4,7 +4,10 @@ import React, { Fragment } from "react";
 import { MdOutlineWatchLater } from "react-icons/md";
 import { HistoryDialog } from "@components/game/HistoryDialog.tsx";
 
-export function HistoryButton(settings: CurrentSettings) {
+export function HistoryButton({
+  isDisabled,
+  ...settings
+}: CurrentSettings & { isDisabled?: boolean }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Fragment>
@@ -14,7 +17,7 @@ export function HistoryButton(settings: CurrentSettings) {
         fontSize={"2xl"}
         aria-label="履歴"
         icon={<MdOutlineWatchLater />}
-        isDisabled={settings.histories.length === 0}
+        isDisabled={isDisabled || settings.histories.length === 0}
         onClick={onOpen}
       />
       <HistoryDialog {...settings} isOpen={isOpen} onClose={onClose} />

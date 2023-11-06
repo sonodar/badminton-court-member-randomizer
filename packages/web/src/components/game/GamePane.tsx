@@ -42,17 +42,25 @@ export default function GamePane({ settings, onReset, shareId }: Props) {
   );
 
   const [environmentId, setEnvironmentId] = useState(shareId || undefined);
+  const [progress, setProgress] = useState(false);
+
+  const openProgress = () => setProgress(true);
+  const closeProgress = () => setProgress(false);
 
   const issueShareLink = async () => {
+    openProgress();
     const { id } = await environments.create(manager);
     window.localStorage.setItem("shareId", id);
     setEnvironmentId(id);
+    closeProgress();
   };
 
   const saveSettings = async (): Promise<void> => {
     storage.save({ ...manager });
     if (environmentId) {
+      openProgress();
       await environments.update(environmentId, manager);
+      closeProgress();
     }
   };
 
@@ -103,12 +111,14 @@ export default function GamePane({ settings, onReset, shareId }: Props) {
               min={courtCount * 4}
               onIncrement={onJoin}
               onDecrement={onLeave}
+              isDisabled={progress}
             />
             <HStack>
               <Button
                 colorScheme={"brand"}
                 leftIcon={<IoDiceOutline />}
                 onClick={handleGenerate}
+                isDisabled={progress}
               >
                 メンバー決め
               </Button>
@@ -118,7 +128,7 @@ export default function GamePane({ settings, onReset, shareId }: Props) {
                 leftIcon={<RepeatClockIcon />}
                 size={"xs"}
                 onClick={handleRetry}
-                isDisabled={manager.histories.length === 0}
+                isDisabled={progress || manager.histories.length === 0}
               >
                 やり直し
               </Button>
@@ -129,13 +139,17 @@ export default function GamePane({ settings, onReset, shareId }: Props) {
       </CardBody>
       <Divider color={"gray.300"} />
       <CardFooter px={10} py={2}>
-        <HistoryButton {...manager} />
+        <HistoryButton {...manager} isDisabled={progress} />
         <Spacer />
-        <MemberButton {...manager} />
+        <MemberButton {...manager} isDisabled={progress} />
         <Spacer />
-        <ShareButton sharedId={environmentId} onIssue={issueShareLink} />
+        <ShareButton
+          sharedId={environmentId}
+          onIssue={issueShareLink}
+          isDisabled={progress}
+        />
         <Spacer />
-        <ResetButton onReset={clear} />
+        <ResetButton onReset={clear} isDisabled={progress} />
       </CardFooter>
     </Card>
   );

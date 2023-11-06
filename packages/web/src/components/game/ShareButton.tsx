@@ -7,13 +7,14 @@ import ConfirmDialog from "@components/ConfirmDialog";
 type Props = {
   sharedId?: string;
   onIssue: () => Promise<void>;
+  isDisabled?: boolean;
 };
 
 function makeShareLink(sharedId?: string) {
   return sharedId ? `${location.origin}?s=${sharedId}` : undefined;
 }
 
-export function ShareButton({ sharedId, onIssue }: Props) {
+export function ShareButton({ sharedId, onIssue, isDisabled }: Props) {
   const shareLink = useMemo(() => makeShareLink(sharedId), [sharedId]);
 
   const {
@@ -59,6 +60,7 @@ export function ShareButton({ sharedId, onIssue }: Props) {
         aria-label="シェア"
         icon={<HiLink />}
         onClick={handleClick}
+        isDisabled={isDisabled}
       />
       <ConfirmDialog
         isOpen={isIssueOpen}

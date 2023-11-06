@@ -15,7 +15,7 @@ const currentSettingsSchema = z.object({
     }),
   ),
   gameCounts: z.record(
-    z.number(),
+    z.string(),
     z.object({ playCount: z.number(), baseCount: z.number() }),
   ),
 }) satisfies ZodType<CurrentSettings>;
