@@ -1,16 +1,14 @@
 version: 1
-backend:
-  phases:
-    build:
-      commands:
-        - '# Execute Amplify CLI with the helper script'
-        - amplifyPush --simple
 frontend:
   phases:
     preBuild:
       commands:
+        - nvm install 18
+        - nvm ls
+        - node -v
         - corepack enable
-        - corepack prepare pnpm@8.10.0 --activate
+        - corepack prepare pnpm@8.10.2 --activate
+        - pnpm config set store-dir .pnpm-store
         - pnpm install
     # IMPORTANT - Please verify your build commands
     build:
@@ -23,4 +21,5 @@ frontend:
       - '**/*'
   cache:
     paths:
+      - .pnpm-store/**/*
       - node_modules/**/*
