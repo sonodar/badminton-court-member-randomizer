@@ -18,7 +18,7 @@ import type {
 import { create } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
 import { IoDiceOutline } from "react-icons/io5";
-import storage from "../../store/settingsStorage";
+import storage from "../../util/settingsStorage";
 import { ShareButton } from "./ShareButton";
 import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
 import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput.tsx";

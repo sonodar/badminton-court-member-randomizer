@@ -1,19 +1,15 @@
 import React from "react";
 import {
-  Box,
   Center,
-  Divider,
-  Heading,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack,
 } from "@chakra-ui/react";
 import type { CurrentSettings } from "@doubles-member-generator/lib";
-import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
+import HistoryPane from "./HistoryPane";
 import { prittyFont } from "@components/theme";
 
 type Props = CurrentSettings & {
@@ -22,9 +18,6 @@ type Props = CurrentSettings & {
 };
 
 export function HistoryDialog({ isOpen, onClose, ...settings }: Props) {
-  const histories = settings.histories
-    .map((history, index) => ({ index, history }))
-    .reverse();
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
       <ModalOverlay />
@@ -35,17 +28,7 @@ export function HistoryDialog({ isOpen, onClose, ...settings }: Props) {
         <ModalCloseButton />
         <ModalBody py={4} px={0}>
           <Center>
-            <Stack spacing={3} divider={<Divider />}>
-              {histories.map(({ history, index }, i) => (
-                <Box key={history.members.flat().join(",")} px={2}>
-                  <Heading as={"label"} size={"sm"} color={"gray.600"}>
-                    {`${index + 1} 回目`}
-                    {i === 0 && " (前回)"}
-                  </Heading>
-                  <CourtMembersPane members={history.members} single={false} />
-                </Box>
-              ))}
-            </Stack>
+            <HistoryPane histories={settings.histories} />
           </Center>
         </ModalBody>
       </ModalContent>
