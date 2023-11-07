@@ -3,9 +3,6 @@ frontend:
   phases:
     preBuild:
       commands:
-        - nvm install 18
-        - nvm ls
-        - node -v
         - corepack enable
         - corepack prepare pnpm@8.10.2 --activate
         - pnpm config set store-dir .pnpm-store
