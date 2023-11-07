@@ -52,7 +52,8 @@ const subscribe = (id: string, onUpdate: (env: Environment) => void) => {
   >({ query: onUpdateEnvironment, variables }).subscribe({
     next: ({ value }) => {
       if (!value.data?.onUpdateEnvironment) return;
-      const { id, version, finishedAt, data } = value.data.onUpdateEnvironment;
+      if (value.data.onUpdateEnvironment.id !== id) return; // 念のため
+      const { version, finishedAt, data } = value.data.onUpdateEnvironment;
       const settings = settingsSchema.parse(JSON.parse(data));
       const isFinished = !!finishedAt;
       onUpdate({ id, version, isFinished, ...settings });

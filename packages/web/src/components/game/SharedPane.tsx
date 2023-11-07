@@ -8,9 +8,9 @@ import {
   CardHeader,
   Center,
   HStack,
+  Heading,
   IconButton,
   Spacer,
-  useToast,
 } from "@chakra-ui/react";
 import { MdRefresh } from "react-icons/md";
 import HistoryPane from "./HistoryPane";
@@ -19,8 +19,6 @@ import type { Environment } from "src/api";
 
 export default function SharedPane({ sharedId }: { sharedId: string }) {
   const [environment, setEnvironment] = useState<Environment | null>(null);
-  const toast = useToast();
-
   useEffect(() => {
     environments.find(sharedId).then((env) => {
       setEnvironment(env);
@@ -28,13 +26,6 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
 
       const { unsubscribe } = environments.subscribe(env.id, (env) => {
         setEnvironment(env);
-        toast({
-          title: "更新しました",
-          status: "info",
-          duration: 2000,
-          isClosable: true,
-          colorScheme: "brand",
-        });
         if (env.isFinished) unsubscribe();
       });
 
@@ -52,6 +43,9 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
           </Alert>
         ) : (
           <HStack>
+            <Heading size={"md"}>
+              {environment?.members.length} 人が参加中
+            </Heading>
             <Spacer />
             <IconButton
               size={"sm"}

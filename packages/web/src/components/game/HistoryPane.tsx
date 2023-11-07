@@ -15,8 +15,8 @@ export default function HistoryPane(
       {histories.map(({ history, index }, i) => (
         <Box key={history.members.flat().join(",")} px={2}>
           <Heading as={"label"} size={"sm"} color={"gray.600"}>
-            {`${index + 1} 回目`}
-            {i === 0 && " (現在)"}
+            {i !== 0 && `${index + 1} 回目`}
+            {i === 0 && " 現在 "}
             {i === 1 && " (前回)"}
           </Heading>
           <CourtMembersPane members={history.members} single={false} />
