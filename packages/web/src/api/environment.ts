@@ -13,7 +13,13 @@ import type {
 
 const ttl = (lifetime: number) => Math.floor((Date.now() + lifetime) / 1000);
 
-const find = async (id: string) => {
+export type Environment = CurrentSettings & {
+  id: string;
+  version: number;
+  isFinished: boolean;
+};
+
+const find = async (id: string): Promise<Environment | null> => {
   const { data, errors } = await API.graphql<GraphQLQuery<GetEnvironmentQuery>>(
     {
       query: getEnvironment,
@@ -30,7 +36,7 @@ const find = async (id: string) => {
   const { version, finishedAt } = data.getEnvironment;
   const settings = settingsSchema.parse(JSON.parse(data.getEnvironment.data));
 
-  return { id, version, finishedAt, ...settings };
+  return { id, version, isFinished: !!finishedAt, ...settings };
 };
 
 const create = async (settings: CurrentSettings) => {
