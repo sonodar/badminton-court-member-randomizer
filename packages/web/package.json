@@ -1,5 +1,6 @@
 {
   "name": "@doubles-member-generator/web",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "astro dev",
@@ -15,7 +16,7 @@
     "@astrojs/react": "^3.0.3",
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.1",
-    "@doubles-member-generator/lib": "workspace:*",
+    "@doubles-member-generator/lib": "*",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "astro": "^3.3.0",
@@ -29,6 +30,8 @@
   },
   "devDependencies": {
     "@types/ms": "0.7.33",
+    "@types/react": "18.2.36",
+    "@types/react-dom": "18.2.14",
     "eslint-import-resolver-typescript": "3.6.1",
     "eslint-plugin-react": "7.33.2",
     "prettier-plugin-astro": "0.12.1"
