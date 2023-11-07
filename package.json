@@ -11,7 +11,8 @@
     "test": "turbo run test",
     "fix": "run-s format lint:fix",
     "typecheck": "turbo run typecheck",
-    "build": "turbo run -F @doubles-member-generator/web build"
+    "build": "turbo run -F @doubles-member-generator/web build",
+    "preview": "npm run preview -w @doubles-member-generator/web"
   },
   "devDependencies": {
     "@aws-amplify/cli": "12.7.1",
