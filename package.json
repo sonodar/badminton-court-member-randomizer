@@ -1,6 +1,8 @@
 {
   "name": "doubles-member-generator",
   "license": "MIT",
+  "private": true,
+  "packageManager": "npm@10.1.0",
   "scripts": {
     "dev": "turbo run dev",
     "format": "turbo run format",
@@ -9,12 +11,12 @@
     "test": "turbo run test",
     "fix": "run-s format lint:fix",
     "typecheck": "turbo run typecheck",
-    "build": "pnpm -F @doubles-member-generator/web build"
+    "build": "npm run build -w @doubles-member-generator/web"
   },
   "devDependencies": {
     "@aws-amplify/cli": "12.7.1",
-    "@doubles-member-generator/eslint-config": "workspace:*",
-    "@doubles-member-generator/tsconfig": "workspace:*",
+    "@doubles-member-generator/eslint-config": "*",
+    "@doubles-member-generator/tsconfig": "*",
     "@types/jest": "29.5.7",
     "jest": "29.7.0",
     "npm-run-all": "4.1.5",
@@ -22,5 +24,8 @@
     "ts-node": "10.9.1",
     "turbo": "latest",
     "typescript": "5.2.2"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }
