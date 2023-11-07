@@ -1,15 +1,18 @@
 import type { CurrentSettings } from "@doubles-member-generator/lib";
 import { API } from "aws-amplify";
 import ms from "ms";
-import type { GraphQLQuery } from "@aws-amplify/api";
+import type { GraphQLQuery, GraphQLSubscription } from "@aws-amplify/api";
 import { createEnvironment, updateEnvironment } from "../graphql/mutations";
 import { getEnvironment } from "../graphql/queries";
 import { settingsSchema } from "../util/settingsSchema";
 import type {
   CreateEnvironmentMutation,
   GetEnvironmentQuery,
+  OnUpdateEnvironmentSubscription,
+  OnDeleteEnvironmentSubscriptionVariables,
   UpdateEnvironmentMutation,
 } from "./API";
+import { onUpdateEnvironment } from "src/graphql/subscriptions";
 
 const ttl = (lifetime: number) => Math.floor((Date.now() + lifetime) / 1000);
 
@@ -37,6 +40,33 @@ const find = async (id: string): Promise<Environment | null> => {
   const settings = settingsSchema.parse(JSON.parse(data.getEnvironment.data));
 
   return { id, version, isFinished: !!finishedAt, ...settings };
+};
+
+const subscribe = (id: string, onUpdate: (env: Environment) => void) => {
+  const variables: OnDeleteEnvironmentSubscriptionVariables = {
+    filter: { id: { eq: id } },
+  };
+
+  const observer = API.graphql<
+    GraphQLSubscription<OnUpdateEnvironmentSubscription>
+  >({ query: onUpdateEnvironment, variables }).subscribe({
+    next: ({ value }) => {
+      if (!value.data?.onUpdateEnvironment) return;
+      const { id, version, finishedAt, data } = value.data.onUpdateEnvironment;
+      const settings = settingsSchema.parse(JSON.parse(data));
+      const isFinished = !!finishedAt;
+      onUpdate({ id, version, isFinished, ...settings });
+    },
+    error: (error) => {
+      throw error;
+    },
+  });
+
+  const unsubscribe = () => {
+    if (!observer.closed) observer.unsubscribe();
+  };
+
+  return { unsubscribe };
 };
 
 const create = async (settings: CurrentSettings) => {
@@ -100,4 +130,4 @@ const remove = async (id: string) => {
   }
 };
 
-export const environments = { find, create, update, remove };
+export const environments = { find, create, update, remove, subscribe };
