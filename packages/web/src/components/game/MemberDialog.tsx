@@ -20,7 +20,7 @@ type Props = {
 
 export function MemberDialog({ members, gameCounts, isOpen, onClose }: Props) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent maxW={"350px"}>
         <ModalHeader maxH={"xs"} style={{ ...prittyFont }}>

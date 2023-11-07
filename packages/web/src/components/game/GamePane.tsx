@@ -5,6 +5,7 @@ import {
   CardBody,
   CardFooter,
   Center,
+  Divider,
   HStack,
   Spacer,
   Stack,
@@ -17,18 +18,22 @@ import type {
 import { create } from "@doubles-member-generator/lib";
 import React, { useState } from "react";
 import { IoDiceOutline } from "react-icons/io5";
+import storage from "../../util/settingsStorage";
+import { ShareButton } from "./ShareButton";
 import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
 import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput.tsx";
 import { HistoryButton } from "@components/game/HistoryButton.tsx";
 import { MemberButton } from "@components/game/MemberButton.tsx";
 import { ResetButton } from "@components/game/ResetButton.tsx";
+import { environments } from "src/api";
 
 type Props = {
   settings: CurrentSettings;
   onReset: () => void;
+  shareId?: string | null;
 };
 
-export default function GamePane({ settings, onReset }: Props) {
+export default function GamePane({ settings, onReset, shareId }: Props) {
   const courtCount = settings.courtCount;
 
   const [manager, setManager] = useState(create(settings));
@@ -36,11 +41,27 @@ export default function GamePane({ settings, onReset }: Props) {
     manager.histories[manager.histories.length - 1]?.members || [],
   );
 
-  const saveSettings = () => {
-    window.localStorage.setItem(
-      "currentSettings",
-      JSON.stringify({ ...manager }),
-    );
+  const [environmentId, setEnvironmentId] = useState(shareId || undefined);
+  const [progress, setProgress] = useState(false);
+
+  const openProgress = () => setProgress(true);
+  const closeProgress = () => setProgress(false);
+
+  const issueShareLink = async () => {
+    openProgress();
+    const { id } = await environments.create(manager);
+    window.localStorage.setItem("shareId", id);
+    setEnvironmentId(id);
+    closeProgress();
+  };
+
+  const saveSettings = async (): Promise<void> => {
+    storage.save({ ...manager });
+    if (environmentId) {
+      openProgress();
+      await environments.update(environmentId, manager);
+      closeProgress();
+    }
   };
 
   const onJoin = () => {
@@ -71,7 +92,11 @@ export default function GamePane({ settings, onReset }: Props) {
   };
 
   const clear = () => {
-    window.localStorage.removeItem("currentSettings");
+    storage.clear();
+    window.localStorage.removeItem("shareId");
+    if (environmentId) {
+      environments.remove(environmentId);
+    }
     onReset();
   };
 
@@ -86,12 +111,14 @@ export default function GamePane({ settings, onReset }: Props) {
               min={courtCount * 4}
               onIncrement={onJoin}
               onDecrement={onLeave}
+              isDisabled={progress}
             />
             <HStack>
               <Button
                 colorScheme={"brand"}
                 leftIcon={<IoDiceOutline />}
                 onClick={handleGenerate}
+                isDisabled={progress}
               >
                 メンバー決め
               </Button>
@@ -101,7 +128,7 @@ export default function GamePane({ settings, onReset }: Props) {
                 leftIcon={<RepeatClockIcon />}
                 size={"xs"}
                 onClick={handleRetry}
-                isDisabled={manager.histories.length === 0}
+                isDisabled={progress || manager.histories.length === 0}
               >
                 やり直し
               </Button>
@@ -110,12 +137,19 @@ export default function GamePane({ settings, onReset }: Props) {
           </Stack>
         </Center>
       </CardBody>
-      <CardFooter>
-        <HistoryButton {...manager} />
+      <Divider color={"gray.300"} />
+      <CardFooter px={10} py={2}>
+        <HistoryButton {...manager} isDisabled={progress} />
         <Spacer />
-        <MemberButton {...manager} />
+        <MemberButton {...manager} isDisabled={progress} />
         <Spacer />
-        <ResetButton onReset={clear} />
+        <ShareButton
+          sharedId={environmentId}
+          onIssue={issueShareLink}
+          isDisabled={progress}
+        />
+        <Spacer />
+        <ResetButton onReset={clear} isDisabled={progress} />
       </CardFooter>
     </Card>
   );
