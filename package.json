@@ -4,7 +4,7 @@
   "private": true,
   "packageManager": "npm@10.1.0",
   "scripts": {
-    "dev": "turbo run dev",
+    "dev": "npm run dev -w @doubles-member-generator/web",
     "format": "turbo run format",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint -- --fix",

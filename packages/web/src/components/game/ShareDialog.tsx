@@ -11,9 +11,11 @@ import {
   ModalOverlay,
   useToast,
   Stack,
+  Spacer,
 } from "@chakra-ui/react";
 import React from "react";
 import { prittyFont } from "@components/theme";
+import LineShareButton from "@components/LineShareButton";
 
 type Props = {
   isOpen: boolean;
@@ -51,13 +53,15 @@ export function ShareDialog({ isOpen, onClose, value }: Props) {
             <Stack w={"100%"}>
               <Input px={1} value={value} isReadOnly={true} />
               <Center>
+                <LineShareButton url={value} />
+                <Spacer />
                 <Button
                   size={"sm"}
                   w={"8rem"}
                   leftIcon={<CopyIcon />}
                   onClick={handleCopy}
                 >
-                  コピー
+                  URLコピー
                 </Button>
               </Center>
             </Stack>
