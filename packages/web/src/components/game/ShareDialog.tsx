@@ -13,7 +13,7 @@ import {
   Stack,
   Spacer,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useRef } from "react";
 import { prittyFont } from "@components/theme";
 import LineShareButton from "@components/LineShareButton";
 
@@ -25,11 +25,12 @@ type Props = {
 
 export function ShareDialog({ isOpen, onClose, value }: Props) {
   const toast = useToast();
+  const toastRef = useRef<string | number>();
 
   const handleCopy = () => {
     if (value) {
       navigator.clipboard.writeText(value);
-      toast({
+      toastRef.current = toast({
         title: "コピーしました",
         status: "info",
         duration: 2000,
