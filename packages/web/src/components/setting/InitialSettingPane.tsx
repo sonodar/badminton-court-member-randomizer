@@ -14,7 +14,7 @@ import {
   Spacer,
   Stack,
 } from "@chakra-ui/react";
-import { COURT_CAPACITY } from "@doubles-member-generator/lib";
+import { COURT_CAPACITY } from "@doubles-member-generator/manager";
 import React, { useState } from "react";
 import { GiTennisCourt } from "react-icons/gi";
 import { ImGithub } from "react-icons/im";

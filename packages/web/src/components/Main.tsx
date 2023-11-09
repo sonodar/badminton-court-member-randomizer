@@ -1,5 +1,5 @@
 import { ChakraProvider, Container } from "@chakra-ui/react";
-import { util } from "@doubles-member-generator/lib";
+import { util } from "@doubles-member-generator/manager";
 import React, { useState } from "react";
 import storage from "../util/settingsStorage";
 import SharedPane from "./game/SharedPane";

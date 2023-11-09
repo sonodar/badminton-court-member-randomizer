@@ -1,6 +1,6 @@
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { HStack, IconButton, Input } from "@chakra-ui/react";
-import { MEMBER_COUNT_LIMIT } from "@doubles-member-generator/lib";
+import { MEMBER_COUNT_LIMIT } from "@doubles-member-generator/manager";
 import React from "react";
 
 type Props = {

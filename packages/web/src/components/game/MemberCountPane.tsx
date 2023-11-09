@@ -6,7 +6,7 @@ import {
   Heading,
   SimpleGrid,
 } from "@chakra-ui/react";
-import type { PlayCountPerMember } from "@doubles-member-generator/lib";
+import type { PlayCountPerMember } from "@doubles-member-generator/manager";
 import React from "react";
 
 type Props = {

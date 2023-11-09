@@ -14,8 +14,8 @@ import {
 import type {
   CurrentSettings,
   GameMembers,
-} from "@doubles-member-generator/lib";
-import { create } from "@doubles-member-generator/lib";
+} from "@doubles-member-generator/manager";
+import { create } from "@doubles-member-generator/manager";
 import React, { useState } from "react";
 import { IoDiceOutline } from "react-icons/io5";
 import storage from "../../util/settingsStorage";

@@ -6,7 +6,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import type { PlayCountPerMember } from "@doubles-member-generator/lib";
+import type { PlayCountPerMember } from "@doubles-member-generator/manager";
 import React from "react";
 import MemberCountPane from "./MemberCountPane";
 import { prittyFont } from "@components/theme";

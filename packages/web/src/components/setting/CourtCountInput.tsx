@@ -1,5 +1,5 @@
 import { Box, HStack, Stack, useRadio, useRadioGroup } from "@chakra-ui/react";
-import { COURT_COUNT_LIMIT } from "@doubles-member-generator/lib";
+import { COURT_COUNT_LIMIT } from "@doubles-member-generator/manager";
 import React from "react";
 
 function CourtCountButton(

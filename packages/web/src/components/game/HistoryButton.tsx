@@ -1,5 +1,5 @@
 import { IconButton, useDisclosure } from "@chakra-ui/react";
-import type { CurrentSettings } from "@doubles-member-generator/lib";
+import type { CurrentSettings } from "@doubles-member-generator/manager";
 import React, { Fragment } from "react";
 import { MdOutlineWatchLater } from "react-icons/md";
 import { HistoryDialog } from "@components/game/HistoryDialog.tsx";

@@ -1,4 +1,4 @@
-import type { CurrentSettings } from "@doubles-member-generator/lib";
+import type { CurrentSettings } from "@doubles-member-generator/manager";
 import { settingsSchema } from "./settingsSchema";
 
 const STORAGE_KEY = "currentSettings";

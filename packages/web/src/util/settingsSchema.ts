@@ -1,4 +1,4 @@
-import type { CurrentSettings } from "@doubles-member-generator/lib";
+import type { CurrentSettings } from "@doubles-member-generator/manager";
 import type { ZodType } from "zod";
 import { z } from "zod";
 

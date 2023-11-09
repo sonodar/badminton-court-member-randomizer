@@ -7,8 +7,11 @@ import {
   SimpleGrid,
   Stack,
 } from "@chakra-ui/react";
-import type { CourtMembers, GameMembers } from "@doubles-member-generator/lib";
-import { util } from "@doubles-member-generator/lib";
+import type {
+  CourtMembers,
+  GameMembers,
+} from "@doubles-member-generator/manager";
+import { util } from "@doubles-member-generator/manager";
 import React from "react";
 
 function CourtCard({

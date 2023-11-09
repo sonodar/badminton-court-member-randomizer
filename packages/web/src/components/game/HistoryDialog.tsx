@@ -8,7 +8,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import type { CurrentSettings } from "@doubles-member-generator/lib";
+import type { CurrentSettings } from "@doubles-member-generator/manager";
 import HistoryPane from "./HistoryPane";
 import { prittyFont } from "@components/theme";
 

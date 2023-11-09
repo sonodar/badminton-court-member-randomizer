@@ -1,5 +1,5 @@
 {
-  "name": "@doubles-member-generator/lib",
+  "name": "@doubles-member-generator/manager",
   "version": "1.0.0",
   "main": "src/index.ts",
   "scripts": {

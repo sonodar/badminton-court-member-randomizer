@@ -1,5 +1,5 @@
 import { IconButton, useDisclosure } from "@chakra-ui/react";
-import type { CurrentSettings } from "@doubles-member-generator/lib";
+import type { CurrentSettings } from "@doubles-member-generator/manager";
 import React, { Fragment } from "react";
 import { TbUsers } from "react-icons/tb";
 import { MemberDialog } from "@components/game/MemberDialog.tsx";

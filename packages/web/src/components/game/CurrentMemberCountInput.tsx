@@ -1,5 +1,5 @@
 import { Button, HStack, Input, Spacer, useDisclosure } from "@chakra-ui/react";
-import { MEMBER_COUNT_LIMIT } from "@doubles-member-generator/lib";
+import { MEMBER_COUNT_LIMIT } from "@doubles-member-generator/manager";
 import React from "react";
 import { TbUserOff, TbUserPlus } from "react-icons/tb";
 import { LeaveDialog } from "@components/game/LeaveDialog.tsx";

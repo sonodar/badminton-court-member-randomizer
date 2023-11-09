@@ -1,4 +1,4 @@
-import type { CurrentSettings } from "@doubles-member-generator/lib";
+import type { CurrentSettings } from "@doubles-member-generator/manager";
 import { API } from "aws-amplify";
 import ms from "ms";
 import type { GraphQLQuery, GraphQLSubscription } from "@aws-amplify/api";
