@@ -29,16 +29,19 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
       if (!env || env.isFinished) return;
 
       const { unsubscribe } = environments.subscribe(env.id, (env) => {
-        toastRef.current = toast({
-          title: `状況が更新されました: ${env.version}`,
-          status: "success",
-          duration: 2000,
-          isClosable: true,
-          colorScheme: "brand",
-          variant: "subtle",
-        });
+        if (env.isFinished) {
+          unsubscribe();
+        } else {
+          toastRef.current = toast({
+            title: `状況が更新されました`,
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+            colorScheme: "brand",
+            variant: "subtle",
+          });
+        }
         setEnvironment(env);
-        if (env.isFinished) unsubscribe();
       });
 
       return () => unsubscribe();

@@ -150,7 +150,7 @@ export default function GamePane({ settings, onReset, shareId }: Props) {
         <ShareButton
           sharedId={environmentId}
           onIssue={issueShareLink}
-          isDisabled={progress}
+          isDisabled={progress || manager.histories.length === 0}
         />
         <Spacer />
         <ResetButton onReset={clear} isDisabled={progress} />
