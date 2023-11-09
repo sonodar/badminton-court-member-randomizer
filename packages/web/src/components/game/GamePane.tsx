@@ -16,7 +16,7 @@ import type {
   GameMembers,
 } from "@doubles-member-generator/manager";
 import { create } from "@doubles-member-generator/manager";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoDiceOutline } from "react-icons/io5";
 import storage from "../../util/settingsStorage";
 import { ShareButton } from "./ShareButton";
@@ -64,9 +64,12 @@ export default function GamePane({ settings, onReset, shareId }: Props) {
     }
   };
 
+  useEffect(() => {
+    saveSettings();
+  }, [manager]);
+
   const onJoin = () => {
     setManager(manager.join());
-    saveSettings();
   };
   const handleGenerate = () => {
     setLatestMembers(manager.next());
@@ -78,10 +81,11 @@ export default function GamePane({ settings, onReset, shareId }: Props) {
   };
 
   const toast = useToast();
+  const toastRef = useRef<string | number>();
+
   const onLeave = (id: number) => {
     setManager(manager.leave(id));
-    saveSettings();
-    toast({
+    toastRef.current = toast({
       title: `メンバー ${id} が離脱しました`,
       status: "warning",
       duration: 2000,

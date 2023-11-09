@@ -1,5 +1,5 @@
 import { IconButton, useDisclosure, useToast } from "@chakra-ui/react";
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useMemo, useRef } from "react";
 import { HiLink } from "react-icons/hi2";
 import { makeShareLink } from "../../util/shareLink";
 import { ShareDialog } from "./ShareDialog";
@@ -34,10 +34,11 @@ export function ShareButton({ sharedId, onIssue, isDisabled }: Props) {
   };
 
   const toast = useToast();
+  const toastRef = useRef<string | number>();
   const handleOk = async () => {
     await onIssue();
     onIssueClose();
-    toast({
+    toastRef.current = toast({
       title: "共有リンクを発行しました",
       status: "success",
       duration: 2000,
