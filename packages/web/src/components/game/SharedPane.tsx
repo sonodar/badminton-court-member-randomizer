@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   AlertIcon,
@@ -11,6 +11,7 @@ import {
   Heading,
   IconButton,
   Spacer,
+  useToast,
 } from "@chakra-ui/react";
 import { MdRefresh } from "react-icons/md";
 import HistoryPane from "./HistoryPane";
@@ -19,12 +20,34 @@ import type { Environment } from "src/api";
 
 export default function SharedPane({ sharedId }: { sharedId: string }) {
   const [environment, setEnvironment] = useState<Environment | null>(null);
+  const toast = useToast();
+  const toastRef = useRef<string | number>();
+
   useEffect(() => {
     environments.find(sharedId).then((env) => {
       setEnvironment(env);
       if (!env || env.isFinished) return;
 
       const { unsubscribe } = environments.subscribe(env.id, (env) => {
+        if (toastRef.current) {
+          toast.update(toastRef.current, {
+            title: "状況が更新されました",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+            colorScheme: "brand",
+            variant: "subtle",
+          });
+        } else {
+          toastRef.current = toast({
+            title: "状況が更新されました",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+            colorScheme: "brand",
+            variant: "subtle",
+          });
+        }
         setEnvironment(env);
         if (env.isFinished) unsubscribe();
       });
