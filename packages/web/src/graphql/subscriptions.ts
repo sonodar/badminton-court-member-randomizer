@@ -6,11 +6,10 @@ export const onCreateEvent = /* GraphQL */ `
   subscription OnCreateEvent($filter: ModelSubscriptionEventFilterInput) {
     onCreateEvent(filter: $filter) {
       id
-      type
-      occuredAt
       environmentID
-      context
-      ttl
+      type
+      payload
+      occurredAt
       createdAt
       updatedAt
     }
@@ -20,11 +19,10 @@ export const onUpdateEvent = /* GraphQL */ `
   subscription OnUpdateEvent($filter: ModelSubscriptionEventFilterInput) {
     onUpdateEvent(filter: $filter) {
       id
-      type
-      occuredAt
       environmentID
-      context
-      ttl
+      type
+      payload
+      occurredAt
       createdAt
       updatedAt
     }
@@ -34,11 +32,10 @@ export const onDeleteEvent = /* GraphQL */ `
   subscription OnDeleteEvent($filter: ModelSubscriptionEventFilterInput) {
     onDeleteEvent(filter: $filter) {
       id
-      type
-      occuredAt
       environmentID
-      context
-      ttl
+      type
+      payload
+      occurredAt
       createdAt
       updatedAt
     }
