@@ -18,8 +18,8 @@ import { COURT_CAPACITY } from "@doubles-member-generator/manager";
 import React, { useState } from "react";
 import { GiTennisCourt } from "react-icons/gi";
 import { ImGithub } from "react-icons/im";
-import { InitMemberCountInput } from "@components/setting/InitMemberCountInput.tsx";
-import { CourtCountInput } from "@components/setting/CourtCountInput.tsx";
+import { InitMemberCountInput } from "@components/setting/InitMemberCountInput";
+import { CourtCountInput } from "@components/setting/CourtCountInput";
 import logo from "@assets/logo.svg";
 
 type Props = {

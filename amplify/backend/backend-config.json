@@ -4,13 +4,10 @@
       "dependsOn": [],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [
-            {
-              "authenticationType": "AWS_IAM"
-            }
-          ],
+          "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
             "apiKeyConfig": {
+              "apiKeyExpirationDate": "2024-11-14T10:09:02.276Z",
               "apiKeyExpirationDays": 365,
               "description": "default api key"
             },
@@ -20,6 +17,56 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "AppSync"
+    }
+  },
+  "function": {
+    "DoublesMemberGeneratorEventCleaner": {
+      "build": true,
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "DoublesMemberGenerator",
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ]
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_DoublesMemberGeneratorEventCleaner_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "DoublesMemberGeneratorEventCleaner"
+        }
+      ]
+    },
+    "AMPLIFY_function_DoublesMemberGeneratorEventCleaner_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "DoublesMemberGeneratorEventCleaner"
+        }
+      ]
+    },
+    "AMPLIFY_function_DoublesMemberGeneratorEventConsumer_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "DoublesMemberGeneratorEventConsumer"
+        }
+      ]
+    },
+    "AMPLIFY_function_DoublesMemberGeneratorEventConsumer_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "DoublesMemberGeneratorEventConsumer"
+        }
+      ]
     }
   }
 }

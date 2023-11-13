@@ -1,0 +1,6 @@
+src/API.ts
+src/graphql/queries.ts
+src/graphql/mutations.ts
+src/graphql/subscriptions.ts
+src/aws-exports.js
+src/amplifyconfiguration.json

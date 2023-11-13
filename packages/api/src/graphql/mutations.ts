@@ -13,6 +13,7 @@ export const createEvent = /* GraphQL */ `
       type
       payload
       occurredAt
+      consumed
       createdAt
       updatedAt
     }
@@ -29,6 +30,7 @@ export const updateEvent = /* GraphQL */ `
       type
       payload
       occurredAt
+      consumed
       createdAt
       updatedAt
     }
@@ -45,6 +47,7 @@ export const deleteEvent = /* GraphQL */ `
       type
       payload
       occurredAt
+      consumed
       createdAt
       updatedAt
     }
@@ -57,13 +60,21 @@ export const createEnvironment = /* GraphQL */ `
   ) {
     createEnvironment(input: $input, condition: $condition) {
       id
-      data
-      version
       ttl
+      finishedAt
       Events {
+        items {
+          id
+          environmentID
+          type
+          payload
+          occurredAt
+          consumed
+          createdAt
+          updatedAt
+        }
         nextToken
       }
-      finishedAt
       createdAt
       updatedAt
     }
@@ -76,13 +87,21 @@ export const updateEnvironment = /* GraphQL */ `
   ) {
     updateEnvironment(input: $input, condition: $condition) {
       id
-      data
-      version
       ttl
+      finishedAt
       Events {
+        items {
+          id
+          environmentID
+          type
+          payload
+          occurredAt
+          consumed
+          createdAt
+          updatedAt
+        }
         nextToken
       }
-      finishedAt
       createdAt
       updatedAt
     }
@@ -95,13 +114,21 @@ export const deleteEnvironment = /* GraphQL */ `
   ) {
     deleteEnvironment(input: $input, condition: $condition) {
       id
-      data
-      version
       ttl
+      finishedAt
       Events {
+        items {
+          id
+          environmentID
+          type
+          payload
+          occurredAt
+          consumed
+          createdAt
+          updatedAt
+        }
         nextToken
       }
-      finishedAt
       createdAt
       updatedAt
     }

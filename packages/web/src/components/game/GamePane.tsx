@@ -21,14 +21,18 @@ import {
 } from "@doubles-member-generator/manager";
 import React, { useEffect, useRef, useState } from "react";
 import { IoDiceOutline } from "react-icons/io5";
+import {
+  createEnvironment,
+  eventEmitter,
+  finishEnvironment,
+} from "@doubles-member-generator/api";
 import storage from "../../util/settingsStorage";
-import { environments } from "../../api";
 import { ShareButton } from "./ShareButton";
-import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
-import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput.tsx";
-import { HistoryButton } from "@components/game/HistoryButton.tsx";
-import { MemberButton } from "@components/game/MemberButton.tsx";
-import { ResetButton } from "@components/game/ResetButton.tsx";
+import CourtMembersPane from "@components/game/CourtMembersPane";
+import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput";
+import { HistoryButton } from "@components/game/HistoryButton";
+import { MemberButton } from "@components/game/MemberButton";
+import { ResetButton } from "@components/game/ResetButton";
 
 type Props = {
   initialSettings: CurrentSettings;
@@ -40,7 +44,8 @@ export default function GamePane({ initialSettings, onReset, shareId }: Props) {
   const courtCount = initialSettings.courtCount;
 
   const [settings, setSettings] = useState(initialSettings);
-  const latestMembers = getLatestMembers(settings);
+  const latestMembers =
+    settings.histories.length > 0 ? getLatestMembers(settings) : [];
 
   const [environmentId, setEnvironmentId] = useState(shareId || undefined);
   const [progress, setProgress] = useState(false);
@@ -50,38 +55,50 @@ export default function GamePane({ initialSettings, onReset, shareId }: Props) {
 
   const issueShareLink = async () => {
     openProgress();
-    const { id } = await environments.create(settings);
+    const { id } = await createEnvironment();
     window.localStorage.setItem("shareId", id);
     setEnvironmentId(id);
+    await eventEmitter(id).initialize(settings);
     closeProgress();
-  };
-
-  const updateEnvironment = async (environmentId: string) => {
-    openProgress();
-    await environments.update(environmentId, settings);
-    closeProgress();
-  };
-
-  const saveSettings = async (): Promise<void> => {
-    storage.save({ ...settings });
-    if (environmentId) {
-      await updateEnvironment(environmentId);
-    }
   };
 
   useEffect(() => {
-    saveSettings().then(() => {});
+    storage.save({ ...settings });
   }, [settings]);
 
-  const handleJoin = () => setSettings(join(settings));
-  const handleGenerate = () => setSettings(generate(settings));
-  const handleRetry = () => setSettings(retry(settings));
+  const handleJoin = () => {
+    setSettings(join(settings));
+    if (environmentId) {
+      eventEmitter(environmentId).join();
+    }
+  };
+
+  const handleGenerate = () => {
+    const newSettings = generate(settings);
+    setSettings(newSettings);
+    if (environmentId) {
+      const members = getLatestMembers(newSettings)!;
+      eventEmitter(environmentId).generate(members);
+    }
+  };
+
+  const handleRetry = () => {
+    const newSettings = retry(settings);
+    setSettings(newSettings);
+    if (environmentId) {
+      const members = getLatestMembers(newSettings)!;
+      eventEmitter(environmentId).retry(members);
+    }
+  };
 
   const toast = useToast();
   const toastRef = useRef<string | number>();
 
   const handleLeave = (id: number) => {
     setSettings(leave(settings, id));
+    if (environmentId) {
+      eventEmitter(environmentId).leave(id);
+    }
     toastRef.current = toast({
       title: `メンバー ${id} が離脱しました`,
       status: "warning",
@@ -92,11 +109,12 @@ export default function GamePane({ initialSettings, onReset, shareId }: Props) {
     });
   };
 
-  const clear = async () => {
+  const clear = () => {
     storage.clear();
     window.localStorage.removeItem("shareId");
     if (environmentId) {
-      await environments.remove(environmentId);
+      eventEmitter(environmentId).finish();
+      finishEnvironment(environmentId);
     }
     onReset();
   };
@@ -134,7 +152,7 @@ export default function GamePane({ initialSettings, onReset, shareId }: Props) {
                 やり直し
               </Button>
             </HStack>
-            {latestMembers && <CourtMembersPane members={latestMembers} />}
+            <CourtMembersPane members={latestMembers || []} />
           </Stack>
         </Center>
       </CardBody>

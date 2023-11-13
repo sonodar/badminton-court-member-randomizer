@@ -8,10 +8,12 @@
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint -- --fix",
     "test": "turbo run test",
-    "fix": "run-s format lint:fix",
+    "fix": "run-s format lint:fix typecheck",
     "typecheck": "turbo run typecheck",
     "build": "turbo run -F @doubles-member-generator/web build",
-    "preview": "npm run preview -w @doubles-member-generator/web"
+    "preview": "turbo run -F @doubles-member-generator/web preview",
+    "amplify:DoublesMemberGeneratorEventCleaner": "yarn install; yarn --cwd amplify/backend/function/DoublesMemberGeneratorEventCleaner run build",
+    "amplify:DoublesMemberGeneratorEventConsumer": "yarn install; yarn --cwd amplify/backend/function/DoublesMemberGeneratorEventConsumer run build"
   },
   "devDependencies": {
     "@doubles-member-generator/eslint-config": "*",
@@ -25,6 +27,7 @@
     "typescript": "5.2.2"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "amplify/backend/function/*"
   ]
 }
