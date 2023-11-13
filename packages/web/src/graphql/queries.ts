@@ -6,11 +6,10 @@ export const getEvent = /* GraphQL */ `
   query GetEvent($id: ID!) {
     getEvent(id: $id) {
       id
-      type
-      occuredAt
       environmentID
-      context
-      ttl
+      type
+      payload
+      occurredAt
       createdAt
       updatedAt
     }
@@ -25,11 +24,10 @@ export const listEvents = /* GraphQL */ `
     listEvents(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        type
-        occuredAt
         environmentID
-        context
-        ttl
+        type
+        payload
+        occurredAt
         createdAt
         updatedAt
       }
@@ -54,11 +52,10 @@ export const eventsByEnvironmentID = /* GraphQL */ `
     ) {
       items {
         id
-        type
-        occuredAt
         environmentID
-        context
-        ttl
+        type
+        payload
+        occurredAt
         createdAt
         updatedAt
       }

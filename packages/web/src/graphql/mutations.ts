@@ -9,11 +9,10 @@ export const createEvent = /* GraphQL */ `
   ) {
     createEvent(input: $input, condition: $condition) {
       id
-      type
-      occuredAt
       environmentID
-      context
-      ttl
+      type
+      payload
+      occurredAt
       createdAt
       updatedAt
     }
@@ -26,11 +25,10 @@ export const updateEvent = /* GraphQL */ `
   ) {
     updateEvent(input: $input, condition: $condition) {
       id
-      type
-      occuredAt
       environmentID
-      context
-      ttl
+      type
+      payload
+      occurredAt
       createdAt
       updatedAt
     }
@@ -43,11 +41,10 @@ export const deleteEvent = /* GraphQL */ `
   ) {
     deleteEvent(input: $input, condition: $condition) {
       id
-      type
-      occuredAt
       environmentID
-      context
-      ttl
+      type
+      payload
+      occurredAt
       createdAt
       updatedAt
     }
