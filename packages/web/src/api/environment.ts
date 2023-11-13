@@ -1,18 +1,21 @@
 import type { CurrentSettings } from "@doubles-member-generator/manager";
 import { API } from "aws-amplify";
 import ms from "ms";
-import type { GraphQLQuery, GraphQLSubscription } from "@aws-amplify/api";
-import { createEnvironment, updateEnvironment } from "../graphql/mutations";
-import { getEnvironment } from "../graphql/queries";
+import type { GraphQLQuery, GraphQLSubscription } from "../graphql";
+import {
+  getEnvironment,
+  createEnvironment,
+  updateEnvironment,
+  onUpdateEnvironment,
+} from "../graphql";
 import { settingsSchema } from "../util/settingsSchema";
 import type {
   CreateEnvironmentMutation,
   GetEnvironmentQuery,
   OnUpdateEnvironmentSubscription,
-  OnDeleteEnvironmentSubscriptionVariables,
+  OnUpdateEnvironmentSubscriptionVariables,
   UpdateEnvironmentMutation,
 } from "./API";
-import { onUpdateEnvironment } from "src/graphql/subscriptions";
 
 const ttl = (lifetime: number) => Math.floor((Date.now() + lifetime) / 1000);
 
@@ -43,7 +46,7 @@ const find = async (id: string): Promise<Environment | null> => {
 };
 
 const subscribe = (id: string, onUpdate: (env: Environment) => void) => {
-  const variables: OnDeleteEnvironmentSubscriptionVariables = {
+  const variables: OnUpdateEnvironmentSubscriptionVariables = {
     filter: { id: { eq: id } },
   };
 

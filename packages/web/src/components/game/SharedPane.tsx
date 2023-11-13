@@ -14,9 +14,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { MdRefresh } from "react-icons/md";
+import { environments, type Environment } from "../../api";
 import HistoryPane from "./HistoryPane";
-import { environments } from "src/api";
-import type { Environment } from "src/api";
 
 export default function SharedPane({ sharedId }: { sharedId: string }) {
   const [environment, setEnvironment] = useState<Environment | null>(null);

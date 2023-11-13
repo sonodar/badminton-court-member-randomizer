@@ -22,13 +22,13 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { IoDiceOutline } from "react-icons/io5";
 import storage from "../../util/settingsStorage";
+import { environments } from "../../api";
 import { ShareButton } from "./ShareButton";
 import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
 import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput.tsx";
 import { HistoryButton } from "@components/game/HistoryButton.tsx";
 import { MemberButton } from "@components/game/MemberButton.tsx";
 import { ResetButton } from "@components/game/ResetButton.tsx";
-import { environments } from "src/api";
 
 type Props = {
   initialSettings: CurrentSettings;
