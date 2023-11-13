@@ -9,11 +9,10 @@ enum EventType {
 
 type Event @model @auth(rules: [{allow: public}]) {
   id: ID!
-  type: EventType!
-  occuredAt: AWSDateTime!
   environmentID: ID! @index(name: "byEnvironment")
-  context: AWSJSON!
-  ttl: AWSTimestamp!
+  type: EventType!
+  payload: AWSJSON!
+  occurredAt: AWSDateTime!
 }
 
 type Environment @model @auth(rules: [{allow: public}]) {
@@ -24,4 +23,3 @@ type Environment @model @auth(rules: [{allow: public}]) {
   Events: [Event] @hasMany(indexName: "byEnvironment", fields: ["id"])
   finishedAt: AWSDateTime
 }
- 

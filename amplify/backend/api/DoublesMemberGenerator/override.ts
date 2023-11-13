@@ -5,8 +5,4 @@ export function override(resources: AmplifyApiGraphQlResourceStackTemplate) {
         attributeName: "ttl",
         enabled: true
     }
-    resources.models["Event"].modelDDBTable.timeToLiveSpecification = {
-        attributeName: "ttl",
-        enabled: true
-    }
 }
