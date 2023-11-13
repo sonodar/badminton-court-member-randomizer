@@ -2,7 +2,6 @@
   "name": "doubles-member-generator",
   "license": "MIT",
   "private": true,
-  "packageManager": "npm@10.1.0",
   "scripts": {
     "dev": "npm run dev -w @doubles-member-generator/web",
     "format": "turbo run format",
@@ -12,7 +11,8 @@
     "fix": "run-s format lint:fix",
     "typecheck": "turbo run typecheck",
     "build": "turbo run -F @doubles-member-generator/web build",
-    "preview": "npm run preview -w @doubles-member-generator/web"
+    "preview": "npm run preview -w @doubles-member-generator/web",
+    "amplify": "amplify"
   },
   "devDependencies": {
     "@aws-amplify/cli": "12.7.1",

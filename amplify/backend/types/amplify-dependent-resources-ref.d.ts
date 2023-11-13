@@ -1,9 +1,9 @@
 export type AmplifyDependentResourcesAttributes = {
-  "api": {
-    "DoublesMemberGenerator": {
-      "GraphQLAPIEndpointOutput": "string",
-      "GraphQLAPIIdOutput": "string",
-      "GraphQLAPIKeyOutput": "string"
+    "api": {
+        "DoublesMemberGenerator": {
+            "GraphQLAPIKeyOutput": "string",
+            "GraphQLAPIIdOutput": "string",
+            "GraphQLAPIEndpointOutput": "string"
+        }
     }
-  }
 }
