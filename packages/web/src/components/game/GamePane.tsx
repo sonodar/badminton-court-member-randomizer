@@ -11,11 +11,14 @@ import {
   Stack,
   useToast,
 } from "@chakra-ui/react";
-import type {
-  CurrentSettings,
-  GameMembers,
+import type { CurrentSettings } from "@doubles-member-generator/manager";
+import {
+  generate,
+  retry,
+  join,
+  leave,
+  getLatestMembers,
 } from "@doubles-member-generator/manager";
-import { create } from "@doubles-member-generator/manager";
 import React, { useEffect, useRef, useState } from "react";
 import { IoDiceOutline } from "react-icons/io5";
 import storage from "../../util/settingsStorage";
@@ -28,18 +31,16 @@ import { ResetButton } from "@components/game/ResetButton.tsx";
 import { environments } from "src/api";
 
 type Props = {
-  settings: CurrentSettings;
+  initialSettings: CurrentSettings;
   onReset: () => void;
   shareId?: string | null;
 };
 
-export default function GamePane({ settings, onReset, shareId }: Props) {
-  const courtCount = settings.courtCount;
+export default function GamePane({ initialSettings, onReset, shareId }: Props) {
+  const courtCount = initialSettings.courtCount;
 
-  const [manager, setManager] = useState(create(settings));
-  const [latestMembers, setLatestMembers] = useState<GameMembers>(
-    manager.histories[manager.histories.length - 1]?.members || [],
-  );
+  const [settings, setSettings] = useState(initialSettings);
+  const latestMembers = getLatestMembers(settings);
 
   const [environmentId, setEnvironmentId] = useState(shareId || undefined);
   const [progress, setProgress] = useState(false);
@@ -49,42 +50,38 @@ export default function GamePane({ settings, onReset, shareId }: Props) {
 
   const issueShareLink = async () => {
     openProgress();
-    const { id } = await environments.create(manager);
+    const { id } = await environments.create(settings);
     window.localStorage.setItem("shareId", id);
     setEnvironmentId(id);
     closeProgress();
   };
 
+  const updateEnvironment = async (environmentId: string) => {
+    openProgress();
+    await environments.update(environmentId, settings);
+    closeProgress();
+  };
+
   const saveSettings = async (): Promise<void> => {
-    storage.save({ ...manager });
+    storage.save({ ...settings });
     if (environmentId) {
-      openProgress();
-      await environments.update(environmentId, manager);
-      closeProgress();
+      await updateEnvironment(environmentId);
     }
   };
 
   useEffect(() => {
-    saveSettings();
-  }, [manager]);
+    saveSettings().then(() => {});
+  }, [settings]);
 
-  const onJoin = () => {
-    setManager(manager.join());
-  };
-  const handleGenerate = () => {
-    setLatestMembers(manager.next());
-    saveSettings();
-  };
-  const handleRetry = () => {
-    setLatestMembers(manager.retry());
-    saveSettings();
-  };
+  const handleJoin = () => setSettings(join(settings));
+  const handleGenerate = () => setSettings(generate(settings));
+  const handleRetry = () => setSettings(retry(settings));
 
   const toast = useToast();
   const toastRef = useRef<string | number>();
 
-  const onLeave = (id: number) => {
-    setManager(manager.leave(id));
+  const handleLeave = (id: number) => {
+    setSettings(leave(settings, id));
     toastRef.current = toast({
       title: `メンバー ${id} が離脱しました`,
       status: "warning",
@@ -95,11 +92,11 @@ export default function GamePane({ settings, onReset, shareId }: Props) {
     });
   };
 
-  const clear = () => {
+  const clear = async () => {
     storage.clear();
     window.localStorage.removeItem("shareId");
     if (environmentId) {
-      environments.remove(environmentId);
+      await environments.remove(environmentId);
     }
     onReset();
   };
@@ -110,11 +107,11 @@ export default function GamePane({ settings, onReset, shareId }: Props) {
         <Center>
           <Stack spacing={6}>
             <CurrentMemberCountInput
-              members={manager.members}
-              value={manager.memberCount}
+              members={settings.members}
+              value={settings.members.length}
               min={courtCount * 4}
-              onIncrement={onJoin}
-              onDecrement={onLeave}
+              onIncrement={handleJoin}
+              onDecrement={handleLeave}
               isDisabled={progress}
             />
             <HStack>
@@ -132,20 +129,20 @@ export default function GamePane({ settings, onReset, shareId }: Props) {
                 leftIcon={<RepeatClockIcon />}
                 size={"xs"}
                 onClick={handleRetry}
-                isDisabled={progress || manager.histories.length === 0}
+                isDisabled={progress || settings.histories.length === 0}
               >
                 やり直し
               </Button>
             </HStack>
-            <CourtMembersPane members={latestMembers} />
+            {latestMembers && <CourtMembersPane members={latestMembers} />}
           </Stack>
         </Center>
       </CardBody>
       <Divider color={"gray.300"} />
       <CardFooter px={10} py={2}>
-        <HistoryButton {...manager} isDisabled={progress} />
+        <HistoryButton {...settings} isDisabled={progress} />
         <Spacer />
-        <MemberButton {...manager} isDisabled={progress} />
+        <MemberButton {...settings} isDisabled={progress} />
         <Spacer />
         <ShareButton
           sharedId={environmentId}

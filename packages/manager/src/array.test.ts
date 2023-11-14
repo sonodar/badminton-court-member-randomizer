@@ -1,4 +1,4 @@
-import { array } from "./util";
+import { array } from "./array";
 
 describe("array util", () => {
   test("split chunks", () => {
