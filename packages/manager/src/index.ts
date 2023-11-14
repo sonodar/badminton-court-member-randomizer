@@ -1,18 +1,8 @@
-import { BadmintonDoublesMemberGenerator } from "./main";
-import type { CurrentSettings, DoublesMemberGenerator } from "./types";
-import { array } from "./util";
-
-export function create(settings: CurrentSettings): DoublesMemberGenerator {
-  return new BadmintonDoublesMemberGenerator({ ...settings });
-}
-
-export const util = { array };
+export type * from "./types";
 export * from "./consts";
-
-export type {
-  CurrentSettings,
-  CourtMembers,
-  GameMembers,
-  History,
-  PlayCountPerMember,
-} from "./types";
+export * from "./array";
+export { getLatestMembers } from "./util";
+export * from "./generate";
+export * from "./retry";
+export * from "./join";
+export * from "./leave";

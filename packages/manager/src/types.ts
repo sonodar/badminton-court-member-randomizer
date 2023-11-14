@@ -11,12 +11,3 @@ export type CurrentSettings = {
   histories: History[];
   gameCounts: PlayCountPerMember;
 };
-
-export interface DoublesMemberGenerator extends CurrentSettings {
-  readonly courtCapacity: number;
-  readonly memberCount: number;
-  next(): GameMembers;
-  retry(): GameMembers;
-  join(): DoublesMemberGenerator;
-  leave(...ids: number[]): DoublesMemberGenerator;
-}

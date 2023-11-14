@@ -1,5 +1,5 @@
 import { ChakraProvider, Container } from "@chakra-ui/react";
-import { util } from "@doubles-member-generator/manager";
+import { array } from "@doubles-member-generator/manager";
 import React, { useState } from "react";
 import storage from "../util/settingsStorage";
 import SharedPane from "./game/SharedPane";
@@ -33,7 +33,7 @@ export default function Main() {
     courtCount: number;
     memberCount: number;
   }) => {
-    const members = util.array.generate(memberCount);
+    const members = array.generate(memberCount);
     setSettings({ courtCount, members, histories: [], gameCounts: {} });
   };
 
@@ -47,7 +47,11 @@ export default function Main() {
       <Container maxW={"sm"} minW={"sm"}>
         {settings === null && <InitialSettingPane onStart={onStart} />}
         {settings !== null && (
-          <GamePane settings={settings} onReset={onReset} shareId={shareId} />
+          <GamePane
+            initialSettings={settings}
+            onReset={onReset}
+            shareId={shareId}
+          />
         )}
       </Container>
     </ChakraProvider>

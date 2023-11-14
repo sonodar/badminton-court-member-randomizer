@@ -11,7 +11,7 @@ import type {
   CourtMembers,
   GameMembers,
 } from "@doubles-member-generator/manager";
-import { util } from "@doubles-member-generator/manager";
+import { array } from "@doubles-member-generator/manager";
 import React from "react";
 
 function CourtCard({
@@ -53,7 +53,7 @@ type Props = {
 };
 
 export default function CourtMembersPane({ members, single = true }: Props) {
-  const courtIds = util.array.generate(members.length, 0);
+  const courtIds = array.generate(members.length, 0);
   return (
     <SimpleGrid columns={single ? 1 : 2} spacing={4} justifyItems={"center"}>
       {members.length > 0 &&
