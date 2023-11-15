@@ -66,7 +66,7 @@ export function ShareButton({ sharedId, onIssue, isDisabled }: Props) {
         onOk={handleOk}
         title={"共有リンクの発行"}
       >
-        まだ共有用のリンクが発行されていません。共有リンクを発行しますか？
+        共有リンクを発行すると、現在の状態を他の人とリアルタイムで共有できます。共有リンクを発行しますか？
       </ConfirmDialog>
       <ShareDialog
         value={shareLink}
