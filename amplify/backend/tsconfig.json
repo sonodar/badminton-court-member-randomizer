@@ -6,5 +6,6 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "build"
-  }
+  },
+  "exclude": ["function"]
 }

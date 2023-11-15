@@ -2,7 +2,7 @@ import { IconButton, useDisclosure } from "@chakra-ui/react";
 import type { CurrentSettings } from "@doubles-member-generator/manager";
 import React, { Fragment } from "react";
 import { MdOutlineWatchLater } from "react-icons/md";
-import { HistoryDialog } from "@components/game/HistoryDialog.tsx";
+import { HistoryDialog } from "@components/game/HistoryDialog";
 
 export function HistoryButton({
   isDisabled,

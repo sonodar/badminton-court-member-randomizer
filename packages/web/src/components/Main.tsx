@@ -2,11 +2,11 @@ import { ChakraProvider, Container } from "@chakra-ui/react";
 import { array } from "@doubles-member-generator/manager";
 import React, { useState } from "react";
 import storage from "../util/settingsStorage";
+import { parseShareLink } from "../util/shareLink";
 import SharedPane from "./game/SharedPane";
-import GamePane from "@components/game/GamePane.tsx";
-import InitialSettingPane from "@components/setting/InitialSettingPane.tsx";
-import customTheme from "@components/theme.ts";
-import { parseShareLink } from "src/util/shareLink";
+import GamePane from "@components/game/GamePane";
+import InitialSettingPane from "@components/setting/InitialSettingPane";
+import customTheme from "@components/theme";
 
 export default function Main() {
   const sharedId = parseShareLink(window.location);

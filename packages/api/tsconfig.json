@@ -1,0 +1,6 @@
+{
+  "extends": "@doubles-member-generator/tsconfig/base.json",
+  "compilerOptions": {
+    "noImplicitAny": false
+  }
+}

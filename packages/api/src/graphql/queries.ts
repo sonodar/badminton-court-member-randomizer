@@ -10,6 +10,7 @@ export const getEvent = /* GraphQL */ `
       type
       payload
       occurredAt
+      consumed
       createdAt
       updatedAt
     }
@@ -28,6 +29,62 @@ export const listEvents = /* GraphQL */ `
         type
         payload
         occurredAt
+        consumed
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getEnvironment = /* GraphQL */ `
+  query GetEnvironment($id: ID!) {
+    getEnvironment(id: $id) {
+      id
+      ttl
+      finishedAt
+      Events {
+        items {
+          id
+          environmentID
+          type
+          payload
+          occurredAt
+          consumed
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listEnvironments = /* GraphQL */ `
+  query ListEnvironments(
+    $filter: ModelEnvironmentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEnvironments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        ttl
+        finishedAt
+        Events {
+          items {
+            id
+            environmentID
+            type
+            payload
+            occurredAt
+            consumed
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -56,42 +113,7 @@ export const eventsByEnvironmentID = /* GraphQL */ `
         type
         payload
         occurredAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getEnvironment = /* GraphQL */ `
-  query GetEnvironment($id: ID!) {
-    getEnvironment(id: $id) {
-      id
-      data
-      version
-      ttl
-      Events {
-        nextToken
-      }
-      finishedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listEnvironments = /* GraphQL */ `
-  query ListEnvironments(
-    $filter: ModelEnvironmentFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listEnvironments(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        data
-        version
-        ttl
-        finishedAt
+        consumed
         createdAt
         updatedAt
       }

@@ -1,14 +1,16 @@
 {
-  "name": "@doubles-member-generator/manager",
+  "name": "@doubles-member-generator/api",
   "version": "1.0.0",
   "main": "src/index.ts",
   "scripts": {
-    "test": "jest",
     "lint": "eslint .",
     "format": "prettier --write '**/*.{js,ts,md,json}'",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@doubles-member-generator/manager": "*",
+    "aws-amplify": "5.3.12",
+    "ts-pattern": "5.0.5",
     "zod": "3.22.4"
   }
 }

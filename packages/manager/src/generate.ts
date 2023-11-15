@@ -100,7 +100,7 @@ function getRandomMembers({ courtCount, members }: CurrentSettings) {
   return array.sortInnerItems(membersPerCourt) as GameMembers;
 }
 
-function addHistory(
+export function addHistory(
   settings: CurrentSettings,
   members: GameMembers,
 ): CurrentSettings {
@@ -109,6 +109,8 @@ function addHistory(
   newSettings.gameCounts = increment(settings.gameCounts, members);
   return newSettings;
 }
+
+export const replayGenerate = addHistory;
 
 function averageEditDistance(
   histories: CurrentSettings["histories"],

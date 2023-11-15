@@ -1,16 +1,12 @@
 import type { CurrentSettings } from "@doubles-member-generator/manager";
-import { settingsSchema } from "./settingsSchema";
+import { toSettings } from "@doubles-member-generator/manager";
 
 const STORAGE_KEY = "currentSettings";
 
 const get = (): CurrentSettings | null => {
   const json = window.localStorage.getItem(STORAGE_KEY);
   if (!json) return null;
-
-  const result = settingsSchema.safeParse(JSON.parse(json));
-  if (!result.success) return null;
-
-  return result.data;
+  return toSettings(json);
 };
 
 const save = (settings: CurrentSettings) => {
