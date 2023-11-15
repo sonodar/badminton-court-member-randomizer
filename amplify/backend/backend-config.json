@@ -24,11 +24,11 @@
       "build": true,
       "dependsOn": [
         {
-          "category": "api",
-          "resourceName": "DoublesMemberGenerator",
           "attributes": [
             "GraphQLAPIIdOutput"
-          ]
+          ],
+          "category": "api",
+          "resourceName": "DoublesMemberGenerator"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -49,22 +49,6 @@
         {
           "category": "function",
           "resourceName": "DoublesMemberGeneratorEventCleaner"
-        }
-      ]
-    },
-    "AMPLIFY_function_DoublesMemberGeneratorEventConsumer_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "DoublesMemberGeneratorEventConsumer"
-        }
-      ]
-    },
-    "AMPLIFY_function_DoublesMemberGeneratorEventConsumer_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "DoublesMemberGeneratorEventConsumer"
         }
       ]
     }
