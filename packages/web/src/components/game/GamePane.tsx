@@ -11,12 +11,9 @@ import {
   Stack,
   useToast,
 } from "@chakra-ui/react";
-import type { CurrentSettings } from "@doubles-member-generator/manager";
 import {
   generate,
   retry,
-  join,
-  leave,
   getLatestMembers,
 } from "@doubles-member-generator/manager";
 import React, { useEffect, useRef, useState } from "react";
@@ -33,19 +30,16 @@ import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInpu
 import { HistoryButton } from "@components/game/HistoryButton";
 import { MemberButton } from "@components/game/MemberButton";
 import { ResetButton } from "@components/game/ResetButton";
+import { useSettings, useSettingsDispatcher } from "@components/state";
 
 type Props = {
-  initialSettings: CurrentSettings;
   onReset: () => void;
   shareId?: string | null;
 };
 
-export default function GamePane({ initialSettings, onReset, shareId }: Props) {
-  const courtCount = initialSettings.courtCount;
-
-  const [settings, setSettings] = useState(initialSettings);
-  const latestMembers =
-    settings.histories.length > 0 ? getLatestMembers(settings) : [];
+export default function GamePane({ onReset, shareId }: Props) {
+  const settings = useSettings();
+  const dispatcher = useSettingsDispatcher();
 
   const [environmentId, setEnvironmentId] = useState(shareId || undefined);
   const [progress, setProgress] = useState(false);
@@ -67,7 +61,7 @@ export default function GamePane({ initialSettings, onReset, shareId }: Props) {
   }, [settings]);
 
   const handleJoin = () => {
-    setSettings(join(settings));
+    dispatcher.join();
     if (environmentId) {
       eventEmitter(environmentId).join();
     }
@@ -75,18 +69,18 @@ export default function GamePane({ initialSettings, onReset, shareId }: Props) {
 
   const handleGenerate = () => {
     const newSettings = generate(settings);
-    setSettings(newSettings);
+    const members = getLatestMembers(newSettings)!;
+    dispatcher.generate(members);
     if (environmentId) {
-      const members = getLatestMembers(newSettings)!;
       eventEmitter(environmentId).generate(members);
     }
   };
 
   const handleRetry = () => {
     const newSettings = retry(settings);
-    setSettings(newSettings);
+    const members = getLatestMembers(newSettings)!;
+    dispatcher.retry(members);
     if (environmentId) {
-      const members = getLatestMembers(newSettings)!;
       eventEmitter(environmentId).retry(members);
     }
   };
@@ -95,7 +89,7 @@ export default function GamePane({ initialSettings, onReset, shareId }: Props) {
   const toastRef = useRef<string | number>();
 
   const handleLeave = (id: number) => {
-    setSettings(leave(settings, id));
+    dispatcher.leave(id);
     if (environmentId) {
       eventEmitter(environmentId).leave(id);
     }
@@ -125,9 +119,6 @@ export default function GamePane({ initialSettings, onReset, shareId }: Props) {
         <Center>
           <Stack spacing={6}>
             <CurrentMemberCountInput
-              members={settings.members}
-              value={settings.members.length}
-              min={courtCount * 4}
               onIncrement={handleJoin}
               onDecrement={handleLeave}
               isDisabled={progress}
@@ -152,15 +143,15 @@ export default function GamePane({ initialSettings, onReset, shareId }: Props) {
                 やり直し
               </Button>
             </HStack>
-            <CourtMembersPane members={latestMembers || []} />
+            <CourtMembersPane members={getLatestMembers(settings) || []} />
           </Stack>
         </Center>
       </CardBody>
       <Divider color={"gray.300"} />
       <CardFooter px={10} py={2}>
-        <HistoryButton {...settings} isDisabled={progress} />
+        <HistoryButton isDisabled={progress} />
         <Spacer />
-        <MemberButton {...settings} isDisabled={progress} />
+        <MemberButton isDisabled={progress} />
         <Spacer />
         <ShareButton
           sharedId={environmentId}

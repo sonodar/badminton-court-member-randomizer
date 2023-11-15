@@ -6,15 +6,11 @@ import {
   Heading,
   SimpleGrid,
 } from "@chakra-ui/react";
-import type { PlayCountPerMember } from "@doubles-member-generator/manager";
 import React from "react";
+import { useSettings } from "@components/state";
 
-type Props = {
-  members: number[];
-  gameCounts: PlayCountPerMember;
-};
-
-export default function MemberCountPane({ members, gameCounts }: Props) {
+export default function MemberCountPane() {
+  const { members, gameCounts } = useSettings();
   const memberIds = new Set(members.map((member) => member.toString()));
   return (
     <SimpleGrid minChildWidth="110px" spacing={2}>
