@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import storage from "../util/settingsStorage";
 import { parseShareLink } from "../util/shareLink";
 import SharedPane from "./game/SharedPane";
+import { SettingsProvider } from "./state";
 import GamePane from "@components/game/GamePane";
 import InitialSettingPane from "@components/setting/InitialSettingPane";
 import customTheme from "@components/theme";
@@ -14,9 +15,11 @@ export default function Main() {
   if (sharedId) {
     return (
       <ChakraProvider theme={customTheme}>
-        <Container maxW={"sm"} minW={"sm"}>
-          <SharedPane sharedId={sharedId} />
-        </Container>
+        <SettingsProvider>
+          <Container maxW={"sm"} minW={"sm"}>
+            <SharedPane sharedId={sharedId} />
+          </Container>
+        </SettingsProvider>
       </ChakraProvider>
     );
   }
@@ -47,11 +50,9 @@ export default function Main() {
       <Container maxW={"sm"} minW={"sm"}>
         {settings === null && <InitialSettingPane onStart={onStart} />}
         {settings !== null && (
-          <GamePane
-            initialSettings={settings}
-            onReset={onReset}
-            shareId={shareId}
-          />
+          <SettingsProvider initialSettings={settings}>
+            <GamePane onReset={onReset} shareId={shareId} />
+          </SettingsProvider>
         )}
       </Container>
     </ChakraProvider>

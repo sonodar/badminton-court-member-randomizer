@@ -1,33 +1,34 @@
 import { Button, HStack, Input, Spacer, useDisclosure } from "@chakra-ui/react";
-import { MEMBER_COUNT_LIMIT } from "@doubles-member-generator/manager";
+import {
+  COURT_CAPACITY,
+  MEMBER_COUNT_LIMIT,
+} from "@doubles-member-generator/manager";
 import React from "react";
 import { TbUserOff, TbUserPlus } from "react-icons/tb";
 import { LeaveDialog } from "@components/game/LeaveDialog";
+import { useSettings } from "@components/state";
 
 type Props = {
-  members: number[];
-  min: number;
-  value: number;
   onIncrement: () => void;
   onDecrement: (id: number) => void;
   isDisabled?: boolean;
 };
 
 export function CurrentMemberCountInput({
-  members,
-  min,
-  value,
   onIncrement,
   onDecrement,
   isDisabled,
 }: Props) {
+  const { members, courtCount } = useSettings();
+  const min = courtCount * COURT_CAPACITY;
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <HStack maxW={"320px"} minW={"320px"}>
       <span>現在</span>
       <Input
         type={"number"}
-        value={value}
+        value={members.length}
         step={1}
         min={min}
         max={MEMBER_COUNT_LIMIT}
@@ -43,7 +44,7 @@ export function CurrentMemberCountInput({
         colorScheme={"brand"}
         variant={"solid"}
         onClick={onIncrement}
-        isDisabled={isDisabled || value >= MEMBER_COUNT_LIMIT}
+        isDisabled={isDisabled || members.length >= MEMBER_COUNT_LIMIT}
       >
         参加
       </Button>
@@ -53,7 +54,7 @@ export function CurrentMemberCountInput({
         variant={"outline"}
         colorScheme={"brand"}
         onClick={onOpen}
-        isDisabled={isDisabled || value <= min}
+        isDisabled={isDisabled || members.length <= min}
       >
         離脱
       </Button>

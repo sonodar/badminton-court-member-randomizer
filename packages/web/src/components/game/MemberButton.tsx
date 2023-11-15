@@ -1,13 +1,11 @@
 import { IconButton, useDisclosure } from "@chakra-ui/react";
-import type { CurrentSettings } from "@doubles-member-generator/manager";
 import React, { Fragment } from "react";
 import { TbUsers } from "react-icons/tb";
 import { MemberDialog } from "@components/game/MemberDialog";
+import { useSettings } from "@components/state";
 
-export function MemberButton({
-  isDisabled,
-  ...settings
-}: CurrentSettings & { isDisabled?: boolean }) {
+export function MemberButton({ isDisabled }: { isDisabled?: boolean }) {
+  const { histories } = useSettings();
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Fragment>
@@ -17,10 +15,10 @@ export function MemberButton({
         fontSize={"2xl"}
         aria-label="メンバー"
         icon={<TbUsers />}
-        isDisabled={isDisabled || settings.histories.length === 0}
+        isDisabled={isDisabled || histories.length === 0}
         onClick={onOpen}
       />
-      <MemberDialog {...settings} isOpen={isOpen} onClose={onClose} />
+      <MemberDialog isOpen={isOpen} onClose={onClose} />
     </Fragment>
   );
 }

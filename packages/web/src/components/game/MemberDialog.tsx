@@ -6,19 +6,16 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import type { PlayCountPerMember } from "@doubles-member-generator/manager";
 import React from "react";
 import MemberCountPane from "./MemberCountPane";
 import { prittyFont } from "@components/theme";
 
 type Props = {
-  members: number[];
-  gameCounts: PlayCountPerMember;
   isOpen: boolean;
   onClose: () => void;
 };
 
-export function MemberDialog({ members, gameCounts, isOpen, onClose }: Props) {
+export function MemberDialog({ isOpen, onClose }: Props) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -28,7 +25,7 @@ export function MemberDialog({ members, gameCounts, isOpen, onClose }: Props) {
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody py={4} px={1}>
-          <MemberCountPane members={members} gameCounts={gameCounts} />
+          <MemberCountPane />
         </ModalBody>
       </ModalContent>
     </Modal>

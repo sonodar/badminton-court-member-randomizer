@@ -14,7 +14,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { MdRefresh } from "react-icons/md";
-import { type CurrentSettings } from "@doubles-member-generator/manager";
 import {
   EventType,
   type Event,
@@ -22,7 +21,9 @@ import {
   replayEvent,
   subscribeEvent,
 } from "@doubles-member-generator/api";
+import { match } from "ts-pattern";
 import HistoryPane from "./HistoryPane";
+import { useSettings, useSettingsDispatcher } from "@components/state";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const messages: Record<EventType, (value: any) => string> = {
@@ -48,7 +49,9 @@ const messageColors: Record<
 };
 
 export default function SharedPane({ sharedId }: { sharedId: string }) {
-  const [settings, setSettings] = useState<CurrentSettings | null>(null);
+  const settings = useSettings();
+  const dispatcher = useSettingsDispatcher();
+
   const [finished, setFinished] = useState(false);
   const [event, setEvent] = useState<Event | null>(null);
   const [subscribed, setSubscribed] = useState(false);
@@ -56,15 +59,18 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
   const proceededEvents: Record<string, Event> = {};
 
   useEffect(() => {
-    findAllEvents(sharedId)
-      .then(replayEvents)
-      .then(({ settings, finished, proceeded }) => {
-        for (const [id, event] of Object.entries(proceeded)) {
-          proceededEvents[id] = event;
-        }
-        setSettings(settings);
-        setFinished(finished);
-      });
+    findAllEvents(sharedId).then((events) => {
+      if (events.length === 0) {
+        setFinished(true);
+        return;
+      }
+      const { settings, finished, proceeded } = replayEvents(events);
+      for (const [id, event] of Object.entries(proceeded)) {
+        proceededEvents[id] = event;
+      }
+      dispatcher.initialize(settings);
+      setFinished(finished);
+    });
   }, [sharedId]);
 
   useEffect(() => {
@@ -100,7 +106,18 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
     if (event.type === EventType.Finish) {
       setFinished(true);
     } else {
-      setSettings(replayEvent(settings!, event));
+      match(event)
+        .with({ type: EventType.Generate }, ({ payload }) =>
+          dispatcher.generate(payload.members),
+        )
+        .with({ type: EventType.Retry }, ({ payload }) =>
+          dispatcher.retry(payload.members),
+        )
+        .with({ type: EventType.Join }, () => dispatcher.join())
+        .with({ type: EventType.Leave }, ({ payload }) =>
+          dispatcher.leave(payload.memberId),
+        )
+        .exhaustive();
     }
 
     const title = messages[event.type](event.payload);
@@ -125,7 +142,7 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
           </Alert>
         ) : (
           <HStack>
-            <Heading size={"md"}>{settings?.members.length} 人が参加中</Heading>
+            <Heading size={"md"}>{settings.members.length} 人が参加中</Heading>
             <Spacer />
             <IconButton
               size={"sm"}
@@ -139,7 +156,7 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
       </CardHeader>
       <CardBody>
         <Center>
-          <HistoryPane histories={settings?.histories || []} />
+          <HistoryPane />
         </Center>
       </CardBody>
     </Card>
