@@ -6,11 +6,12 @@ import type {
 import { getLatestMembers } from "@doubles-member-generator/manager";
 import { EventType, type EventPayload } from "@doubles-member-generator/api";
 
-export const empty = {
+export const empty: CurrentSettings = {
   courtCount: 0,
   members: [],
   histories: [],
   gameCounts: {},
+  randomMode: "DISCRETENESS",
 };
 
 export const SettingsContext = createContext<CurrentSettings>(empty);

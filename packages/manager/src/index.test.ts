@@ -9,6 +9,7 @@ describe("main", () => {
       members: array.generate(12),
       histories: [],
       gameCounts: {},
+      randomMode: "DISCRETENESS",
     });
 
     // 履歴が生成されていること

@@ -105,7 +105,11 @@ export function addHistory(
   members: GameMembers,
 ): CurrentSettings {
   const newSettings = structuredClone(settings);
-  newSettings.histories.push({ members });
+  const playMembers = members.flat();
+  const restMembers = settings.members.filter(
+    (id) => !playMembers.includes(id),
+  );
+  newSettings.histories.push({ members, restMembers });
   newSettings.gameCounts = increment(settings.gameCounts, members);
   return newSettings;
 }

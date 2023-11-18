@@ -14,21 +14,30 @@ import {
   Spacer,
   Stack,
 } from "@chakra-ui/react";
-import { COURT_CAPACITY } from "@doubles-member-generator/manager";
+import {
+  COURT_CAPACITY,
+  type RandomMode,
+} from "@doubles-member-generator/manager";
 import React, { useState } from "react";
 import { GiTennisCourt } from "react-icons/gi";
 import { ImGithub } from "react-icons/im";
-import { InitMemberCountInput } from "@components/setting/InitMemberCountInput";
-import { CourtCountInput } from "@components/setting/CourtCountInput";
+import RandomModeInput from "./RandomModeInput";
+import { InitMemberCountInput } from "./InitMemberCountInput";
+import { CourtCountInput } from "./CourtCountInput";
 import logo from "@assets/logo.svg";
 
 type Props = {
-  onStart: (env: { courtCount: number; memberCount: number }) => void;
+  onStart: (env: {
+    courtCount: number;
+    memberCount: number;
+    randomMode: RandomMode;
+  }) => void;
 };
 
 export default function InitialSettingPane({ onStart }: Props) {
   const [courtCount, setCourtCount] = useState(2);
   const [memberCount, setMemberCount] = useState(2 * COURT_CAPACITY);
+  const [randomMode, setRandomMode] = useState<RandomMode>("DISCRETENESS");
 
   const onChangeCourtCount = (courtCount: number) => {
     setCourtCount(courtCount);
@@ -48,7 +57,7 @@ export default function InitialSettingPane({ onStart }: Props) {
                 ダブルスメンバー決めるくん
               </Heading>
             </HStack>
-            <Heading as="h2" size="xl">
+            <Heading as="h2" size="lg">
               初期設定
             </Heading>
             <HStack spacing={0}>
@@ -66,6 +75,10 @@ export default function InitialSettingPane({ onStart }: Props) {
               value={memberCount}
               onChange={setMemberCount}
             />
+            <Heading as="h3" size="md">
+              モード
+            </Heading>
+            <RandomModeInput value={randomMode} onChange={setRandomMode} />
             <Divider />
             <Flex>
               <Link
@@ -82,7 +95,13 @@ export default function InitialSettingPane({ onStart }: Props) {
                 rightIcon={<ArrowForwardIcon />}
                 colorScheme={"brand"}
                 variant="outline"
-                onClick={() => onStart({ courtCount, memberCount })}
+                onClick={() =>
+                  onStart({
+                    courtCount,
+                    memberCount,
+                    randomMode,
+                  })
+                }
               >
                 開始
               </Button>

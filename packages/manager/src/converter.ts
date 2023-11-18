@@ -12,6 +12,7 @@ const settings = z.object({
   histories: z.array(
     z.object({
       members: gameMembers,
+      restMembers: z.array(z.number()),
       deleted: z.literal(true).optional(),
     }),
   ),
@@ -19,6 +20,7 @@ const settings = z.object({
     z.string(),
     z.object({ playCount: z.number(), baseCount: z.number() }),
   ),
+  randomMode: z.enum(["DISCRETENESS", "EVENNESS"]),
 }) satisfies ZodType<CurrentSettings>;
 
 export function toSettings(data: string | object): CurrentSettings {

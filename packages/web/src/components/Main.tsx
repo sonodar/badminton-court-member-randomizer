@@ -1,5 +1,5 @@
 import { ChakraProvider, Container } from "@chakra-ui/react";
-import { array } from "@doubles-member-generator/manager";
+import { array, type RandomMode } from "@doubles-member-generator/manager";
 import React, { useState } from "react";
 import storage from "../util/settingsStorage";
 import { parseShareLink } from "../util/shareLink";
@@ -32,12 +32,20 @@ export default function Main() {
   const onStart = ({
     courtCount,
     memberCount,
+    randomMode,
   }: {
     courtCount: number;
     memberCount: number;
+    randomMode: RandomMode;
   }) => {
     const members = array.generate(memberCount);
-    setSettings({ courtCount, members, histories: [], gameCounts: {} });
+    setSettings({
+      courtCount,
+      members,
+      histories: [],
+      gameCounts: {},
+      randomMode,
+    });
   };
 
   const onReset = () => {
