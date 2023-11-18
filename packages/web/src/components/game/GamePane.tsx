@@ -125,6 +125,7 @@ export default function GamePane({ onReset, shareId }: Props) {
             />
             <HStack>
               <Button
+                w={"45%"}
                 colorScheme={"brand"}
                 leftIcon={<IoDiceOutline />}
                 onClick={handleGenerate}
@@ -134,9 +135,10 @@ export default function GamePane({ onReset, shareId }: Props) {
               </Button>
               <Spacer />
               <Button
+                w={"45%"}
+                colorScheme={"brand"}
                 variant={"outline"}
                 leftIcon={<RepeatClockIcon />}
-                size={"xs"}
                 onClick={handleRetry}
                 isDisabled={progress || settings.histories.length === 0}
               >
