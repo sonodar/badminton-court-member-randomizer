@@ -17,7 +17,7 @@ function CourtCountButton(
         {...checkbox}
         cursor="pointer"
         borderWidth="1px"
-        borderRadius="md"
+        borderRadius="sm"
         boxShadow="md"
         sx={{ "--chakra-shadows-outline": "0" }}
         _checked={{
@@ -28,8 +28,8 @@ function CourtCountButton(
         _focus={{
           boxShadow: "outline",
         }}
-        px={5}
-        py={3}
+        px={4}
+        py={2}
       >
         {props.children}
       </Box>

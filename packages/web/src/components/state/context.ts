@@ -11,7 +11,7 @@ export const empty: CurrentSettings = {
   members: [],
   histories: [],
   gameCounts: {},
-  randomMode: "DISCRETENESS",
+  algorithm: "DISCRETENESS",
 };
 
 export const SettingsContext = createContext<CurrentSettings>(empty);

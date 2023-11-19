@@ -8,12 +8,12 @@ export type History = {
 };
 export type PlayCount = { playCount: number; baseCount: number };
 export type PlayCountPerMember = Record<MemberId, PlayCount>;
-export type RandomMode = "DISCRETENESS" | "EVENNESS";
+export type Algorithm = "DISCRETENESS" | "EVENNESS";
 
 export type CurrentSettings = {
   courtCount: number;
   members: MemberId[];
   histories: History[];
   gameCounts: PlayCountPerMember;
-  randomMode: RandomMode;
+  algorithm: Algorithm;
 };

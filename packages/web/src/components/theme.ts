@@ -10,6 +10,14 @@ const customTheme = extendTheme({
     // body: `"Zen Maru Gothic",-apple-system,sans-serif`,
     // mono: `"Zen Maru Gothic",monospace`,
   },
+  fontSizes: {
+    // "2xl": "20px",
+    // xl: "18px",
+    // lg: "16px",
+    // md: "14px",
+    // sm: "11px",
+    // xs: "9px",
+  },
   colors: {
     brand: {
       50: "#E8EFF6",

@@ -1,4 +1,4 @@
-import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
 import {
   Button,
   Card,
@@ -13,31 +13,33 @@ import {
   Link,
   Spacer,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import {
   COURT_CAPACITY,
-  type RandomMode,
+  type Algorithm,
 } from "@doubles-member-generator/manager";
 import React, { useState } from "react";
 import { GiTennisCourt } from "react-icons/gi";
 import { ImGithub } from "react-icons/im";
-import RandomModeInput from "./RandomModeInput";
+import AlgorithmInput from "./AlgorithmInput";
 import { InitMemberCountInput } from "./InitMemberCountInput";
 import { CourtCountInput } from "./CourtCountInput";
 import logo from "@assets/logo.svg";
+import HelpButton from "@components/HelpButton";
 
 type Props = {
   onStart: (env: {
     courtCount: number;
     memberCount: number;
-    randomMode: RandomMode;
+    algorithm: Algorithm;
   }) => void;
 };
 
 export default function InitialSettingPane({ onStart }: Props) {
   const [courtCount, setCourtCount] = useState(2);
   const [memberCount, setMemberCount] = useState(2 * COURT_CAPACITY);
-  const [randomMode, setRandomMode] = useState<RandomMode>("DISCRETENESS");
+  const [algorithm, setAlgorithm] = useState<Algorithm>("DISCRETENESS");
 
   const onChangeCourtCount = (courtCount: number) => {
     setCourtCount(courtCount);
@@ -53,7 +55,7 @@ export default function InitialSettingPane({ onStart }: Props) {
           <Stack spacing={6}>
             <HStack>
               <Image src={logo.src} boxSize="28px" borderRadius={"md"} />
-              <Heading as="h1" size="sm">
+              <Heading as="h1" size="md">
                 ダブルスメンバー決めるくん
               </Heading>
             </HStack>
@@ -64,7 +66,7 @@ export default function InitialSettingPane({ onStart }: Props) {
               <Heading as="h3" size="md">
                 コート数
               </Heading>
-              <span>（後から変更不可）</span>
+              <Text fontSize="md">（後から変更不可）</Text>
             </HStack>
             <CourtCountInput value={courtCount} onChange={onChangeCourtCount} />
             <Heading as="h3" size="md">
@@ -75,10 +77,13 @@ export default function InitialSettingPane({ onStart }: Props) {
               value={memberCount}
               onChange={setMemberCount}
             />
-            <Heading as="h3" size="md">
-              モード
-            </Heading>
-            <RandomModeInput value={randomMode} onChange={setRandomMode} />
+            <HStack>
+              <Heading as="h3" size="md">
+                アルゴリズム
+              </Heading>
+              <HelpButton title={"アルゴリズム"} items={["algorithm"]} />
+            </HStack>
+            <AlgorithmInput value={algorithm} onChange={setAlgorithm} />
             <Divider />
             <Flex>
               <Link
@@ -99,7 +104,7 @@ export default function InitialSettingPane({ onStart }: Props) {
                   onStart({
                     courtCount,
                     memberCount,
-                    randomMode,
+                    algorithm,
                   })
                 }
               >
