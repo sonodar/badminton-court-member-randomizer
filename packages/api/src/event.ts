@@ -2,7 +2,7 @@ import type {
   CurrentSettings,
   GameMembers,
 } from "@doubles-member-generator/manager";
-import { DataStore } from "aws-amplify";
+import { DataStore } from "@aws-amplify/datastore";
 import {
   join,
   leave,
