@@ -67,7 +67,7 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader maxH={"xs"}>
+          <ModalHeader>
             <Stack spacing={3}>
               <Heading as={"h3"} size={"md"}>
                 メンバー確定

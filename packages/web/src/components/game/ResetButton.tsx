@@ -33,7 +33,7 @@ export function ResetButton({
         okColorScheme={"danger"}
         title={"本当に終了しますか？"}
       >
-        コート、メンバー、履歴を削除して初期設定に戻ります。
+        すべての設定をリセットして初期設定に戻ります。
       </ConfirmDialog>
     </Fragment>
   );

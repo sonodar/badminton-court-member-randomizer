@@ -16,11 +16,7 @@ export default function HistoryPane(props: { histories?: History[] }) {
       <Heading as={"label"} size={"sm"} color={"primary.900"}>
         {" 今回 "}
       </Heading>
-      <CourtMembersPane
-        members={members}
-        single={false}
-        color={"primary.900"}
-      />
+      <CourtMembersPane members={members} single={false} />
     </Box>
   );
 
@@ -29,7 +25,7 @@ export default function HistoryPane(props: { histories?: History[] }) {
       <Heading as={"label"} size={"sm"} color={"gray.500"}>
         {" 前回 "}
       </Heading>
-      <CourtMembersPane members={members} single={false} color={"gray.500"} />
+      <CourtMembersPane members={members} single={false} archive={true} />
     </Box>
   );
 
@@ -44,7 +40,7 @@ export default function HistoryPane(props: { histories?: History[] }) {
       <Heading as={"label"} size={"sm"} color={"gray.500"}>
         {`${index + 1} 回目`}
       </Heading>
-      <CourtMembersPane members={members} single={false} color={"gray.500"} />
+      <CourtMembersPane members={members} single={false} archive={true} />
     </Box>
   );
 

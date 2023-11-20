@@ -27,7 +27,7 @@ export function StatisticsPane({ settings }: { settings: CurrentSettings }) {
     <Stack spacing={3}>
       <HistoryPane histories={histories} />
       {showStatistics && (
-        <Center>
+        <Center mt={4}>
           <Button
             w={"80%"}
             size={"sm"}
