@@ -59,9 +59,14 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
       >
         メンバー決め
       </Button>
-      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size={"full"}
+        scrollBehavior={"inside"}
+      >
         <ModalOverlay />
-        <ModalContent maxW={"350px"}>
+        <ModalContent>
           <ModalHeader maxH={"xs"}>
             <Stack spacing={3}>
               <Heading as={"h3"} size={"md"}>
