@@ -1,6 +1,6 @@
 import type { ZodType } from "zod";
 import { z } from "zod";
-import type { CurrentSettings, GameMembers, Algorithm } from "./types";
+import type { CurrentSettings, GameMembers } from "./types";
 
 const gameMembers = z.array(
   z.tuple([z.number(), z.number(), z.number(), z.number()]),

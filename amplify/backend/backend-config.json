@@ -51,22 +51,6 @@
           "resourceName": "DoublesMemberGeneratorEventCleaner"
         }
       ]
-    },
-    "AMPLIFY_function_DoublesMemberGeneratorEventConsumer_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "DoublesMemberGeneratorEventConsumer"
-        }
-      ]
-    },
-    "AMPLIFY_function_DoublesMemberGeneratorEventConsumer_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "DoublesMemberGeneratorEventConsumer"
-        }
-      ]
     }
   }
 }

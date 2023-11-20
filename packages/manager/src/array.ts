@@ -1,4 +1,6 @@
 export const array = {
+  sort,
+  unique,
   generate,
   shuffle,
   chunks,
@@ -12,6 +14,14 @@ export const array = {
   sum,
   range,
 };
+
+function unique(array: number[]) {
+  return Array.from(new Set(array));
+}
+
+function sort(array: number[]) {
+  return array.sort((n1, n2) => n1 - n2);
+}
 
 function generate(length: number, offset = 1): number[] {
   return Array.from({ length }, (_, i) => i + offset);
