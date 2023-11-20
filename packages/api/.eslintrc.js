@@ -6,6 +6,7 @@ module.exports = {
     "coverage/",
     "**/*.js",
     "src/API.ts",
+    "src/models/",
     "src/graphql/*.ts",
   ],
 };

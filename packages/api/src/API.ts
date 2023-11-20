@@ -9,6 +9,7 @@ export type CreateEventInput = {
   payload: string,
   occurredAt: string,
   consumed?: boolean | null,
+  _version?: number | null,
 };
 
 export enum EventType {
@@ -30,6 +31,7 @@ export type ModelEventConditionInput = {
   and?: Array< ModelEventConditionInput | null > | null,
   or?: Array< ModelEventConditionInput | null > | null,
   not?: ModelEventConditionInput | null,
+  _deleted?: ModelBooleanInput | null,
 };
 
 export type ModelIDInput = {
@@ -110,6 +112,9 @@ export type Event = {
   consumed?: boolean | null,
   createdAt: string,
   updatedAt: string,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
 };
 
 export type UpdateEventInput = {
@@ -119,16 +124,19 @@ export type UpdateEventInput = {
   payload?: string | null,
   occurredAt?: string | null,
   consumed?: boolean | null,
+  _version?: number | null,
 };
 
 export type DeleteEventInput = {
   id: string,
+  _version?: number | null,
 };
 
 export type CreateEnvironmentInput = {
   id?: string | null,
   ttl: number,
   finishedAt?: string | null,
+  _version?: number | null,
 };
 
 export type ModelEnvironmentConditionInput = {
@@ -137,6 +145,7 @@ export type ModelEnvironmentConditionInput = {
   and?: Array< ModelEnvironmentConditionInput | null > | null,
   or?: Array< ModelEnvironmentConditionInput | null > | null,
   not?: ModelEnvironmentConditionInput | null,
+  _deleted?: ModelBooleanInput | null,
 };
 
 export type ModelIntInput = {
@@ -159,22 +168,28 @@ export type Environment = {
   Events?: ModelEventConnection | null,
   createdAt: string,
   updatedAt: string,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
 };
 
 export type ModelEventConnection = {
   __typename: "ModelEventConnection",
   items:  Array<Event | null >,
   nextToken?: string | null,
+  startedAt?: number | null,
 };
 
 export type UpdateEnvironmentInput = {
   id: string,
   ttl?: number | null,
   finishedAt?: string | null,
+  _version?: number | null,
 };
 
 export type DeleteEnvironmentInput = {
   id: string,
+  _version?: number | null,
 };
 
 export type ModelEventFilterInput = {
@@ -187,6 +202,7 @@ export type ModelEventFilterInput = {
   and?: Array< ModelEventFilterInput | null > | null,
   or?: Array< ModelEventFilterInput | null > | null,
   not?: ModelEventFilterInput | null,
+  _deleted?: ModelBooleanInput | null,
 };
 
 export type ModelEnvironmentFilterInput = {
@@ -196,12 +212,14 @@ export type ModelEnvironmentFilterInput = {
   and?: Array< ModelEnvironmentFilterInput | null > | null,
   or?: Array< ModelEnvironmentFilterInput | null > | null,
   not?: ModelEnvironmentFilterInput | null,
+  _deleted?: ModelBooleanInput | null,
 };
 
 export type ModelEnvironmentConnection = {
   __typename: "ModelEnvironmentConnection",
   items:  Array<Environment | null >,
   nextToken?: string | null,
+  startedAt?: number | null,
 };
 
 export enum ModelSortDirection {
@@ -219,6 +237,7 @@ export type ModelSubscriptionEventFilterInput = {
   consumed?: ModelSubscriptionBooleanInput | null,
   and?: Array< ModelSubscriptionEventFilterInput | null > | null,
   or?: Array< ModelSubscriptionEventFilterInput | null > | null,
+  _deleted?: ModelBooleanInput | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -262,6 +281,7 @@ export type ModelSubscriptionEnvironmentFilterInput = {
   finishedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionEnvironmentFilterInput | null > | null,
   or?: Array< ModelSubscriptionEnvironmentFilterInput | null > | null,
+  _deleted?: ModelBooleanInput | null,
 };
 
 export type ModelSubscriptionIntInput = {
@@ -292,6 +312,9 @@ export type CreateEventMutation = {
     consumed?: boolean | null,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
   } | null,
 };
 
@@ -311,6 +334,9 @@ export type UpdateEventMutation = {
     consumed?: boolean | null,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
   } | null,
 };
 
@@ -330,6 +356,9 @@ export type DeleteEventMutation = {
     consumed?: boolean | null,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
   } | null,
 };
 
@@ -356,11 +385,18 @@ export type CreateEnvironmentMutation = {
         consumed?: boolean | null,
         createdAt: string,
         updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
       } | null >,
       nextToken?: string | null,
+      startedAt?: number | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
   } | null,
 };
 
@@ -387,11 +423,18 @@ export type UpdateEnvironmentMutation = {
         consumed?: boolean | null,
         createdAt: string,
         updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
       } | null >,
       nextToken?: string | null,
+      startedAt?: number | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
   } | null,
 };
 
@@ -418,11 +461,18 @@ export type DeleteEnvironmentMutation = {
         consumed?: boolean | null,
         createdAt: string,
         updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
       } | null >,
       nextToken?: string | null,
+      startedAt?: number | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
   } | null,
 };
 
@@ -441,6 +491,9 @@ export type GetEventQuery = {
     consumed?: boolean | null,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
   } | null,
 };
 
@@ -463,8 +516,41 @@ export type ListEventsQuery = {
       consumed?: boolean | null,
       createdAt: string,
       updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
     } | null >,
     nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type SyncEventsQueryVariables = {
+  filter?: ModelEventFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncEventsQuery = {
+  syncEvents?:  {
+    __typename: "ModelEventConnection",
+    items:  Array< {
+      __typename: "Event",
+      id: string,
+      environmentID: string,
+      type: EventType,
+      payload: string,
+      occurredAt: string,
+      consumed?: boolean | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
   } | null,
 };
 
@@ -490,11 +576,18 @@ export type GetEnvironmentQuery = {
         consumed?: boolean | null,
         createdAt: string,
         updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
       } | null >,
       nextToken?: string | null,
+      startedAt?: number | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
   } | null,
 };
 
@@ -524,13 +617,66 @@ export type ListEnvironmentsQuery = {
           consumed?: boolean | null,
           createdAt: string,
           updatedAt: string,
+          _version: number,
+          _deleted?: boolean | null,
+          _lastChangedAt: number,
         } | null >,
         nextToken?: string | null,
+        startedAt?: number | null,
       } | null,
       createdAt: string,
       updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
     } | null >,
     nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type SyncEnvironmentsQueryVariables = {
+  filter?: ModelEnvironmentFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncEnvironmentsQuery = {
+  syncEnvironments?:  {
+    __typename: "ModelEnvironmentConnection",
+    items:  Array< {
+      __typename: "Environment",
+      id: string,
+      ttl: number,
+      finishedAt?: string | null,
+      Events?:  {
+        __typename: "ModelEventConnection",
+        items:  Array< {
+          __typename: "Event",
+          id: string,
+          environmentID: string,
+          type: EventType,
+          payload: string,
+          occurredAt: string,
+          consumed?: boolean | null,
+          createdAt: string,
+          updatedAt: string,
+          _version: number,
+          _deleted?: boolean | null,
+          _lastChangedAt: number,
+        } | null >,
+        nextToken?: string | null,
+        startedAt?: number | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
   } | null,
 };
 
@@ -555,8 +701,12 @@ export type EventsByEnvironmentIDQuery = {
       consumed?: boolean | null,
       createdAt: string,
       updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
     } | null >,
     nextToken?: string | null,
+    startedAt?: number | null,
   } | null,
 };
 
@@ -575,6 +725,9 @@ export type OnCreateEventSubscription = {
     consumed?: boolean | null,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
   } | null,
 };
 
@@ -593,6 +746,9 @@ export type OnUpdateEventSubscription = {
     consumed?: boolean | null,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
   } | null,
 };
 
@@ -611,6 +767,9 @@ export type OnDeleteEventSubscription = {
     consumed?: boolean | null,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
   } | null,
 };
 
@@ -636,11 +795,18 @@ export type OnCreateEnvironmentSubscription = {
         consumed?: boolean | null,
         createdAt: string,
         updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
       } | null >,
       nextToken?: string | null,
+      startedAt?: number | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
   } | null,
 };
 
@@ -666,11 +832,18 @@ export type OnUpdateEnvironmentSubscription = {
         consumed?: boolean | null,
         createdAt: string,
         updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
       } | null >,
       nextToken?: string | null,
+      startedAt?: number | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
   } | null,
 };
 
@@ -696,10 +869,17 @@ export type OnDeleteEnvironmentSubscription = {
         consumed?: boolean | null,
         createdAt: string,
         updatedAt: string,
+        _version: number,
+        _deleted?: boolean | null,
+        _lastChangedAt: number,
       } | null >,
       nextToken?: string | null,
+      startedAt?: number | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
   } | null,
 };
