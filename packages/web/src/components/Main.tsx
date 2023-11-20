@@ -3,7 +3,7 @@ import { array, type Algorithm } from "@doubles-member-generator/manager";
 import React, { useState } from "react";
 import storage from "../util/settingsStorage";
 import { parseShareLink } from "../util/shareLink";
-import SharedPane from "./game/SharedPane";
+import SharedPane from "./shared/SharedPane.tsx";
 import { SettingsProvider } from "./state";
 import GamePane from "@components/game/GamePane";
 import InitialSettingPane from "@components/setting/InitialSettingPane";
