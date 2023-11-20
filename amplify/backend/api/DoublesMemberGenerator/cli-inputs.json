@@ -8,6 +8,11 @@
       "expirationTime": 365,
       "apiKeyExpirationDate": "2024-11-14T10:09:02.276Z",
       "keyDescription": "default api key"
+    },
+    "conflictResolution": {
+      "defaultResolutionStrategy": {
+        "type": "OPTIMISTIC_CONCURRENCY"
+      }
     }
   }
 }

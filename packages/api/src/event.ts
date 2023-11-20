@@ -2,7 +2,7 @@ import type {
   CurrentSettings,
   GameMembers,
 } from "@doubles-member-generator/manager";
-import { API } from "aws-amplify";
+import { DataStore } from "@aws-amplify/datastore";
 import {
   join,
   leave,
@@ -10,15 +10,7 @@ import {
   replayRetry,
 } from "@doubles-member-generator/manager";
 import { match } from "ts-pattern";
-import type { GraphQLQuery, GraphQLSubscription } from "./graphql";
-import { createEvent, eventsByEnvironmentID, onCreateEvent } from "./graphql";
-import type {
-  CreateEventMutation,
-  OnCreateEventSubscription,
-  OnCreateEventSubscriptionVariables,
-  EventsByEnvironmentIDQuery,
-  CreateEventInput,
-} from "./API";
+import { Event as EventEntity } from "./models";
 
 export const EventType = {
   Initialize: "INITIALIZE",
@@ -74,18 +66,15 @@ export type Event = EventPayload & {
   occurredAt: Date;
 };
 
-async function emit(envId: string, event: EventPayload) {
-  await API.graphql<GraphQLQuery<CreateEventMutation>>({
-    query: createEvent,
-    variables: {
-      input: {
-        environmentID: envId,
-        type: event.type,
-        payload: JSON.stringify(event.payload || "{}"),
-        occurredAt: new Date().toISOString(),
-      },
-    },
-  });
+async function emit(environmentID: string, event: EventPayload) {
+  await DataStore.save(
+    new EventEntity({
+      environmentID,
+      type: event.type,
+      payload: JSON.stringify(event.payload || "{}"),
+      occurredAt: new Date().toISOString(),
+    }),
+  );
 }
 
 export function eventEmitter(envId: string) {
@@ -107,31 +96,9 @@ export function subscribeEvent(
   environmentID: string,
   handler: (event: Event) => void,
 ) {
-  const variables: OnCreateEventSubscriptionVariables = {
-    filter: { environmentID: { eq: environmentID } },
-  };
-
-  const observer = API.graphql<GraphQLSubscription<OnCreateEventSubscription>>({
-    query: onCreateEvent,
-    variables,
-  }).subscribe({
-    next: ({ value }) => {
-      if (!value.data?.onCreateEvent) return;
-      if (value.data.onCreateEvent.environmentID !== environmentID) return; // 念のため
-      const payload = JSON.parse(value.data.onCreateEvent.payload);
-      const occurredAt = new Date(value.data.onCreateEvent.occurredAt);
-      const event = {
-        ...value.data.onCreateEvent,
-        payload,
-        occurredAt,
-      } as Event;
-      console.log("occurred event", event);
-      handler(event);
-    },
-    error: (error) => {
-      throw error;
-    },
-  });
+  const observer = DataStore.observeQuery(EventEntity, (c) =>
+    c.environmentID.eq(environmentID),
+  ).subscribe(({ items }) => items.map(toEvent).forEach(handler));
 
   const unsubscribe = () => {
     if (!observer.closed) observer.unsubscribe();
@@ -141,24 +108,25 @@ export function subscribeEvent(
 }
 
 export async function findAllEvents(id: string): Promise<Event[]> {
-  const { data } = await API.graphql<GraphQLQuery<EventsByEnvironmentIDQuery>>({
-    query: eventsByEnvironmentID,
-    variables: { environmentID: id },
+  const items = await DataStore.query(EventEntity, (c) =>
+    c.environmentID.eq(id),
+  );
+  return items.map(toEvent).sort((e1, e2) => {
+    if (e1.type === EventType.Initialize) return -1;
+    if (e1.type === EventType.Finish) return 1;
+    return e1.occurredAt.getTime() - e2.occurredAt.getTime();
   });
-  return (data?.eventsByEnvironmentID?.items || [])
-    .filter((item): item is NonNullable<typeof item> => !!item)
-    .map(toEvent)
-    .sort((e1, e2) => {
-      if (e1.type === EventType.Initialize) return -1;
-      if (e1.type === EventType.Finish) return 1;
-      return e1.occurredAt.getTime() - e2.occurredAt.getTime();
-    });
 }
 
-function toEvent(data: Omit<CreateEventInput, "id"> & { id: string }): Event {
-  const payload = JSON.parse(data.payload);
+function toEvent(data: EventEntity): Event {
+  const payload = toPayload(data.payload);
   const occurredAt = new Date(data.occurredAt);
-  return { ...data, payload, occurredAt };
+  return { ...data, payload, occurredAt } as Event;
+}
+
+function toPayload<E>(payload: string | object): E {
+  if (typeof payload !== "string") return payload as E;
+  return JSON.parse(payload);
 }
 
 export function replayEvent(
