@@ -70,17 +70,17 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
           <ModalHeader>
             <Stack spacing={3}>
               <Heading as={"h3"} size={"md"}>
-                メンバー確定
+                メンバー選出
               </Heading>
               <Text fontSize={"sm"}>
-                以下の内容でメンバーを確定します。よろしいですか？
+                以下の内容で確定します。よろしいですか？
               </Text>
             </Stack>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody p={0}>
             <Center>
-              <Stack spacing={6} p={2}>
+              <Stack spacing={6} px={2}>
                 <StatisticsPane settings={newSettings || settings} />
               </Stack>
             </Center>
