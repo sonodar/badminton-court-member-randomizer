@@ -1,6 +1,7 @@
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import {
   Button,
+  Divider,
   Heading,
   IconButton,
   Modal,
@@ -60,9 +61,14 @@ export default function HelpButton({ title, items }: Props) {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{title || "ヘルプ"}</ModalHeader>
+          <ModalHeader>
+            <Heading as="h3" size="md">
+              {title || "ヘルプ"}
+            </Heading>
+          </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <Divider />
+          <ModalBody mt={2}>
             {items.map((item) => (
               <Stack key={item} spacing={4}>
                 {Help[item]}
