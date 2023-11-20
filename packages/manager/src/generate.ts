@@ -13,7 +13,7 @@ import {
   rotateFirstHistory,
 } from "./util";
 import { getDiscretenessRandomMembers } from "./discreteness";
-import { getEvennessRandomMembers, useIsEvenness } from "./evenness";
+import { getEvennessRandomMembers, isEvenness } from "./evenness";
 
 // ソート用のプロパティを持ったオブジェクトの配列
 type SortableMembers = {
@@ -62,7 +62,7 @@ export function generate(settings: CurrentSettings): CurrentSettings {
 
   const historyKeys = makeHistoryKeys(settings);
 
-  const isEvenness = useIsEvenness(settings);
+  const surplusLimit = getSurplusLimit(settings);
   const generatedMembers: SortableMembers[] = [];
 
   while (generatedMembers.length < generateSize) {
@@ -83,16 +83,23 @@ export function generate(settings: CurrentSettings): CurrentSettings {
     const playCounts = getAllPlayCount(settings.members, incremented);
 
     // 均等モードの場合の特別処置
-    if (!isEvenness(generated)) {
-      console.log("休みすぎのメンバーがいるためやり直し");
+    if (
+      settings.algorithm === "EVENNESS" &&
+      !isEvenness(settings, surplusLimit, generated)
+    ) {
+      continue;
+    }
+
+    // 最大値と最小値の差を求めておく（あとでソートに使う）
+    const range = array.range(playCounts);
+
+    // ばらつきモードでも差が開きすぎるのは良くないのでやり直し
+    if (settings.algorithm === "DISCRETENESS" && range > surplusLimit) {
       continue;
     }
 
     // 参加メンバーの参加回数の標準偏差を算出（あとでソートに使う）
     const dev = array.standardDeviation(playCounts);
-
-    // 最大値と最小値の差を求めておく（あとでソートに使う）
-    const range = array.range(playCounts);
 
     // 編集距離の平均を求めておく（あとでソートに使う）
     const dist = averageEditDistance(settings.histories, generated);
@@ -112,6 +119,8 @@ function getRandomMembers(settings: CurrentSettings) {
       return getDiscretenessRandomMembers(settings);
     case "EVENNESS":
       return getEvennessRandomMembers(settings);
+    default: // 旧バージョンの設定が localStorage に残っている場合にありうる
+      return getDiscretenessRandomMembers(settings);
   }
 }
 
@@ -185,6 +194,14 @@ function calcCombination(courtCount: number, memberCount: number): number {
   return result;
 }
 
+// 連続休憩回数の許容回数を算出する
+// (休憩メンバー数 / 4)の切り上げ: 3 => 1, 4 => 1, 5 => 2, 0 => 0
+function getSurplusLimit(settings: CurrentSettings) {
+  const maxPlayerCount = settings.courtCount * COURT_CAPACITY;
+  const surplusCount = settings.members.length - maxPlayerCount;
+  return Math.ceil(surplusCount / COURT_CAPACITY);
+}
+
 // メンバー全員の参加回数を返す（どのメンバーの回数かという情報は削除）
 // すでにいない人のカウントは参照しないように除外
 // 遅れて参加したメンバーには補正値を加算する
@@ -192,7 +209,8 @@ function getAllPlayCount(
   members: MemberId[],
   gameCounts: PlayCountPerMember,
 ): number[] {
-  return Object.entries(gameCounts)
-    .filter(([id]) => !members.includes(Number(id)))
-    .map(([_, count]) => (count?.playCount || 0) + (count?.baseCount || 0));
+  return members
+    .map((id) => gameCounts[id])
+    .filter(Boolean)
+    .map((c) => (c.playCount || 0) + (c.baseCount || 0));
 }

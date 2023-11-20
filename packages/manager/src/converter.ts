@@ -6,10 +6,6 @@ const gameMembers = z.array(
   z.tuple([z.number(), z.number(), z.number(), z.number()]),
 ) satisfies ZodType<GameMembers>;
 
-const algorithm = z
-  .enum(["DISCRETENESS", "EVENNESS"])
-  .default("DISCRETENESS") as ZodType<Algorithm>;
-
 const settings = z.object({
   courtCount: z.number(),
   members: z.array(z.number()),
@@ -23,7 +19,7 @@ const settings = z.object({
     z.string(),
     z.object({ playCount: z.number(), baseCount: z.number() }),
   ),
-  algorithm,
+  algorithm: z.enum(["DISCRETENESS", "EVENNESS"]).optional(),
 }) satisfies ZodType<CurrentSettings>;
 
 export function toSettings(data: string | object): CurrentSettings {

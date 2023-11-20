@@ -78,25 +78,12 @@ function getRandomMembers(courtCount: number, members: CountPerMember[]) {
   return selectRandomMembers({ courtCount, members: members.map(id) });
 }
 
-export function useIsEvenness(settings: CurrentSettings) {
-  if (settings.algorithm !== "EVENNESS") {
-    return () => true;
-  }
-
-  // 許容される連続休憩回数
-  const surplusLimit = getSurplusLimit(settings);
-
-  return (generated: GameMembers) => {
-    const restMembers = getRestMembers(settings, generated);
-    const restCounts = getContinuousRestCounts(settings.histories, restMembers);
-    return !restCounts.some(({ count }) => count > surplusLimit);
-  };
-}
-
-// 連続休憩回数の許容回数を算出する
-// (休憩メンバー数 / 4)の切り上げ: 3 => 1, 4 => 1, 5 => 2, 0 => 0
-function getSurplusLimit(settings: CurrentSettings) {
-  const maxPlayerCount = settings.courtCount * COURT_CAPACITY;
-  const surplusCount = settings.members.length - maxPlayerCount;
-  return Math.ceil(surplusCount / COURT_CAPACITY);
+export function isEvenness(
+  { members, histories }: Pick<CurrentSettings, "members" | "histories">,
+  surplusLimit: number,
+  generated: GameMembers,
+) {
+  const restMembers = getRestMembers({ members }, generated);
+  const restCounts = getContinuousRestCounts(histories, restMembers);
+  return !restCounts.some(({ count }) => count > surplusLimit);
 }
