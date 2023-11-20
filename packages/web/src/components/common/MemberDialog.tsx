@@ -7,8 +7,8 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import React from "react";
-import MemberCountPane from "./MemberCountPane";
-import { prittyFont } from "@components/theme";
+import MemberCountPane from "./MemberCountPane.tsx";
+import { prittyFont } from "@components/theme.ts";
 
 type Props = {
   isOpen: boolean;

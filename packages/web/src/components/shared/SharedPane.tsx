@@ -22,8 +22,9 @@ import {
   subscribeEvent,
 } from "@doubles-member-generator/api";
 import { match } from "ts-pattern";
-import HistoryPane from "./HistoryPane";
+import HistoryPane from "../common/HistoryPane.tsx";
 import { useSettings, useSettingsDispatcher } from "@components/state";
+import { MemberButton } from "@components/common/MemberButton.tsx";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const messages: Record<EventType, (value: any) => string> = {
@@ -144,9 +145,13 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
           <HStack>
             <Heading size={"md"}>{settings.members.length} 人が参加中</Heading>
             <Spacer />
+            <MemberButton />
             <IconButton
               size={"sm"}
+              isRound={true}
+              variant={"solid"}
               colorScheme={"brand"}
+              fontSize={"md"}
               icon={<MdRefresh />}
               onClick={() => window.location.reload()}
               aria-label={"reload"}

@@ -27,8 +27,8 @@ import storage from "../../util/settingsStorage";
 import { ShareButton } from "./ShareButton";
 import CourtMembersPane from "@components/game/CourtMembersPane";
 import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput";
-import { HistoryButton } from "@components/game/HistoryButton";
-import { MemberButton } from "@components/game/MemberButton";
+import { HistoryButton } from "@components/common/HistoryButton.tsx";
+import { MemberButton } from "@components/common/MemberButton.tsx";
 import { ResetButton } from "@components/game/ResetButton";
 import { useSettings, useSettingsDispatcher } from "@components/state";
 
@@ -125,6 +125,7 @@ export default function GamePane({ onReset, shareId }: Props) {
             />
             <HStack>
               <Button
+                w={"45%"}
                 colorScheme={"brand"}
                 leftIcon={<IoDiceOutline />}
                 onClick={handleGenerate}
@@ -134,9 +135,10 @@ export default function GamePane({ onReset, shareId }: Props) {
               </Button>
               <Spacer />
               <Button
+                w={"45%"}
+                colorScheme={"brand"}
                 variant={"outline"}
                 leftIcon={<RepeatClockIcon />}
-                size={"xs"}
                 onClick={handleRetry}
                 isDisabled={progress || settings.histories.length === 0}
               >

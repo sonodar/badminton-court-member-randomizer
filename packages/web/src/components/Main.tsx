@@ -1,9 +1,9 @@
 import { ChakraProvider, Container } from "@chakra-ui/react";
-import { array } from "@doubles-member-generator/manager";
+import { array, type Algorithm } from "@doubles-member-generator/manager";
 import React, { useState } from "react";
 import storage from "../util/settingsStorage";
 import { parseShareLink } from "../util/shareLink";
-import SharedPane from "./game/SharedPane";
+import SharedPane from "./shared/SharedPane.tsx";
 import { SettingsProvider } from "./state";
 import GamePane from "@components/game/GamePane";
 import InitialSettingPane from "@components/setting/InitialSettingPane";
@@ -32,12 +32,20 @@ export default function Main() {
   const onStart = ({
     courtCount,
     memberCount,
+    algorithm,
   }: {
     courtCount: number;
     memberCount: number;
+    algorithm: Algorithm;
   }) => {
     const members = array.generate(memberCount);
-    setSettings({ courtCount, members, histories: [], gameCounts: {} });
+    setSettings({
+      courtCount,
+      members,
+      histories: [],
+      gameCounts: {},
+      algorithm,
+    });
   };
 
   const onReset = () => {

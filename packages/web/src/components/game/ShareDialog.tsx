@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useRef } from "react";
 import { prittyFont } from "@components/theme";
-import LineShareButton from "@components/LineShareButton";
+import LineShareButton from "@components/common/LineShareButton.tsx";
 
 type Props = {
   isOpen: boolean;

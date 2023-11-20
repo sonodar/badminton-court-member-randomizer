@@ -8,7 +8,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import React, { useRef, type ReactNode } from "react";
-import { prittyFont } from "./theme";
+import { prittyFont } from "../theme.ts";
 
 type Props = {
   isOpen: boolean;

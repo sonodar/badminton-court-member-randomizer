@@ -34,6 +34,7 @@ export function CurrentMemberCountInput({
         max={MEMBER_COUNT_LIMIT}
         style={{ textAlign: "center" }}
         width={"14"}
+        border={""}
         readOnly
       />
       <span>人</span>

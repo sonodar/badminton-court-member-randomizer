@@ -8,8 +8,8 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import HistoryPane from "./HistoryPane";
-import { prittyFont } from "@components/theme";
+import HistoryPane from "./HistoryPane.tsx";
+import { prittyFont } from "@components/theme.ts";
 
 type Props = {
   isOpen: boolean;

@@ -1,7 +1,19 @@
 import { array } from "./array";
-import type { CurrentSettings, GameMembers, PlayCountPerMember } from "./types";
+import type {
+  CurrentSettings,
+  GameMembers,
+  PlayCountPerMember,
+  MemberId,
+} from "./types";
 import { COURT_CAPACITY } from "./consts";
-import { toHistoryKey } from "./util";
+import {
+  toHistoryKey,
+  makeHistoryKeys,
+  selectRandomMembers,
+  rotateFirstHistory,
+} from "./util";
+import { getDiscretenessRandomMembers } from "./discreteness";
+import { getEvennessRandomMembers, useIsEvenness } from "./evenness";
 
 // ソート用のプロパティを持ったオブジェクトの配列
 type SortableMembers = {
@@ -24,9 +36,10 @@ function sortableMembersComparator(a: SortableMembers, b: SortableMembers) {
 export function generate(settings: CurrentSettings): CurrentSettings {
   // 履歴がない場合はランダムに選出する
   if (settings.histories.length === 0) {
-    return addHistory(settings, getRandomMembers(settings));
+    return addHistory(settings, selectRandomMembers(settings));
   }
 
+  // すべての組み合わせの数を算出
   const combinationCount = calcCombination(
     settings.courtCount,
     settings.members.length,
@@ -38,15 +51,8 @@ export function generate(settings: CurrentSettings): CurrentSettings {
     console.log(
       `履歴数(${settings.histories.length})が組み合わせ数(${combinationCount})に達したため最も古い履歴を選出`,
     );
-    const newSettings = structuredClone(settings);
-    newSettings.histories.push(newSettings.histories.shift()!);
-    return newSettings;
+    return rotateFirstHistory(settings);
   }
-
-  const historyKeys = new Set(
-    settings.histories.map((history) => toHistoryKey(history.members)),
-  );
-  const generatedMembers: SortableMembers[] = [];
 
   // メンバー数の 10 倍か、最大組み合わせ数 - 履歴数のどちらか小さい方の数だけ組み合わせを払い出す (最大 320)
   const generateSize = Math.min(
@@ -54,8 +60,13 @@ export function generate(settings: CurrentSettings): CurrentSettings {
     combinationCount - settings.histories.length,
   );
 
+  const historyKeys = makeHistoryKeys(settings);
+
+  const isEvenness = useIsEvenness(settings);
+  const generatedMembers: SortableMembers[] = [];
+
   while (generatedMembers.length < generateSize) {
-    // とりあえず適当に払い出す
+    // まずメンバーをランダム選出（アルゴリズム設定によって選出方法が異なる）
     const generated = getRandomMembers(settings);
 
     // 履歴にすでに同じ組み合わせがあったらやり直し
@@ -68,11 +79,14 @@ export function generate(settings: CurrentSettings): CurrentSettings {
     // あくまで標準偏差などの計算用で、インスタンスの gameCounts は直接増やさない
     const incremented = increment(settings.gameCounts, generated);
 
-    // すでにいない人のカウントは参照しないように除外
-    // 遅れて参加したメンバーには補正値を加算する
-    const playCounts = Object.entries(incremented)
-      .filter(([id]) => settings.members.includes(Number(id)))
-      .map(([_, { playCount, baseCount }]) => baseCount + playCount);
+    // 参加回数のみの配列（計算に使用する）
+    const playCounts = getAllPlayCount(settings.members, incremented);
+
+    // 均等モードの場合の特別処置
+    if (!isEvenness(generated)) {
+      console.log("休みすぎのメンバーがいるためやり直し");
+      continue;
+    }
 
     // 参加メンバーの参加回数の標準偏差を算出（あとでソートに使う）
     const dev = array.standardDeviation(playCounts);
@@ -92,12 +106,13 @@ export function generate(settings: CurrentSettings): CurrentSettings {
   return addHistory(settings, generatedMembers[0].members);
 }
 
-function getRandomMembers({ courtCount, members }: CurrentSettings) {
-  const randomMembers = array
-    .shuffle(members)
-    .slice(0, courtCount * COURT_CAPACITY);
-  const membersPerCourt = array.chunks(randomMembers, COURT_CAPACITY);
-  return array.sortInnerItems(membersPerCourt) as GameMembers;
+function getRandomMembers(settings: CurrentSettings) {
+  switch (settings.algorithm) {
+    case "DISCRETENESS":
+      return getDiscretenessRandomMembers(settings);
+    case "EVENNESS":
+      return getEvennessRandomMembers(settings);
+  }
 }
 
 export function addHistory(
@@ -168,4 +183,16 @@ function calcCombination(courtCount: number, memberCount: number): number {
     memberCount % COURT_CAPACITY,
   );
   return result;
+}
+
+// メンバー全員の参加回数を返す（どのメンバーの回数かという情報は削除）
+// すでにいない人のカウントは参照しないように除外
+// 遅れて参加したメンバーには補正値を加算する
+function getAllPlayCount(
+  members: MemberId[],
+  gameCounts: PlayCountPerMember,
+): number[] {
+  return Object.entries(gameCounts)
+    .filter(([id]) => !members.includes(Number(id)))
+    .map(([_, count]) => (count?.playCount || 0) + (count?.baseCount || 0));
 }

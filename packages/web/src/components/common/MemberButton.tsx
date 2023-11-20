@@ -1,10 +1,10 @@
 import { IconButton, useDisclosure } from "@chakra-ui/react";
 import React, { Fragment } from "react";
-import { MdOutlineWatchLater } from "react-icons/md";
-import { HistoryDialog } from "@components/game/HistoryDialog";
+import { TbUsers } from "react-icons/tb";
+import { MemberDialog } from "@components/common/MemberDialog.tsx";
 import { useSettings } from "@components/state";
 
-export function HistoryButton({ isDisabled }: { isDisabled?: boolean }) {
+export function MemberButton({ isDisabled }: { isDisabled?: boolean }) {
   const { histories } = useSettings();
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
@@ -13,12 +13,12 @@ export function HistoryButton({ isDisabled }: { isDisabled?: boolean }) {
         variant={"ghost"}
         colorScheme={"brand"}
         fontSize={"2xl"}
-        aria-label="履歴"
-        icon={<MdOutlineWatchLater />}
+        aria-label="メンバー"
+        icon={<TbUsers />}
         isDisabled={isDisabled || histories.length === 0}
         onClick={onOpen}
       />
-      <HistoryDialog isOpen={isOpen} onClose={onClose} />
+      <MemberDialog isOpen={isOpen} onClose={onClose} />
     </Fragment>
   );
 }

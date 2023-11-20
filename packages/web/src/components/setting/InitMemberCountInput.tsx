@@ -1,5 +1,5 @@
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
-import { HStack, IconButton, Input } from "@chakra-ui/react";
+import { HStack, IconButton, Input, Text } from "@chakra-ui/react";
 import { MEMBER_COUNT_LIMIT } from "@doubles-member-generator/manager";
 import React from "react";
 
@@ -15,8 +15,10 @@ export function InitMemberCountInput({ min, value, onChange }: Props) {
       <IconButton
         colorScheme={"brand"}
         aria-label="decrement"
+        borderRadius="sm"
         isDisabled={value <= min}
         icon={<MinusIcon />}
+        size={"sm"}
         onClick={() => value > min && onChange(value - 1)}
       />
       <Input
@@ -27,16 +29,20 @@ export function InitMemberCountInput({ min, value, onChange }: Props) {
         max={MEMBER_COUNT_LIMIT}
         style={{ textAlign: "center" }}
         width={"20"}
+        size={"sm"}
+        fontSize={"md"}
         onChange={(e) => onChange(parseInt(e.target.value))}
       />
       <IconButton
         colorScheme={"brand"}
         aria-label="increment"
+        borderRadius="sm"
         isDisabled={value >= MEMBER_COUNT_LIMIT}
         icon={<AddIcon />}
+        size={"sm"}
         onClick={() => value < MEMBER_COUNT_LIMIT && onChange(value + 1)}
       />
-      <span>(上限 {MEMBER_COUNT_LIMIT} 人)</span>
+      <Text fontSize="md">(上限 {MEMBER_COUNT_LIMIT} 人)</Text>
     </HStack>
   );
 }
