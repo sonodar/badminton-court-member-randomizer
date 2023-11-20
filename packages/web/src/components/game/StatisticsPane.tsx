@@ -1,15 +1,15 @@
 import type { CurrentSettings } from "@doubles-member-generator/manager";
 import {
   Button,
-  Center,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Stack,
+  Center,
   useDisclosure,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import React from "react";
 import { COURT_CAPACITY } from "@doubles-member-generator/manager";
@@ -27,35 +27,30 @@ export function StatisticsPane({ settings }: { settings: CurrentSettings }) {
     <Stack spacing={3}>
       <HistoryPane histories={histories} />
       {showStatistics && (
-        <Popover
-          isOpen={isOpen}
-          onOpen={onOpen}
-          onClose={onClose}
-          closeOnBlur={true}
-        >
-          <PopoverTrigger>
-            <Center pt={3}>
-              <Button
-                w={"80%"}
-                size={"sm"}
-                variant={"outline"}
-                leftIcon={<TbUsers />}
-                color={"gray.600"}
-              >
-                プレイ回数を確認
-              </Button>
-            </Center>
-          </PopoverTrigger>
-          <PopoverContent>
-            <PopoverHeader fontSize={"sm"}>
-              プレイ回数 (連続休憩回数)
-            </PopoverHeader>
-            <PopoverArrow />
-            <PopoverBody>
-              <MemberCountPane settings={settings} small={true} />
-            </PopoverBody>
-          </PopoverContent>
-        </Popover>
+        <Center>
+          <Button
+            w={"80%"}
+            size={"sm"}
+            variant={"outline"}
+            leftIcon={<TbUsers />}
+            color={"gray.600"}
+            onClick={onOpen}
+          >
+            プレイ回数を確認
+          </Button>
+          <Modal onClose={onClose} isOpen={isOpen} scrollBehavior={"inside"}>
+            <ModalOverlay />
+            <ModalContent w={"300px"}>
+              <ModalHeader maxH={"xs"} fontSize={"sm"}>
+                プレイ回数 (連続休憩回数)
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <MemberCountPane settings={settings} small={true} />
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+        </Center>
       )}
     </Stack>
   );
