@@ -12,7 +12,6 @@ const settings = z.object({
   histories: z.array(
     z.object({
       members: gameMembers,
-      restMembers: z.array(z.number()),
       deleted: z.literal(true).optional(),
     }),
   ),

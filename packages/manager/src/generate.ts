@@ -1,5 +1,10 @@
 import { array } from "./array";
-import type { CurrentSettings, GameMembers, PlayCountPerMember } from "./types";
+import type {
+  CurrentSettings,
+  GameMembers,
+  PlayCountPerMember,
+  History,
+} from "./types";
 import { COURT_CAPACITY } from "./consts";
 import { toHistoryKey } from "./util";
 
@@ -43,16 +48,18 @@ export function generate(settings: CurrentSettings): CurrentSettings {
     return newSettings;
   }
 
-  const historyKeys = new Set(
-    settings.histories.map((history) => toHistoryKey(history.members)),
-  );
-  const generatedMembers: SortableMembers[] = [];
-
   // メンバー数の 10 倍か、最大組み合わせ数 - 履歴数のどちらか小さい方の数だけ組み合わせを払い出す (最大 320)
   const generateSize = Math.min(
     settings.members.length * 10,
     combinationCount - settings.histories.length,
   );
+
+  const historyKeys = new Set(
+    settings.histories.map((history) => toHistoryKey(history.members)),
+  );
+
+  const surplusLimit = getSurplusLimit(settings);
+  const generatedMembers: SortableMembers[] = [];
 
   while (generatedMembers.length < generateSize) {
     // とりあえず適当に払い出す
@@ -74,11 +81,28 @@ export function generate(settings: CurrentSettings): CurrentSettings {
       .filter(([id]) => settings.members.includes(Number(id)))
       .map(([_, { playCount, baseCount }]) => baseCount + playCount);
 
-    // 参加メンバーの参加回数の標準偏差を算出（あとでソートに使う）
-    const dev = array.standardDeviation(playCounts);
-
     // 最大値と最小値の差を求めておく（あとでソートに使う）
     const range = array.range(playCounts);
+
+    // 均等モードの場合の特別処置
+    if (settings.algorithm === "EVENNESS") {
+      // 最大値と最小値の差が 人数 / 4 (端数切り上げ) より大きかったらやり直し
+      if (range > surplusLimit) continue;
+
+      const restMembers = getRestMembers(settings, generated);
+
+      // 休憩メンバー内に休みすぎの人がいるかどうか
+      const existsContinuousRestMember = restMembers.some((memberId) => {
+        const restCount = getContinuousRestCount(settings.histories, memberId);
+        return restCount > surplusLimit;
+      });
+
+      // 休みすぎの人がいたらやり直し
+      if (existsContinuousRestMember) continue;
+    }
+
+    // 参加メンバーの参加回数の標準偏差を算出（あとでソートに使う）
+    const dev = array.standardDeviation(playCounts);
 
     // 編集距離の平均を求めておく（あとでソートに使う）
     const dist = averageEditDistance(settings.histories, generated);
@@ -105,11 +129,7 @@ export function addHistory(
   members: GameMembers,
 ): CurrentSettings {
   const newSettings = structuredClone(settings);
-  const playMembers = members.flat();
-  const restMembers = settings.members.filter(
-    (id) => !playMembers.includes(id),
-  );
-  newSettings.histories.push({ members, restMembers });
+  newSettings.histories.push({ members });
   newSettings.gameCounts = increment(settings.gameCounts, members);
   return newSettings;
 }
@@ -172,4 +192,29 @@ function calcCombination(courtCount: number, memberCount: number): number {
     memberCount % COURT_CAPACITY,
   );
   return result;
+}
+
+function getSurplusLimit(settings: CurrentSettings) {
+  const surplusCount =
+    settings.members.length - settings.courtCount * COURT_CAPACITY;
+  return Math.ceil(surplusCount / COURT_CAPACITY);
+}
+
+function getRestMembers(
+  { members }: { members: number[] },
+  current: GameMembers,
+): number[] {
+  const playMembers = current.flat();
+  return members.filter((id) => !playMembers.includes(id));
+}
+
+// 履歴を直近から走査し、連続で休憩している回数を算出する
+function getContinuousRestCount(
+  histories: History[],
+  memberId: number,
+): number {
+  const lastIndex = histories.findLastIndex((history) =>
+    history.members.flat().includes(memberId),
+  );
+  return histories.length - 1 - lastIndex;
 }
