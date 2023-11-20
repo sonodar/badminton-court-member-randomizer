@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Divider, Heading, Stack } from "@chakra-ui/react";
-import CourtMembersPane from "@components/game/CourtMembersPane";
+import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
 import { useSettings } from "@components/state";
 
 export default function HistoryPane() {

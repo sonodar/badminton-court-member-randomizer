@@ -26,7 +26,7 @@ import AlgorithmInput from "./AlgorithmInput";
 import { InitMemberCountInput } from "./InitMemberCountInput";
 import { CourtCountInput } from "./CourtCountInput";
 import logo from "@assets/logo.svg";
-import HelpButton from "@components/HelpButton";
+import HelpButton from "@components/common/HelpButton.tsx";
 
 type Props = {
   onStart: (env: {

@@ -22,7 +22,7 @@ import {
   subscribeEvent,
 } from "@doubles-member-generator/api";
 import { match } from "ts-pattern";
-import HistoryPane from "./HistoryPane";
+import HistoryPane from "../common/HistoryPane.tsx";
 import { useSettings, useSettingsDispatcher } from "@components/state";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

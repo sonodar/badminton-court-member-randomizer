@@ -3,7 +3,7 @@ import React, { Fragment, useMemo, useRef } from "react";
 import { HiLink } from "react-icons/hi2";
 import { makeShareLink } from "../../util/shareLink";
 import { ShareDialog } from "./ShareDialog";
-import ConfirmDialog from "@components/ConfirmDialog";
+import ConfirmDialog from "@components/common/ConfirmDialog.tsx";
 
 type Props = {
   sharedId?: string;

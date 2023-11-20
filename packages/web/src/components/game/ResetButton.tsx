@@ -1,7 +1,7 @@
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { IconButton, useDisclosure } from "@chakra-ui/react";
 import React, { Fragment } from "react";
-import ConfirmDialog from "@components/ConfirmDialog";
+import ConfirmDialog from "@components/common/ConfirmDialog.tsx";
 
 export function ResetButton({
   isDisabled,
