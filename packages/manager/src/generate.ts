@@ -87,18 +87,27 @@ export function generate(settings: CurrentSettings): CurrentSettings {
     // 均等モードの場合の特別処置
     if (settings.algorithm === "EVENNESS") {
       // 最大値と最小値の差が 人数 / 4 (端数切り上げ) より大きかったらやり直し
-      if (range > surplusLimit) continue;
+      if (range > surplusLimit) {
+        console.log("最大・最小の差が大きすぎる", { range, surplusLimit });
+        continue;
+      }
 
       const restMembers = getRestMembers(settings, generated);
 
       // 休憩メンバー内に休みすぎの人がいるかどうか
       const existsContinuousRestMember = restMembers.some((memberId) => {
         const restCount = getContinuousRestCount(settings.histories, memberId);
-        return restCount > surplusLimit;
+        if (restCount > surplusLimit) {
+          console.log("休みすぎのメンバーがいる", { restCount, surplusLimit });
+          return true;
+        }
+        return false;
       });
 
       // 休みすぎの人がいたらやり直し
-      if (existsContinuousRestMember) continue;
+      if (existsContinuousRestMember) {
+        continue;
+      }
     }
 
     // 参加メンバーの参加回数の標準偏差を算出（あとでソートに使う）
@@ -116,12 +125,25 @@ export function generate(settings: CurrentSettings): CurrentSettings {
   return addHistory(settings, generatedMembers[0].members);
 }
 
-function getRandomMembers({ courtCount, members }: CurrentSettings) {
-  const randomMembers = array
-    .shuffle(members)
-    .slice(0, courtCount * COURT_CAPACITY);
+function getRandomMembers(settings: CurrentSettings) {
+  const randomMembers = getRandomTargetMembers(settings);
   const membersPerCourt = array.chunks(randomMembers, COURT_CAPACITY);
   return array.sortInnerItems(membersPerCourt) as GameMembers;
+}
+
+function getRandomTargetMembers(settings: CurrentSettings) {
+  const memberCapacity = settings.courtCount * COURT_CAPACITY;
+
+  if (settings.members.length <= memberCapacity) {
+    return array.shuffle(settings.members);
+  }
+
+  const { played, notPlayed } = separatePlayedMembers(settings);
+  const targetMembers = notPlayed
+    .concat(array.shuffle(played))
+    .slice(0, memberCapacity);
+
+  return array.shuffle(targetMembers);
 }
 
 export function addHistory(
@@ -217,4 +239,28 @@ function getContinuousRestCount(
     history.members.flat().includes(memberId),
   );
   return histories.length - 1 - lastIndex;
+}
+
+function separatePlayedMembers({
+  members,
+  histories,
+  gameCounts,
+}: Omit<CurrentSettings, "courtCount">) {
+  const played: number[] = [];
+
+  if (histories.length === 0) {
+    return { played, notPlayed: members };
+  }
+
+  const notPlayed: number[] = [];
+
+  for (const [id, { playCount }] of Object.entries(gameCounts)) {
+    if (playCount === 0) {
+      notPlayed.push(Number(id));
+    } else {
+      played.push(Number(id));
+    }
+  }
+
+  return { played, notPlayed };
 }
