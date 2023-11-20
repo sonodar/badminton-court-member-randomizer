@@ -29,12 +29,13 @@ function splitPlayedMembers({
   if (histories.length === 0) {
     return { played: [], notPlayed: members };
   }
-  return Object.entries(gameCounts).reduce(
-    (splitMembers, [id, { playCount }]) => {
-      if (playCount > 0) {
-        splitMembers.played.push(Number(id));
+  return members.reduce(
+    (splitMembers, id) => {
+      const count = gameCounts[id];
+      if (!count || !count.playCount) {
+        splitMembers.notPlayed.push(id);
       } else {
-        splitMembers.notPlayed.push(Number(id));
+        splitMembers.played.push(id);
       }
       return splitMembers;
     },

@@ -1,15 +1,17 @@
 import type {
   CurrentSettings,
   GameMembers,
-  History,
   MemberId,
   PlayCountPerMember,
 } from "./types";
 import { array } from "./array";
 import { COURT_CAPACITY } from "./consts";
-import { selectRandomMembers } from "./util";
-
-type Item = { id: number; count: number };
+import {
+  type CountPerMember,
+  getContinuousRestCounts,
+  getRestMembers,
+  selectRandomMembers,
+} from "./util";
 
 // 均等性重視の場合は参加回数でソートして少ない順に選出
 export function getEvennessRandomMembers({
@@ -58,7 +60,7 @@ export function getEvennessRandomMembers({
 function sortMembers({
   members,
   gameCounts,
-}: Pick<CurrentSettings, "members" | "gameCounts">): Item[] {
+}: Pick<CurrentSettings, "members" | "gameCounts">): CountPerMember[] {
   return members
     .map((id) => ({ id, count: getPlayCount(gameCounts, id) }))
     .sort((i1, i2) => i1.count - i2.count);
@@ -68,11 +70,11 @@ function getPlayCount(gameCounts: PlayCountPerMember, id: MemberId) {
   return (gameCounts[id]?.playCount || 0) + (gameCounts[id]?.baseCount || 0);
 }
 
-function id(item: Item) {
+function id(item: CountPerMember) {
   return item.id;
 }
 
-function getRandomMembers(courtCount: number, members: Item[]) {
+function getRandomMembers(courtCount: number, members: CountPerMember[]) {
   return selectRandomMembers({ courtCount, members: members.map(id) });
 }
 
@@ -87,7 +89,6 @@ export function useIsEvenness(settings: CurrentSettings) {
   return (generated: GameMembers) => {
     const restMembers = getRestMembers(settings, generated);
     const restCounts = getContinuousRestCounts(settings.histories, restMembers);
-    console.log("連続休憩回数", restCounts);
     return !restCounts.some(({ count }) => count > surplusLimit);
   };
 }
@@ -98,34 +99,4 @@ function getSurplusLimit(settings: CurrentSettings) {
   const maxPlayerCount = settings.courtCount * COURT_CAPACITY;
   const surplusCount = settings.members.length - maxPlayerCount;
   return Math.ceil(surplusCount / COURT_CAPACITY);
-}
-
-function getRestMembers(
-  { members }: { members: number[] },
-  current: GameMembers,
-): number[] {
-  const playMembers = current.flat();
-  return members.filter((id) => !playMembers.includes(id));
-}
-
-// 履歴を直近から走査し、連続で休憩している回数を算出する
-function getContinuousRestCount(
-  histories: History[],
-  memberId: number,
-): number {
-  const lastIndex = histories.findLastIndex((history) =>
-    history.members.flat().includes(memberId),
-  );
-  return histories.length - 1 - lastIndex;
-}
-
-function getContinuousRestCounts(
-  histories: History[],
-  restMembers: MemberId[],
-): Item[] {
-  return restMembers.reduce((counts, id) => {
-    const count = getContinuousRestCount(histories, id);
-    counts.push({ id, count });
-    return counts;
-  }, [] as Item[]);
 }
