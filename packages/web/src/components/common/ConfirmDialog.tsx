@@ -19,7 +19,7 @@ type Props = {
   okButtonText?: string;
   okColorScheme?: string;
   cancelButtonText?: string;
-};
+} & Record<string, unknown>;
 
 export default function ConfirmDialog({
   isOpen,
@@ -30,6 +30,7 @@ export default function ConfirmDialog({
   cancelButtonText = "キャンセル",
   okButtonText = "OK",
   okColorScheme = "brand",
+  ...attrs
 }: Props) {
   const cancel = useRef<HTMLButtonElement | null>(null);
   return (
@@ -43,7 +44,7 @@ export default function ConfirmDialog({
           <AlertDialogHeader fontSize="lg" fontWeight="bold" {...prittyFont}>
             {title}
           </AlertDialogHeader>
-          <AlertDialogBody>{children}</AlertDialogBody>
+          <AlertDialogBody {...attrs}>{children}</AlertDialogBody>
           <AlertDialogFooter>
             <Button ref={cancel} onClick={onCancel} variant={"outline"}>
               {cancelButtonText}

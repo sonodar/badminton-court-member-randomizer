@@ -49,13 +49,13 @@ export default function InitialSettingPane({ onStart }: Props) {
   };
 
   return (
-    <Card my={1} py={4} height={"100dvh"}>
-      <CardBody>
+    <Card m={0} p={0} height={"100dvh"}>
+      <CardBody p={0} pt={6}>
         <Center>
           <Stack spacing={6}>
             <HStack>
-              <Image src={logo.src} boxSize="28px" borderRadius={"md"} />
-              <Heading as="h1" size="md">
+              <Image src={logo.src} boxSize="24px" borderRadius={"md"} />
+              <Heading as="h1" size="sm">
                 ダブルスメンバー決めるくん
               </Heading>
             </HStack>

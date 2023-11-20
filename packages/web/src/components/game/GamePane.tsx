@@ -1,23 +1,21 @@
-import { RepeatClockIcon } from "@chakra-ui/icons";
 import {
-  Button,
+  Badge,
+  Box,
   Card,
   CardBody,
   CardFooter,
   Center,
   Divider,
-  HStack,
   Spacer,
   Stack,
   useToast,
 } from "@chakra-ui/react";
 import {
-  generate,
-  retry,
   getLatestMembers,
+  type CurrentSettings,
+  type Algorithm,
 } from "@doubles-member-generator/manager";
 import React, { useEffect, useRef, useState } from "react";
-import { IoDiceOutline } from "react-icons/io5";
 import {
   createEnvironment,
   eventEmitter,
@@ -31,10 +29,16 @@ import { HistoryButton } from "@components/common/HistoryButton.tsx";
 import { MemberButton } from "@components/common/MemberButton.tsx";
 import { ResetButton } from "@components/game/ResetButton";
 import { useSettings, useSettingsDispatcher } from "@components/state";
+import { GenerateButton } from "@components/game/GenerateButton.tsx";
 
 type Props = {
   onReset: () => void;
   shareId?: string | null;
+};
+
+const badgeLabels: Record<Algorithm, string> = {
+  DISCRETENESS: "ばらつき重視",
+  EVENNESS: "均等性重視",
 };
 
 export default function GamePane({ onReset, shareId }: Props) {
@@ -43,6 +47,9 @@ export default function GamePane({ onReset, shareId }: Props) {
 
   const [environmentId, setEnvironmentId] = useState(shareId || undefined);
   const [progress, setProgress] = useState(false);
+
+  const latestMembers = getLatestMembers(settings) || [];
+  const badgeLabel = badgeLabels[settings.algorithm!];
 
   const openProgress = () => setProgress(true);
   const closeProgress = () => setProgress(false);
@@ -67,21 +74,11 @@ export default function GamePane({ onReset, shareId }: Props) {
     }
   };
 
-  const handleGenerate = () => {
-    const newSettings = generate(settings);
+  const handleGenerate = (newSettings: CurrentSettings) => {
     const members = getLatestMembers(newSettings)!;
     dispatcher.generate(members);
     if (environmentId) {
       eventEmitter(environmentId).generate(members);
-    }
-  };
-
-  const handleRetry = () => {
-    const newSettings = retry(settings);
-    const members = getLatestMembers(newSettings)!;
-    dispatcher.retry(members);
-    if (environmentId) {
-      eventEmitter(environmentId).retry(members);
     }
   };
 
@@ -114,38 +111,37 @@ export default function GamePane({ onReset, shareId }: Props) {
   };
 
   return (
-    <Card my={1} py={4} height={"100dvh"}>
-      <CardBody>
+    <Card m={0} p={0} height={"100dvh"}>
+      <CardBody p={0} pt={3}>
         <Center>
-          <Stack spacing={6}>
+          <Stack spacing={2}>
             <CurrentMemberCountInput
               onIncrement={handleJoin}
               onDecrement={handleLeave}
               isDisabled={progress}
             />
-            <HStack>
-              <Button
-                w={"45%"}
-                colorScheme={"brand"}
-                leftIcon={<IoDiceOutline />}
-                onClick={handleGenerate}
-                isDisabled={progress}
-              >
-                メンバー決め
-              </Button>
-              <Spacer />
-              <Button
-                w={"45%"}
-                colorScheme={"brand"}
-                variant={"outline"}
-                leftIcon={<RepeatClockIcon />}
-                onClick={handleRetry}
-                isDisabled={progress || settings.histories.length === 0}
-              >
-                やり直し
-              </Button>
-            </HStack>
-            <CourtMembersPane members={getLatestMembers(settings) || []} />
+            {badgeLabel && (
+              <Center>
+                <Badge
+                  borderRadius={"md"}
+                  w={"80%"}
+                  variant="subtle"
+                  colorScheme={"brand"}
+                >
+                  <Center>{badgeLabel}</Center>
+                </Badge>
+              </Center>
+            )}
+            <GenerateButton
+              settings={settings}
+              onGenerate={handleGenerate}
+              isDisabled={progress}
+            />
+            {latestMembers.length > 0 && (
+              <Box pt={4}>
+                <CourtMembersPane members={latestMembers} />
+              </Box>
+            )}
           </Stack>
         </Center>
       </CardBody>

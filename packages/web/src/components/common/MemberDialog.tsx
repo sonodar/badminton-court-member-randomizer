@@ -1,10 +1,12 @@
 import {
+  Heading,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Stack,
 } from "@chakra-ui/react";
 import React from "react";
 import MemberCountPane from "./MemberCountPane.tsx";
@@ -21,11 +23,18 @@ export function MemberDialog({ isOpen, onClose }: Props) {
       <ModalOverlay />
       <ModalContent maxW={"350px"}>
         <ModalHeader maxH={"xs"} style={{ ...prittyFont }}>
-          メンバー
+          <Heading as="h3" size="md">
+            メンバー
+          </Heading>
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody py={4} px={1}>
-          <MemberCountPane />
+          <Stack>
+            <Heading as="h4" size="sm" px={4}>
+              プレイ回数 (連続休憩回数)
+            </Heading>
+            <MemberCountPane showLeftMember={true} />
+          </Stack>
         </ModalBody>
       </ModalContent>
     </Modal>
