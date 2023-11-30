@@ -38,7 +38,12 @@ export function StatisticsPane({ settings }: { settings: CurrentSettings }) {
           >
             プレイ回数を確認
           </Button>
-          <Modal onClose={onClose} isOpen={isOpen} scrollBehavior={"inside"}>
+          <Modal
+            onClose={onClose}
+            isOpen={isOpen}
+            scrollBehavior={"inside"}
+            isCentered
+          >
             <ModalOverlay />
             <ModalContent w={"300px"}>
               <ModalHeader maxH={"xs"} fontSize={"sm"}>

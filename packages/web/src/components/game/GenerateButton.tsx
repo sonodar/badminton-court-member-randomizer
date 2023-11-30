@@ -62,11 +62,12 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        size={"full"}
         scrollBehavior={"inside"}
+        isCentered
+        motionPreset={"slideInTop"}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent maxW={"350px"}>
           <ModalHeader>
             <Stack spacing={3}>
               <Heading as={"h3"} size={"md"}>
@@ -78,7 +79,7 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
             </Stack>
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody p={0}>
+          <ModalBody p={0} mb={1}>
             <Center>
               <Stack spacing={6} px={2}>
                 <StatisticsPane settings={newSettings || settings} />
