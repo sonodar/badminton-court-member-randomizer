@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.ts",
   "scripts": {
-    "test": "jest",
+    "test": "vitest run",
     "lint": "eslint .",
     "format": "prettier --write '**/*.{js,ts,md,json}'",
     "typecheck": "tsc --noEmit"

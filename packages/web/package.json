@@ -29,7 +29,6 @@
     "ts-pattern": "5.0.5"
   },
   "devDependencies": {
-    "@types/jest": "29.5.8",
     "@types/ms": "0.7.34",
     "@types/react": "18.2.37",
     "@types/react-dom": "18.2.15",
