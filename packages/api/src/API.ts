@@ -31,7 +31,6 @@ export type ModelEventConditionInput = {
   and?: Array< ModelEventConditionInput | null > | null,
   or?: Array< ModelEventConditionInput | null > | null,
   not?: ModelEventConditionInput | null,
-  _deleted?: ModelBooleanInput | null,
 };
 
 export type ModelIDInput = {
@@ -145,7 +144,6 @@ export type ModelEnvironmentConditionInput = {
   and?: Array< ModelEnvironmentConditionInput | null > | null,
   or?: Array< ModelEnvironmentConditionInput | null > | null,
   not?: ModelEnvironmentConditionInput | null,
-  _deleted?: ModelBooleanInput | null,
 };
 
 export type ModelIntInput = {
@@ -202,7 +200,6 @@ export type ModelEventFilterInput = {
   and?: Array< ModelEventFilterInput | null > | null,
   or?: Array< ModelEventFilterInput | null > | null,
   not?: ModelEventFilterInput | null,
-  _deleted?: ModelBooleanInput | null,
 };
 
 export type ModelEnvironmentFilterInput = {
@@ -212,7 +209,6 @@ export type ModelEnvironmentFilterInput = {
   and?: Array< ModelEnvironmentFilterInput | null > | null,
   or?: Array< ModelEnvironmentFilterInput | null > | null,
   not?: ModelEnvironmentFilterInput | null,
-  _deleted?: ModelBooleanInput | null,
 };
 
 export type ModelEnvironmentConnection = {
@@ -237,7 +233,6 @@ export type ModelSubscriptionEventFilterInput = {
   consumed?: ModelSubscriptionBooleanInput | null,
   and?: Array< ModelSubscriptionEventFilterInput | null > | null,
   or?: Array< ModelSubscriptionEventFilterInput | null > | null,
-  _deleted?: ModelBooleanInput | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -281,7 +276,6 @@ export type ModelSubscriptionEnvironmentFilterInput = {
   finishedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionEnvironmentFilterInput | null > | null,
   or?: Array< ModelSubscriptionEnvironmentFilterInput | null > | null,
-  _deleted?: ModelBooleanInput | null,
 };
 
 export type ModelSubscriptionIntInput = {

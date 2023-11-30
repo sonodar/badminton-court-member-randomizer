@@ -1,38 +1,46 @@
 {
   "api": {
     "DoublesMemberGenerator": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
+            "authenticationType": "API_KEY",
             "apiKeyConfig": {
-              "apiKeyExpirationDate": "2024-11-14T10:09:02.276Z",
               "apiKeyExpirationDays": 365,
+              "apiKeyExpirationDate": "2024-11-29T18:26:21.440Z",
               "description": "default api key"
-            },
-            "authenticationType": "API_KEY"
-          }
+            }
+          },
+          "additionalAuthenticationProviders": []
         }
-      },
-      "providerPlugin": "awscloudformation",
-      "service": "AppSync"
+      }
     }
   },
   "function": {
     "DoublesMemberGeneratorEventCleaner": {
       "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
       "dependsOn": [
         {
+          "category": "api",
+          "resourceName": "DoublesMemberGenerator",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ]
+        },
+        {
+          "category": "api",
+          "resourceName": "DoublesMemberGenerator",
           "attributes": [
             "GraphQLAPIIdOutput"
-          ],
-          "category": "api",
-          "resourceName": "DoublesMemberGenerator"
+          ]
         }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
+      ]
     }
   },
   "parameters": {
