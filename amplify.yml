@@ -6,6 +6,7 @@ frontend:
         - yarn install
     build:
       commands:
+        - cd packages/web
         - yarn run build
   artifacts:
     baseDirectory: packages/web/dist
