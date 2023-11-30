@@ -67,7 +67,7 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
         motionPreset={"slideInTop"}
       >
         <ModalOverlay />
-        <ModalContent maxW={"350px"}>
+        <ModalContent maxW={"350px"} minH={"480px"}>
           <ModalHeader>
             <Stack spacing={3}>
               <Heading as={"h3"} size={"md"}>
