@@ -42,23 +42,5 @@
         }
       ]
     }
-  },
-  "parameters": {
-    "AMPLIFY_function_DoublesMemberGeneratorEventCleaner_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "DoublesMemberGeneratorEventCleaner"
-        }
-      ]
-    },
-    "AMPLIFY_function_DoublesMemberGeneratorEventCleaner_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "DoublesMemberGeneratorEventCleaner"
-        }
-      ]
-    }
   }
 }
