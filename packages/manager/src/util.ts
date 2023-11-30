@@ -24,7 +24,9 @@ export function selectRandomMembers({
   const playMembers = array
     .shuffle(members)
     .slice(0, courtCount * COURT_CAPACITY);
-  return array.chunks(playMembers, COURT_CAPACITY) as GameMembers;
+  return array.sortInnerItems(
+    array.chunks(playMembers, COURT_CAPACITY),
+  ) as GameMembers;
 }
 
 export function rotateFirstHistory(settings: CurrentSettings): CurrentSettings {
