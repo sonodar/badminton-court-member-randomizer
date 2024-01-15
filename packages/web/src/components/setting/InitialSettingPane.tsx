@@ -39,7 +39,7 @@ type Props = {
 export default function InitialSettingPane({ onStart }: Props) {
   const [courtCount, setCourtCount] = useState(2);
   const [memberCount, setMemberCount] = useState(2 * COURT_CAPACITY);
-  const [algorithm, setAlgorithm] = useState<Algorithm>("EVENNESS");
+  const [algorithm, setAlgorithm] = useState<Algorithm>("DISCRETENESS");
 
   const onChangeCourtCount = (courtCount: number) => {
     setCourtCount(courtCount);
