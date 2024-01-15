@@ -54,17 +54,23 @@ export function generate(settings: CurrentSettings): CurrentSettings {
     return rotateFirstHistory(settings);
   }
 
-  // メンバー数の 10 倍か、最大組み合わせ数 - 履歴数のどちらか小さい方の数だけ組み合わせを払い出す (上限 100)
+  // 最大組み合わせ数 - 履歴数の数だけ組み合わせを払い出す (上限 20)
   const generateSize = Math.min(
-    100,
-    settings.members.length * 10,
+    20,
     combinationCount - settings.histories.length,
   );
 
   const historyKeys = makeHistoryKeys(settings);
 
-  const surplusLimit = getSurplusLimit(settings);
+  // 均等モードにおける連続休憩回数の許容回数
+  const restLimit = getContinuousRestCountLimit(settings);
+
+  // ばらつきモードにおけるプレイ回数の差の許容値
+  const diffLimit = restLimit + 1;
+
   const generatedMembers: SortableMembers[] = [];
+
+  let retryCount = 0;
 
   while (generatedMembers.length < generateSize) {
     // まずメンバーをランダム選出（アルゴリズム設定によって選出方法が異なる）
@@ -73,6 +79,7 @@ export function generate(settings: CurrentSettings): CurrentSettings {
     // 履歴にすでに同じ組み合わせがあったらやり直し
     if (historyKeys.has(toHistoryKey(generated))) {
       console.log(`${JSON.stringify(generated)} は既出のためやり直し`);
+      retryCount++;
       continue;
     }
 
@@ -83,19 +90,40 @@ export function generate(settings: CurrentSettings): CurrentSettings {
     // 参加回数のみの配列（計算に使用する）
     const playCounts = getAllPlayCount(settings.members, incremented);
 
-    // 均等モードの場合の特別処置
-    if (
-      settings.algorithm === "EVENNESS" &&
-      !isEvenness(settings, surplusLimit, generated)
-    ) {
+    // 最大値と最小値の差を求める
+    const range = array.range(playCounts);
+
+    // 100 回やり直してもダメなら諦める
+    if (retryCount > 100) {
+      console.log("100 回やり直してもダメなためやり直しをやめる");
+      generatedMembers.push({
+        members: generated,
+        dev: array.standardDeviation(playCounts),
+        dist: averageEditDistance(settings.histories, generated),
+        range,
+      });
       continue;
     }
 
-    // 最大値と最小値の差を求めておく（あとでソートに使う）
-    const range = array.range(playCounts);
+    // 均等モードの場合、連続休憩回数が許容回数を超える場合はやり直し
+    if (
+      settings.algorithm === "EVENNESS" &&
+      !isEvenness(settings, restLimit, generated)
+    ) {
+      console.log(
+        `連続休憩回数が上限である${restLimit}回を超えたメンバーがいるためやり直し`,
+      );
+      retryCount++;
+      historyKeys.add(toHistoryKey(generated));
+      continue;
+    }
 
-    // ばらつきモードでも差が開きすぎるのは良くないのでやり直し
-    if (settings.algorithm === "DISCRETENESS" && range > surplusLimit) {
+    if (settings.algorithm === "DISCRETENESS" && range > diffLimit) {
+      console.log(
+        `プレイ回数の差が ${range} で上限の ${diffLimit} より大きいためやり直し`,
+      );
+      historyKeys.add(toHistoryKey(generated));
+      retryCount++;
       continue;
     }
 
@@ -196,12 +224,11 @@ function calcCombination(courtCount: number, memberCount: number): number {
 }
 
 // 連続休憩回数の許容回数を算出する
-// (休憩メンバー数 / 4)の切り上げ: 3 => 1, 4 => 1, 5 => 2, 0 => 0
-function getSurplusLimit(settings: CurrentSettings) {
+// (余剰メンバー数 / 4)の切り上げ: 3 => 1, 4 => 1, 5 => 2, 0 => 0
+function getContinuousRestCountLimit(settings: CurrentSettings) {
   const maxPlayerCount = settings.courtCount * COURT_CAPACITY;
   const surplusCount = settings.members.length - maxPlayerCount;
-  const correction = settings.algorithm === "EVENNESS" ? 0 : 1;
-  return Math.ceil(surplusCount / COURT_CAPACITY) + correction;
+  return Math.ceil(surplusCount / COURT_CAPACITY);
 }
 
 // メンバー全員の参加回数を返す（どのメンバーの回数かという情報は削除）

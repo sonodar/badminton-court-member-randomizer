@@ -53,7 +53,7 @@ export function getRestMembers(
 }
 
 // 履歴を直近から走査し、連続で休憩している回数を算出する
-function getContinuousRestCount(
+export function getContinuousRestCount(
   histories: History[],
   memberId: number,
 ): number {

@@ -8,9 +8,9 @@ import { array } from "./array";
 import { COURT_CAPACITY } from "./consts";
 import {
   type CountPerMember,
-  getContinuousRestCounts,
-  getRestMembers,
   selectRandomMembers,
+  getContinuousRestCount,
+  getRestMembers,
 } from "./util";
 
 // 均等性重視の場合は参加回数でソートして少ない順に選出
@@ -78,12 +78,22 @@ function getRandomMembers(courtCount: number, members: CountPerMember[]) {
   return selectRandomMembers({ courtCount, members: members.map(id) });
 }
 
+/**
+ * @param threshold 連続で休憩している回数のしきい値
+ * @param generated ランダム選出されたメンバーの配列
+ * @returns
+ */
 export function isEvenness(
   { members, histories }: Pick<CurrentSettings, "members" | "histories">,
-  surplusLimit: number,
+  threshold: number,
   generated: GameMembers,
 ) {
   const restMembers = getRestMembers({ members }, generated);
-  const restCounts = getContinuousRestCounts(histories, restMembers);
-  return !restCounts.some(({ count }) => count > surplusLimit);
+  for (const memberId of restMembers) {
+    const count = getContinuousRestCount(histories, memberId);
+    if (count > threshold) {
+      return false;
+    }
+  }
+  return true;
 }
