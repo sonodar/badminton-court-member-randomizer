@@ -23,8 +23,8 @@ import {
 } from "@doubles-member-generator/api";
 import { match } from "ts-pattern";
 import HistoryPane from "../common/HistoryPane.tsx";
-import { useSettings, useSettingsDispatcher } from "@components/state";
 import { MemberButton } from "@components/common/MemberButton.tsx";
+import { useSettingsReducer } from "@components/state";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const messages: Record<EventType, (value: any) => string> = {
@@ -50,8 +50,7 @@ const messageColors: Record<
 };
 
 export default function SharedPane({ sharedId }: { sharedId: string }) {
-  const settings = useSettings();
-  const dispatcher = useSettingsDispatcher();
+  const [settings, dispatch] = useSettingsReducer();
 
   const [finished, setFinished] = useState(false);
   const [event, setEvent] = useState<Event | null>(null);
@@ -69,7 +68,7 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
       for (const [id, event] of Object.entries(proceeded)) {
         proceededEvents[id] = event;
       }
-      dispatcher.initialize(settings);
+      dispatch({ type: EventType.Initialize, payload: settings });
       setFinished(finished);
     });
   }, [sharedId]);
@@ -109,14 +108,16 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
     } else {
       match(event)
         .with({ type: EventType.Generate }, ({ payload }) =>
-          dispatcher.generate(payload.members),
+          dispatch({ type: EventType.Generate, payload }),
         )
         .with({ type: EventType.Retry }, ({ payload }) =>
-          dispatcher.retry(payload.members),
+          dispatch({ type: EventType.Retry, payload }),
         )
-        .with({ type: EventType.Join }, () => dispatcher.join())
+        .with({ type: EventType.Join }, () =>
+          dispatch({ type: EventType.Join }),
+        )
         .with({ type: EventType.Leave }, ({ payload }) =>
-          dispatcher.leave(payload.memberId),
+          dispatch({ type: EventType.Leave, payload }),
         )
         .exhaustive();
     }
