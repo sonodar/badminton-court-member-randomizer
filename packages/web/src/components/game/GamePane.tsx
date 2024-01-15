@@ -15,25 +15,25 @@ import {
   type CurrentSettings,
   type Algorithm,
 } from "@doubles-member-generator/manager";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
+  EventType,
   createEnvironment,
   eventEmitter,
   finishEnvironment,
 } from "@doubles-member-generator/api";
-import storage from "../../util/settingsStorage";
+import { useAtom } from "jotai";
 import { ShareButton } from "./ShareButton";
 import CourtMembersPane from "@components/game/CourtMembersPane";
 import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput";
 import { HistoryButton } from "@components/common/HistoryButton.tsx";
 import { MemberButton } from "@components/common/MemberButton.tsx";
 import { ResetButton } from "@components/game/ResetButton";
-import { useSettings, useSettingsDispatcher } from "@components/state";
+import { useSettingsReducer, shareIdAtom } from "@components/state";
 import { GenerateButton } from "@components/game/GenerateButton.tsx";
 
 type Props = {
   onReset: () => void;
-  shareId?: string | null;
 };
 
 const badgeLabels: Record<Algorithm, string> = {
@@ -41,11 +41,10 @@ const badgeLabels: Record<Algorithm, string> = {
   EVENNESS: "均等性重視",
 };
 
-export default function GamePane({ onReset, shareId }: Props) {
-  const settings = useSettings();
-  const dispatcher = useSettingsDispatcher();
+export default function GamePane({ onReset }: Props) {
+  const [settings, dispatch] = useSettingsReducer();
 
-  const [environmentId, setEnvironmentId] = useState(shareId || undefined);
+  const [environmentId, setEnvironmentId] = useAtom(shareIdAtom);
   const [progress, setProgress] = useState(false);
 
   const latestMembers = getLatestMembers(settings) || [];
@@ -57,18 +56,13 @@ export default function GamePane({ onReset, shareId }: Props) {
   const issueShareLink = async () => {
     openProgress();
     const { id } = await createEnvironment();
-    window.localStorage.setItem("shareId", id);
     setEnvironmentId(id);
     await eventEmitter(id).initialize(settings);
     closeProgress();
   };
 
-  useEffect(() => {
-    storage.save({ ...settings });
-  }, [settings]);
-
   const handleJoin = () => {
-    dispatcher.join();
+    dispatch({ type: EventType.Join });
     if (environmentId) {
       eventEmitter(environmentId).join();
     }
@@ -76,7 +70,7 @@ export default function GamePane({ onReset, shareId }: Props) {
 
   const handleGenerate = (newSettings: CurrentSettings) => {
     const members = getLatestMembers(newSettings)!;
-    dispatcher.generate(members);
+    dispatch({ type: EventType.Generate, payload: { members } });
     if (environmentId) {
       eventEmitter(environmentId).generate(members);
     }
@@ -86,7 +80,7 @@ export default function GamePane({ onReset, shareId }: Props) {
   const toastRef = useRef<string | number>();
 
   const handleLeave = (id: number) => {
-    dispatcher.leave(id);
+    dispatch({ type: EventType.Leave, payload: { memberId: id } });
     if (environmentId) {
       eventEmitter(environmentId).leave(id);
     }
@@ -101,13 +95,11 @@ export default function GamePane({ onReset, shareId }: Props) {
   };
 
   const clear = () => {
-    storage.clear();
-    window.localStorage.removeItem("shareId");
+    onReset();
     if (environmentId) {
       eventEmitter(environmentId).finish();
       finishEnvironment(environmentId);
     }
-    onReset();
   };
 
   return (
