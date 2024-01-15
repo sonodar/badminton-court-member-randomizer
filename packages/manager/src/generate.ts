@@ -54,8 +54,9 @@ export function generate(settings: CurrentSettings): CurrentSettings {
     return rotateFirstHistory(settings);
   }
 
-  // メンバー数の 10 倍か、最大組み合わせ数 - 履歴数のどちらか小さい方の数だけ組み合わせを払い出す (最大 320)
+  // メンバー数の 10 倍か、最大組み合わせ数 - 履歴数のどちらか小さい方の数だけ組み合わせを払い出す (上限 100)
   const generateSize = Math.min(
+    100,
     settings.members.length * 10,
     combinationCount - settings.histories.length,
   );
@@ -199,7 +200,8 @@ function calcCombination(courtCount: number, memberCount: number): number {
 function getSurplusLimit(settings: CurrentSettings) {
   const maxPlayerCount = settings.courtCount * COURT_CAPACITY;
   const surplusCount = settings.members.length - maxPlayerCount;
-  return Math.ceil(surplusCount / COURT_CAPACITY);
+  const correction = settings.algorithm === "EVENNESS" ? 0 : 1;
+  return Math.ceil(surplusCount / COURT_CAPACITY) + correction;
 }
 
 // メンバー全員の参加回数を返す（どのメンバーの回数かという情報は削除）
