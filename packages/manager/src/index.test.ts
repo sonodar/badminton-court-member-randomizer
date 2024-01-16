@@ -1,7 +1,14 @@
 import { describe, expect, test } from "vitest";
 import { array } from "./array";
 import { getLatestMembers } from "./util";
-import { type CurrentSettings, generate, join, retry, leave } from "./";
+import {
+  type CurrentSettings,
+  generate,
+  join,
+  retry,
+  leave,
+  Algorithms,
+} from "./";
 
 describe("main", () => {
   test("generate random members", () => {
@@ -10,7 +17,7 @@ describe("main", () => {
       members: array.generate(12),
       histories: [],
       gameCounts: {},
-      algorithm: "DISCRETENESS",
+      algorithm: Algorithms.DISCRETENESS,
     });
 
     // 履歴が生成されていること

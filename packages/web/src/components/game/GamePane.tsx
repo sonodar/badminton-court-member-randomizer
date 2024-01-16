@@ -14,6 +14,7 @@ import {
   getLatestMembers,
   type CurrentSettings,
   type Algorithm,
+  Algorithms,
 } from "@doubles-member-generator/manager";
 import React, { useRef, useState } from "react";
 import {
@@ -37,8 +38,8 @@ type Props = {
 };
 
 const badgeLabels: Record<Algorithm, string> = {
-  DISCRETENESS: "ばらつき重視",
-  EVENNESS: "均等性重視",
+  [Algorithms.DISCRETENESS]: "ばらつき重視",
+  [Algorithms.EVENNESS]: "均等性重視",
 };
 
 export default function GamePane({ onReset }: Props) {

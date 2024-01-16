@@ -7,7 +7,13 @@ export type History = {
 };
 export type PlayCount = { playCount: number; baseCount: number };
 export type PlayCountPerMember = Record<MemberId, PlayCount>;
-export type Algorithm = "DISCRETENESS" | "EVENNESS";
+
+export const Algorithms = {
+  DISCRETENESS: "discreteness",
+  EVENNESS: "evenness",
+} as const;
+
+export type Algorithm = (typeof Algorithms)[keyof typeof Algorithms];
 
 export type CurrentSettings = {
   courtCount: number;

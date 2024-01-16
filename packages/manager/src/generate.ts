@@ -5,6 +5,7 @@ import type {
   PlayCountPerMember,
   MemberId,
 } from "./types";
+import { Algorithms } from "./types";
 import { COURT_CAPACITY } from "./consts";
 import {
   toHistoryKey,
@@ -107,7 +108,7 @@ export function generate(settings: CurrentSettings): CurrentSettings {
 
     // 均等モードの場合、連続休憩回数が許容回数を超える場合はやり直し
     if (
-      settings.algorithm === "EVENNESS" &&
+      settings.algorithm === Algorithms.EVENNESS &&
       !isEvenness(settings, restLimit, generated)
     ) {
       console.log(
@@ -118,7 +119,7 @@ export function generate(settings: CurrentSettings): CurrentSettings {
       continue;
     }
 
-    if (settings.algorithm === "DISCRETENESS" && range > diffLimit) {
+    if (settings.algorithm === Algorithms.DISCRETENESS && range > diffLimit) {
       console.log(
         `プレイ回数の差が ${range} で上限の ${diffLimit} より大きいためやり直し`,
       );
@@ -144,9 +145,9 @@ export function generate(settings: CurrentSettings): CurrentSettings {
 
 function getRandomMembers(settings: CurrentSettings) {
   switch (settings.algorithm) {
-    case "DISCRETENESS":
+    case Algorithms.DISCRETENESS:
       return getDiscretenessRandomMembers(settings);
-    case "EVENNESS":
+    case Algorithms.EVENNESS:
       return getEvennessRandomMembers(settings);
     default: // 旧バージョンの設定が localStorage に残っている場合にありうる
       return getDiscretenessRandomMembers(settings);

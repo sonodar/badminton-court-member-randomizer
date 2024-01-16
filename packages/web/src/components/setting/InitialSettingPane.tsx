@@ -18,6 +18,7 @@ import {
 import {
   COURT_CAPACITY,
   type Algorithm,
+  Algorithms,
 } from "@doubles-member-generator/manager";
 import React, { useState } from "react";
 import { GiTennisCourt } from "react-icons/gi";
@@ -39,7 +40,9 @@ type Props = {
 export default function InitialSettingPane({ onStart }: Props) {
   const [courtCount, setCourtCount] = useState(2);
   const [memberCount, setMemberCount] = useState(2 * COURT_CAPACITY);
-  const [algorithm, setAlgorithm] = useState<Algorithm>("DISCRETENESS");
+  const [algorithm, setAlgorithm] = useState<Algorithm>(
+    Algorithms.DISCRETENESS,
+  );
 
   const onChangeCourtCount = (courtCount: number) => {
     setCourtCount(courtCount);

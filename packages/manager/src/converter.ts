@@ -19,7 +19,7 @@ const settings = z.object({
     z.string(),
     z.object({ playCount: z.number(), baseCount: z.number() }),
   ),
-  algorithm: z.enum(["DISCRETENESS", "EVENNESS"]).optional(),
+  algorithm: z.enum(["discreteness", "evenness"]).optional(),
 }) satisfies ZodType<CurrentSettings>;
 
 export function toSettings(data: string | object): CurrentSettings {

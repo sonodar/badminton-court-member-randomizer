@@ -1,4 +1,7 @@
-import type { CurrentSettings } from "@doubles-member-generator/manager";
+import {
+  Algorithms,
+  type CurrentSettings,
+} from "@doubles-member-generator/manager";
 import { useAtomValue, useSetAtom } from "jotai";
 import { atomWithStorage, RESET, useReducerAtom } from "jotai/utils";
 import { settingsReducer } from "./reducer";
@@ -8,7 +11,7 @@ const emptySettings: CurrentSettings = {
   members: [],
   histories: [],
   gameCounts: {},
-  algorithm: "DISCRETENESS",
+  algorithm: Algorithms.DISCRETENESS,
 };
 
 // const onBoardingAtom = atomWithStorage("onBoarding", { step: 0 });
