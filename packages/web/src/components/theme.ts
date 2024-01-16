@@ -1,6 +1,6 @@
 import { extendTheme } from "@chakra-ui/react";
 
-export const prittyFont = {
+export const prettyFont = {
   fontFamily: `"Zen Maru Gothic",-apple-system,sans-serif`,
 };
 

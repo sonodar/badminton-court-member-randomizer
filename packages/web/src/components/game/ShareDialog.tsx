@@ -14,7 +14,7 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import React, { useRef } from "react";
-import { prittyFont } from "@components/theme";
+import { prettyFont } from "@components/theme";
 import LineShareButton from "@components/common/LineShareButton.tsx";
 
 type Props = {
@@ -45,7 +45,7 @@ export function ShareDialog({ isOpen, onClose, value }: Props) {
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
       <ModalOverlay />
       <ModalContent maxW={"350px"}>
-        <ModalHeader maxH={"xs"} style={{ ...prittyFont }}>
+        <ModalHeader maxH={"xs"} style={{ ...prettyFont }}>
           共有
         </ModalHeader>
         <ModalCloseButton />
