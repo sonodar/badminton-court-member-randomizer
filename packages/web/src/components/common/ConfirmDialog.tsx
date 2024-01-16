@@ -8,7 +8,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import React, { useRef, type ReactNode } from "react";
-import { prittyFont } from "../theme.ts";
+import { prettyFont } from "../theme.ts";
 
 type Props = {
   isOpen: boolean;
@@ -41,7 +41,7 @@ export default function ConfirmDialog({
     >
       <AlertDialogOverlay>
         <AlertDialogContent maxW={"350px"}>
-          <AlertDialogHeader fontSize="lg" fontWeight="bold" {...prittyFont}>
+          <AlertDialogHeader fontSize="lg" fontWeight="bold" {...prettyFont}>
             {title}
           </AlertDialogHeader>
           <AlertDialogBody {...attrs}>{children}</AlertDialogBody>

@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import MemberCountPane from "./MemberCountPane.tsx";
-import { prittyFont } from "@components/theme.ts";
+import { prettyFont } from "@components/theme.ts";
 
 type Props = {
   isOpen: boolean;
@@ -22,7 +22,7 @@ export function MemberDialog({ isOpen, onClose }: Props) {
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent maxW={"350px"}>
-        <ModalHeader maxH={"xs"} style={{ ...prittyFont }}>
+        <ModalHeader maxH={"xs"} style={{ ...prettyFont }}>
           <Heading as="h3" size="md">
             メンバー
           </Heading>

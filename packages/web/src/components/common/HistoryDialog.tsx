@@ -9,7 +9,7 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import HistoryPane from "./HistoryPane.tsx";
-import { prittyFont } from "@components/theme.ts";
+import { prettyFont } from "@components/theme.ts";
 
 type Props = {
   isOpen: boolean;
@@ -21,7 +21,7 @@ export function HistoryDialog({ isOpen, onClose }: Props) {
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
       <ModalOverlay />
       <ModalContent maxW={"350px"}>
-        <ModalHeader maxH={"xs"} style={{ ...prittyFont }}>
+        <ModalHeader maxH={"xs"} style={{ ...prettyFont }}>
           履歴
         </ModalHeader>
         <ModalCloseButton />
