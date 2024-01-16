@@ -60,8 +60,10 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
 
   useEffect(() => {
     findAllEvents(sharedId).then((events) => {
+      if (!subscribed) {
+        startSubscribe(sharedId);
+      }
       if (events.length === 0) {
-        setFinished(true);
         return;
       }
       const { settings, finished, proceeded } = replayEvents(events);
@@ -72,12 +74,6 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
       setFinished(finished);
     });
   }, [sharedId]);
-
-  useEffect(() => {
-    if (!subscribed && settings) {
-      startSubscribe(sharedId);
-    }
-  }, [settings, subscribed]);
 
   const startSubscribe = (id: string) => {
     setSubscribed(true);
