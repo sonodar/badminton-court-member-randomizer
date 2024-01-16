@@ -4,7 +4,7 @@ import React from "react";
 
 type Props = { value: Algorithm; onChange: (mode: Algorithm) => void };
 
-export default function AlgorithmInput({ value, onChange }: Props) {
+export function AlgorithmInput({ value, onChange }: Props) {
   return (
     <RadioGroup onChange={onChange} value={value}>
       <HStack spacing={6}>

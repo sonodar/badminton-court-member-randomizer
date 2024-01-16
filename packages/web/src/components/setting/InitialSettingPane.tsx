@@ -22,7 +22,7 @@ import {
 import React, { useState } from "react";
 import { GiTennisCourt } from "react-icons/gi";
 import { ImGithub } from "react-icons/im";
-import AlgorithmInput from "./AlgorithmInput";
+import { AlgorithmInput } from "./AlgorithmInput";
 import { InitMemberCountInput } from "./InitMemberCountInput";
 import { CourtCountInput } from "./CourtCountInput";
 import logo from "@assets/logo.svg";
