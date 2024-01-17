@@ -47,17 +47,17 @@ export function Tutor({
         <Box>{children}</Box>
       </PopoverTrigger>
       <Portal>
-        <PopoverContent>
+        <PopoverContent
+          borderColor={"lightgray"}
+          sx={{ "--popper-arrow-size": "14px" }}
+          bgColor={"ghostwhite"}
+        >
           {title && (
-            <PopoverHeader
-              fontSize={"small"}
-              fontWeight="semibold"
-              bgColor={"brand.50"}
-            >
+            <PopoverHeader fontSize={"small"} fontWeight="semibold">
               {title}
             </PopoverHeader>
           )}
-          <PopoverArrow />
+          <PopoverArrow shadowColor={"lightgray"} bgColor={"ghostwhite"} />
           <PopoverBody fontSize={"small"}>{description}</PopoverBody>
           <PopoverFooter>
             <HStack justifyContent={"flex-end"}>
