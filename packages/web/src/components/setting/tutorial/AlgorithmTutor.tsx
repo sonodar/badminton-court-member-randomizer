@@ -16,10 +16,10 @@ export function AlgorithmTutor({ children }: { children: ReactNode }) {
   return (
     <Tutor
       isOpen={step === SettingsTutorialSteps.ALGORITHM}
-      title={"アルゴリズム"}
+      title={"選出モード"}
       description={
         <Stack spacing={4} fontSize={"small"}>
-          <Text>メンバー選出のアルゴリズムを選択してください。</Text>
+          <Text>メンバー選出モード（アルゴリズム）を選択してください。</Text>
           <Text fontWeight="semibold">ばらつき重視</Text>
           <Text>
             なるべく似通った面子にならないようにメンバーを選出します。連続での休憩が発生しますが、何度も繰り返しているうちに平準化されていきます。

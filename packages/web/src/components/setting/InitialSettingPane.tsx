@@ -100,9 +100,9 @@ export default function InitialSettingPane({ onStart }: Props) {
             </MemberCountTutor>
             <HStack>
               <Heading as="h3" size="md">
-                アルゴリズム
+                選出モード
               </Heading>
-              <HelpButton title={"アルゴリズム"} items={["algorithm"]} />
+              <HelpButton title={"選出モード"} items={["algorithm"]} />
             </HStack>
             <AlgorithmTutor>
               <AlgorithmInput value={algorithm} onChange={setAlgorithm} />
