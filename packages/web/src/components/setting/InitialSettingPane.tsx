@@ -23,13 +23,14 @@ import {
 import React, { useState } from "react";
 import { GiTennisCourt } from "react-icons/gi";
 import { ImGithub } from "react-icons/im";
+import { MdTour } from "react-icons/md";
 import { useAtomValue } from "jotai";
 import { AlgorithmInput } from "./AlgorithmInput";
 import { InitMemberCountInput } from "./InitMemberCountInput";
 import { CourtCountInput } from "./CourtCountInput";
 import logo from "@assets/logo.svg";
 import HelpButton from "@components/common/HelpButton.tsx";
-import { SettingsTutorialSteps } from "@components/state";
+import { SettingsTutorialSteps, useResetTutorial } from "@components/state";
 import { CourtCountTutor } from "@components/setting/tutorial/CourtCountTutor.tsx";
 import { settingsTutorialAtom } from "@components/state/atoms.ts";
 import { MemberCountTutor } from "@components/setting/tutorial/MemberCountTutor.tsx";
@@ -58,6 +59,8 @@ export default function InitialSettingPane({ onStart }: Props) {
   };
 
   const tutorialStep = useAtomValue(settingsTutorialAtom);
+  const resetTutorial = useResetTutorial();
+  const isProd = window.location.hostname === "badminton.sonodar.net";
 
   return (
     <Card m={0} p={0} height={"100dvh"}>
@@ -114,6 +117,15 @@ export default function InitialSettingPane({ onStart }: Props) {
               >
                 <IconButton aria-label={"github"} icon={<ImGithub />} />
               </Link>
+              {!isProd && (
+                <IconButton
+                  aria-label={"tour"}
+                  ml={4}
+                  variant={"ghost"}
+                  icon={<MdTour />}
+                  onClick={resetTutorial}
+                />
+              )}
               <Spacer />
               <Button
                 leftIcon={<GiTennisCourt />}

@@ -50,3 +50,12 @@ export const useSettingsTutorialReducer = () =>
   useReducerAtom(settingsTutorialAtom, settingsTutorialReducer);
 export const useGameTutorialReducer = () =>
   useReducerAtom(gameTutorialAtom, gameTutorialReducer);
+
+export const useResetTutorial = () => {
+  const setSettingsTutorial = useSetAtom(settingsTutorialAtom);
+  const setGameTutorial = useSetAtom(gameTutorialAtom);
+  return () => {
+    setSettingsTutorial(RESET);
+    setGameTutorial(RESET);
+  };
+};

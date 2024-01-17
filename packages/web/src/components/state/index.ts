@@ -6,6 +6,7 @@ export {
   useSettingsReducer,
   useSettingsTutorialReducer,
   useGameTutorialReducer,
+  useResetTutorial,
 } from "./atoms";
 export {
   SettingsTutorialSteps,
