@@ -25,6 +25,13 @@ type Props = {
   children: ReactNode;
 };
 
+const buttonStyles = {
+  variant: "outline",
+  size: "xs",
+  borderRadius: "sm",
+  minWidth: "3.5rem",
+};
+
 export function Tutor({
   isOpen,
   title,
@@ -48,6 +55,7 @@ export function Tutor({
       </PopoverTrigger>
       <Portal>
         <PopoverContent
+          borderRadius={"xl"}
           borderColor={"lightgray"}
           sx={{ "--popper-arrow-size": "14px" }}
           bgColor={"ghostwhite"}
@@ -62,14 +70,13 @@ export function Tutor({
           <PopoverFooter>
             <HStack justifyContent={"flex-end"}>
               {onBack && (
-                <Button size={"xs"} variant={"outline"} onClick={onBack}>
+                <Button {...buttonStyles} onClick={onBack}>
                   戻る
                 </Button>
               )}
               {onNext && (
                 <Button
-                  size={"xs"}
-                  variant={"outline"}
+                  {...buttonStyles}
                   colorScheme={"primary"}
                   onClick={onNext}
                 >
@@ -77,7 +84,12 @@ export function Tutor({
                 </Button>
               )}
               {onDone && (
-                <Button size={"xs"} colorScheme={"primary"} onClick={onDone}>
+                <Button
+                  {...buttonStyles}
+                  variant={"solid"}
+                  colorScheme={"primary"}
+                  onClick={onDone}
+                >
                   OK
                 </Button>
               )}
