@@ -4,7 +4,15 @@ import {
 } from "@doubles-member-generator/manager";
 import { useAtomValue, useSetAtom } from "jotai";
 import { atomWithStorage, RESET, useReducerAtom } from "jotai/utils";
-import { settingsReducer } from "./reducer";
+import {
+  gameTutorialReducer,
+  settingsTutorialReducer,
+  settingsReducer,
+} from "./reducer";
+import {
+  GameTutorialSteps,
+  SettingsTutorialSteps,
+} from "@components/state/tutor.ts";
 
 const emptySettings: CurrentSettings = {
   courtCount: 0,
@@ -14,9 +22,16 @@ const emptySettings: CurrentSettings = {
   algorithm: Algorithms.DISCRETENESS,
 };
 
-// const onBoardingAtom = atomWithStorage("onBoarding", { step: 0 });
 export const settingsAtom = atomWithStorage("currentSettings", emptySettings);
 export const shareIdAtom = atomWithStorage("shareId", "");
+export const settingsTutorialAtom = atomWithStorage(
+  "settingsTutorial",
+  SettingsTutorialSteps.COURT_COUNT,
+);
+export const gameTutorialAtom = atomWithStorage(
+  "gameTutorial",
+  GameTutorialSteps.GENERATE,
+);
 
 export function useResetAll() {
   const setSettings = useSetAtom(settingsAtom);
@@ -30,3 +45,8 @@ export function useResetAll() {
 export const useSettings = () => useAtomValue(settingsAtom);
 export const useSettingsReducer = () =>
   useReducerAtom(settingsAtom, settingsReducer);
+
+export const useSettingsTutorialReducer = () =>
+  useReducerAtom(settingsTutorialAtom, settingsTutorialReducer);
+export const useGameTutorialReducer = () =>
+  useReducerAtom(gameTutorialAtom, gameTutorialReducer);

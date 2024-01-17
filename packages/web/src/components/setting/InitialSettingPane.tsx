@@ -6,8 +6,8 @@ import {
   Center,
   Divider,
   Flex,
-  HStack,
   Heading,
+  HStack,
   IconButton,
   Image,
   Link,
@@ -16,18 +16,24 @@ import {
   Text,
 } from "@chakra-ui/react";
 import {
-  COURT_CAPACITY,
   type Algorithm,
   Algorithms,
+  COURT_CAPACITY,
 } from "@doubles-member-generator/manager";
 import React, { useState } from "react";
 import { GiTennisCourt } from "react-icons/gi";
 import { ImGithub } from "react-icons/im";
+import { useAtomValue } from "jotai";
 import { AlgorithmInput } from "./AlgorithmInput";
 import { InitMemberCountInput } from "./InitMemberCountInput";
 import { CourtCountInput } from "./CourtCountInput";
 import logo from "@assets/logo.svg";
 import HelpButton from "@components/common/HelpButton.tsx";
+import { SettingsTutorialSteps } from "@components/state";
+import { CourtCountTutor } from "@components/setting/tutorial/CourtCountTutor.tsx";
+import { settingsTutorialAtom } from "@components/state/atoms.ts";
+import { MemberCountTutor } from "@components/setting/tutorial/MemberCountTutor.tsx";
+import { AlgorithmTutor } from "@components/setting/tutorial/AlgorithmTutor.tsx";
 
 type Props = {
   onStart: (env: {
@@ -39,7 +45,7 @@ type Props = {
 
 export default function InitialSettingPane({ onStart }: Props) {
   const [courtCount, setCourtCount] = useState(2);
-  const [memberCount, setMemberCount] = useState(2 * COURT_CAPACITY);
+  const [memberCount, setMemberCount] = useState(courtCount * COURT_CAPACITY);
   const [algorithm, setAlgorithm] = useState<Algorithm>(
     Algorithms.DISCRETENESS,
   );
@@ -50,6 +56,8 @@ export default function InitialSettingPane({ onStart }: Props) {
       setMemberCount(courtCount * COURT_CAPACITY);
     }
   };
+
+  const tutorialStep = useAtomValue(settingsTutorialAtom);
 
   return (
     <Card m={0} p={0} height={"100dvh"}>
@@ -71,22 +79,31 @@ export default function InitialSettingPane({ onStart }: Props) {
               </Heading>
               <Text fontSize="md">（後から変更不可）</Text>
             </HStack>
-            <CourtCountInput value={courtCount} onChange={onChangeCourtCount} />
+            <CourtCountTutor>
+              <CourtCountInput
+                value={courtCount}
+                onChange={onChangeCourtCount}
+              />
+            </CourtCountTutor>
             <Heading as="h3" size="md">
               メンバー数
             </Heading>
-            <InitMemberCountInput
-              min={courtCount * COURT_CAPACITY}
-              value={memberCount}
-              onChange={setMemberCount}
-            />
+            <MemberCountTutor>
+              <InitMemberCountInput
+                min={courtCount * COURT_CAPACITY}
+                value={memberCount}
+                onChange={setMemberCount}
+              />
+            </MemberCountTutor>
             <HStack>
               <Heading as="h3" size="md">
                 アルゴリズム
               </Heading>
               <HelpButton title={"アルゴリズム"} items={["algorithm"]} />
             </HStack>
-            <AlgorithmInput value={algorithm} onChange={setAlgorithm} />
+            <AlgorithmTutor>
+              <AlgorithmInput value={algorithm} onChange={setAlgorithm} />
+            </AlgorithmTutor>
             <Divider />
             <Flex>
               <Link
@@ -110,6 +127,7 @@ export default function InitialSettingPane({ onStart }: Props) {
                     algorithm,
                   })
                 }
+                isDisabled={tutorialStep !== SettingsTutorialSteps.DONE}
               >
                 開始
               </Button>
