@@ -23,6 +23,19 @@ type Props = {
   showLeftMember?: boolean;
 };
 
+function detectColor(restCount: number) {
+  if (restCount >= 3) {
+    return "red.200";
+  }
+  if (restCount === 2) {
+    return "orange.200";
+  }
+  if (restCount === 1) {
+    return "yellow.100";
+  }
+  return "";
+}
+
 export default function MemberCountPane({
   small,
   settings,
@@ -40,15 +53,19 @@ export default function MemberCountPane({
     : [];
   const restCounts = getContinuousRestCounts(histories, restMembers);
 
-  function CountPain({ id, playCount }: { id: number; playCount?: number }) {
+  function CountPain({
+    id,
+    playCount = 0,
+  }: {
+    id: number;
+    playCount?: number;
+  }) {
     const restCount = restCounts.find((c) => c.id === id)?.count || 0;
 
+    const color = !members.includes(id) ? "gray" : detectColor(restCount);
+
     return (
-      <Box
-        bg={members.includes(id) ? "" : "gray"}
-        color={members.includes(id) ? "" : "white"}
-        p={2}
-      >
+      <Box bg={color} color={members.includes(id) ? "" : "white"}>
         <Center>
           <HStack spacing={3}>
             <Heading
@@ -56,7 +73,7 @@ export default function MemberCountPane({
               size={small ? "sm" : "md"}
             >{`${id} :`}</Heading>
             <Text fontSize={small ? "sm" : "md"}>
-              {playCount || 0} 回 ({restCount})
+              {playCount} 回 ({restCount})
             </Text>
           </HStack>
         </Center>
@@ -66,7 +83,7 @@ export default function MemberCountPane({
   }
 
   return (
-    <SimpleGrid minChildWidth="110px" spacing={2} color={"gray.600"}>
+    <SimpleGrid minChildWidth="110px" spacing={0} color={"gray.600"}>
       {memberIds.map((id) => (
         <CountPain key={id} id={id} playCount={gameCounts[id]?.playCount} />
       ))}

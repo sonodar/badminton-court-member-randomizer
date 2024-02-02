@@ -45,12 +45,12 @@ export function StatisticsPane({ settings }: { settings: CurrentSettings }) {
             isCentered
           >
             <ModalOverlay />
-            <ModalContent w={"300px"}>
+            <ModalContent w={"95dvw"}>
               <ModalHeader maxH={"xs"} fontSize={"sm"}>
                 プレイ回数 (連続休憩回数)
               </ModalHeader>
               <ModalCloseButton />
-              <ModalBody>
+              <ModalBody px={1}>
                 <MemberCountPane settings={settings} small={true} />
               </ModalBody>
             </ModalContent>
