@@ -33,7 +33,7 @@ export function ResetButton({
         okColorScheme={"danger"}
         title={"本当に終了しますか？"}
       >
-        すべての設定をリセットして初期設定に戻ります。
+        プレイ履歴をリセットして初期設定に戻ります。今回の設定は次回に引き継がれます。
       </ConfirmDialog>
     </Fragment>
   );

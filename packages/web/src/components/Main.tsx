@@ -1,10 +1,14 @@
 import { ChakraProvider, Container } from "@chakra-ui/react";
 import { array, type Algorithm } from "@doubles-member-generator/manager";
 import React from "react";
-import { Provider, createStore, useAtom } from "jotai";
+import { Provider, createStore, useAtom, useSetAtom } from "jotai";
 import { parseShareLink } from "../util/shareLink";
 import SharedPane from "./shared/SharedPane.tsx";
-import { settingsAtom, useResetAll } from "./state/index.ts";
+import {
+  settingsAtom,
+  previousSettingsAtom,
+  useResetAll,
+} from "./state/index.ts";
 import GamePane from "@components/game/GamePane";
 import InitialSettingPane from "@components/setting/InitialSettingPane";
 import customTheme from "@components/theme";
@@ -26,6 +30,7 @@ export default function Main() {
   }
 
   const [settings, setSettings] = useAtom(settingsAtom);
+  const setPreviousSettings = useSetAtom(previousSettingsAtom);
 
   const onStart = ({
     courtCount,
@@ -37,13 +42,15 @@ export default function Main() {
     algorithm: Algorithm;
   }) => {
     const members = array.generate(memberCount);
-    setSettings({
+    const settings = {
       courtCount,
       members,
       histories: [],
       gameCounts: {},
       algorithm,
-    });
+    };
+    setSettings(settings);
+    setPreviousSettings(settings);
   };
 
   const onReset = useResetAll();
