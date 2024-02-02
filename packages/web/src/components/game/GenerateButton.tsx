@@ -81,9 +81,7 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
           <ModalCloseButton />
           <ModalBody p={0} mb={1}>
             <Center>
-              <Stack spacing={6} px={2}>
-                <StatisticsPane settings={newSettings || settings} />
-              </Stack>
+              <StatisticsPane settings={newSettings || settings} />
             </Center>
           </ModalBody>
           <ModalFooter>
