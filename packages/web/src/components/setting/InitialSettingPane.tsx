@@ -20,7 +20,7 @@ import {
   type Algorithm,
   Algorithms,
 } from "@doubles-member-generator/manager";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GiTennisCourt } from "react-icons/gi";
 import { ImGithub } from "react-icons/im";
 import { AlgorithmInput } from "./AlgorithmInput";
@@ -28,6 +28,7 @@ import { InitMemberCountInput } from "./InitMemberCountInput";
 import { CourtCountInput } from "./CourtCountInput";
 import logo from "@assets/logo.svg";
 import HelpButton from "@components/common/HelpButton.tsx";
+import { getPreviousSettings } from "@components/state";
 
 type Props = {
   onStart: (env: {
@@ -38,11 +39,19 @@ type Props = {
 };
 
 export default function InitialSettingPane({ onStart }: Props) {
+  const initialSettings = getPreviousSettings();
+
   const [courtCount, setCourtCount] = useState(2);
   const [memberCount, setMemberCount] = useState(2 * COURT_CAPACITY);
   const [algorithm, setAlgorithm] = useState<Algorithm>(
     Algorithms.DISCRETENESS,
   );
+
+  useEffect(() => {
+    setCourtCount(initialSettings?.courtCount || 2);
+    setMemberCount(initialSettings?.members.length || 2 * COURT_CAPACITY);
+    setAlgorithm(initialSettings?.algorithm || Algorithms.DISCRETENESS);
+  }, [initialSettings]);
 
   const onChangeCourtCount = (courtCount: number) => {
     setCourtCount(courtCount);
