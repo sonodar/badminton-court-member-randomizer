@@ -8,7 +8,7 @@
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint -- --fix",
     "test": "turbo run test",
-    "fix": "run-s format lint:fix typecheck",
+    "fix": "run-s format lint:fix typecheck format",
     "typecheck": "turbo run typecheck",
     "build": "turbo run -F @doubles-member-generator/web build",
     "preview": "turbo run -F @doubles-member-generator/web preview",

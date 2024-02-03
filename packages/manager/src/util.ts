@@ -1,8 +1,8 @@
-import type { CurrentSettings, GameMembers, History, MemberId } from "./types";
+import type { CurrentSettings, GameMembers, History } from "./types";
 import { array } from "./array";
 import { COURT_CAPACITY } from "./consts";
 
-export type CountPerMember = { id: number; count: number };
+export type CountPerMember = Record<number, number>;
 
 export function toHistoryKey(members: GameMembers): string {
   return array.sortMatrix(members).flat().join(",");
@@ -63,13 +63,32 @@ export function getContinuousRestCount(
   return histories.length - 1 - lastIndex;
 }
 
-export function getContinuousRestCounts(
-  histories: History[],
-  restMembers: MemberId[],
-) {
+export function getContinuousRestCounts({
+  members,
+  histories,
+}: Pick<CurrentSettings, "histories" | "members">) {
+  const lastMembers = getLatestMembers({ histories });
+  const restMembers = lastMembers
+    ? getRestMembers({ members }, lastMembers)
+    : [];
   return restMembers.reduce((counts, id) => {
-    const count = getContinuousRestCount(histories, id);
-    counts.push({ id, count });
+    counts[id] = getContinuousRestCount(histories, id);
     return counts;
-  }, [] as CountPerMember[]);
+  }, {} as CountPerMember);
+}
+
+function getTotalRestCount(histories: History[], memberId: number): number {
+  return histories.filter(
+    (history) => !history.members.flat().includes(memberId),
+  ).length;
+}
+
+export function getTotalRestCounts({
+  members,
+  histories,
+}: Pick<CurrentSettings, "histories" | "members">) {
+  return members.reduce((counts, id) => {
+    counts[id] = getTotalRestCount(histories, id);
+    return counts;
+  }, {} as CountPerMember);
 }

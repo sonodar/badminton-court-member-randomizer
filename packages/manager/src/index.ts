@@ -4,8 +4,10 @@ export * from "./array";
 export {
   getLatestMembers,
   type CountPerMember,
+  getContinuousRestCount,
   getContinuousRestCounts,
   getRestMembers,
+  getTotalRestCounts,
 } from "./util";
 export { generate, replayGenerate } from "./generate";
 export { retry, replayRetry } from "./retry";
