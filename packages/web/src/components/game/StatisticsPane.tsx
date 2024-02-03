@@ -1,21 +1,10 @@
-import type { CurrentSettings } from "@doubles-member-generator/manager";
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Stack,
-  Center,
-  useDisclosure,
-  ModalCloseButton,
-} from "@chakra-ui/react";
+import { type CurrentSettings } from "@doubles-member-generator/manager";
+import { Button, Stack, Center, useDisclosure } from "@chakra-ui/react";
 import React from "react";
 import { COURT_CAPACITY } from "@doubles-member-generator/manager";
 import { TbUsers } from "react-icons/tb";
 import HistoryPane from "@components/common/HistoryPane.tsx";
-import MemberCountPane from "@components/common/MemberCountPane.tsx";
+import { MemberDialog } from "@components/common/MemberDialog.tsx";
 
 export function StatisticsPane({ settings }: { settings: CurrentSettings }) {
   const histories = settings.histories.slice(settings.histories.length - 2);
@@ -38,23 +27,12 @@ export function StatisticsPane({ settings }: { settings: CurrentSettings }) {
           >
             プレイ回数を確認
           </Button>
-          <Modal
-            onClose={onClose}
+          <MemberDialog
+            settings={settings}
             isOpen={isOpen}
-            scrollBehavior={"inside"}
-            isCentered
-          >
-            <ModalOverlay />
-            <ModalContent w={"95dvw"}>
-              <ModalHeader maxH={"xs"} fontSize={"sm"}>
-                プレイ回数 (連続休憩回数)
-              </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody px={1}>
-                <MemberCountPane settings={settings} small={true} />
-              </ModalBody>
-            </ModalContent>
-          </Modal>
+            onClose={onClose}
+            small={true}
+          />
         </Center>
       )}
     </Stack>

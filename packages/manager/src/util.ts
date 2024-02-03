@@ -1,8 +1,8 @@
-import type { CurrentSettings, GameMembers, History, MemberId } from "./types";
+import type { CurrentSettings, GameMembers, History } from "./types";
 import { array } from "./array";
 import { COURT_CAPACITY } from "./consts";
 
-export type CountPerMember = { id: number; count: number };
+export type CountPerMember = Record<number, number>;
 
 export function toHistoryKey(members: GameMembers): string {
   return array.sortMatrix(members).flat().join(",");
@@ -61,15 +61,4 @@ export function getContinuousRestCount(
     history.members.flat().includes(memberId),
   );
   return histories.length - 1 - lastIndex;
-}
-
-export function getContinuousRestCounts(
-  histories: History[],
-  restMembers: MemberId[],
-) {
-  return restMembers.reduce((counts, id) => {
-    const count = getContinuousRestCount(histories, id);
-    counts.push({ id, count });
-    return counts;
-  }, [] as CountPerMember[]);
 }

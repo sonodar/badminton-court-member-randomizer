@@ -7,11 +7,12 @@ import type {
 import { array } from "./array";
 import { COURT_CAPACITY } from "./consts";
 import {
-  type CountPerMember,
   selectRandomMembers,
   getContinuousRestCount,
   getRestMembers,
 } from "./util";
+
+type PlayCount = { id: number; count: number };
 
 // 均等性重視の場合は参加回数でソートして少ない順に選出
 export function getEvennessRandomMembers({
@@ -60,7 +61,7 @@ export function getEvennessRandomMembers({
 function sortMembers({
   members,
   gameCounts,
-}: Pick<CurrentSettings, "members" | "gameCounts">): CountPerMember[] {
+}: Pick<CurrentSettings, "members" | "gameCounts">): PlayCount[] {
   return members
     .map((id) => ({ id, count: getPlayCount(gameCounts, id) }))
     .sort((i1, i2) => i1.count - i2.count);
@@ -70,11 +71,11 @@ function getPlayCount(gameCounts: PlayCountPerMember, id: MemberId) {
   return (gameCounts[id]?.playCount || 0) + (gameCounts[id]?.baseCount || 0);
 }
 
-function id(item: CountPerMember) {
+function id(item: PlayCount) {
   return item.id;
 }
 
-function getRandomMembers(courtCount: number, members: CountPerMember[]) {
+function getRandomMembers(courtCount: number, members: PlayCount[]) {
   return selectRandomMembers({ courtCount, members: members.map(id) });
 }
 

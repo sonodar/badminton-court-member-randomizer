@@ -18,7 +18,7 @@ export function MemberButton({ isDisabled }: { isDisabled?: boolean }) {
         isDisabled={isDisabled || histories.length === 0}
         onClick={onOpen}
       />
-      <MemberDialog isOpen={isOpen} onClose={onClose} />
+      <MemberDialog isOpen={isOpen} onClose={onClose} showLeftMember={true} />
     </Fragment>
   );
 }

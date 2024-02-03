@@ -9,11 +9,10 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import {
-  getLatestMembers,
-  getContinuousRestCounts,
-  getRestMembers,
   type CurrentSettings,
   array,
+  type MemberCountVariant,
+  OutlierLevelProvider,
 } from "@doubles-member-generator/manager";
 import { useSettings } from "@components/state";
 
@@ -21,25 +20,21 @@ type Props = {
   settings?: CurrentSettings;
   small?: boolean;
   showLeftMember?: boolean;
+  variant: MemberCountVariant;
 };
 
-function detectColor(restCount: number) {
-  if (restCount >= 3) {
-    return "red.200";
-  }
-  if (restCount === 2) {
-    return "orange.200";
-  }
-  if (restCount === 1) {
-    return "yellow.100";
-  }
-  return "";
-}
+const outlierLevelColors = {
+  none: "",
+  low: "yellow.100",
+  medium: "orange.200",
+  high: "red.200",
+} as const;
 
 export default function MemberCountPane({
   small,
   settings,
   showLeftMember,
+  variant,
 }: Props) {
   const { histories, members, gameCounts } = settings || useSettings();
   const playMemberIds = Object.keys(gameCounts).map(Number);
@@ -47,34 +42,31 @@ export default function MemberCountPane({
     array.unique(members.concat(showLeftMember ? playMemberIds : [])),
   );
 
-  const lastMembers = getLatestMembers({ histories });
-  const restMembers = lastMembers
-    ? getRestMembers({ members }, lastMembers)
-    : [];
-  const restCounts = getContinuousRestCounts(histories, restMembers);
+  const { getLevel, getValue } = OutlierLevelProvider({
+    histories,
+    members,
+    gameCounts,
+  });
 
   function CountPain({
     id,
-    playCount = 0,
+    variant,
   }: {
     id: number;
     playCount?: number;
+    variant: MemberCountVariant;
   }) {
-    const restCount = restCounts.find((c) => c.id === id)?.count || 0;
-
-    const color = !members.includes(id) ? "gray" : detectColor(restCount);
+    const value = getValue(variant, id);
+    const level = getLevel(variant, id);
+    const color = !members.includes(id) ? "gray" : outlierLevelColors[level];
+    const size = small ? "sm" : "md";
 
     return (
       <Box bg={color} color={members.includes(id) ? "" : "white"}>
         <Center>
           <HStack spacing={3}>
-            <Heading
-              as={"label"}
-              size={small ? "sm" : "md"}
-            >{`${id} :`}</Heading>
-            <Text fontSize={small ? "sm" : "md"}>
-              {playCount} 回 ({restCount})
-            </Text>
+            <Heading as={"label"} size={size}>{`${id} :`}</Heading>
+            <Text fontSize={size}>{value} 回</Text>
           </HStack>
         </Center>
         {members.includes(id) && <Divider />}
@@ -85,7 +77,7 @@ export default function MemberCountPane({
   return (
     <SimpleGrid minChildWidth="110px" spacing={0} color={"gray.600"}>
       {memberIds.map((id) => (
-        <CountPain key={id} id={id} playCount={gameCounts[id]?.playCount} />
+        <CountPain key={id} id={id} variant={variant} />
       ))}
     </SimpleGrid>
   );
