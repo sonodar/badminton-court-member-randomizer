@@ -11,12 +11,12 @@ import {
   Tabs,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { type CurrentSettings } from "@doubles-member-generator/manager";
-import MemberCountPane from "./MemberCountPane.tsx";
 import {
+  type CurrentSettings,
   memberCountVariantLabels,
   memberCountVariants,
-} from "@components/common/MemberCount.ts";
+} from "@doubles-member-generator/manager";
+import MemberCountPane from "./MemberCountPane.tsx";
 
 type Props = {
   settings?: CurrentSettings;

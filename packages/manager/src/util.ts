@@ -62,33 +62,3 @@ export function getContinuousRestCount(
   );
   return histories.length - 1 - lastIndex;
 }
-
-export function getContinuousRestCounts({
-  members,
-  histories,
-}: Pick<CurrentSettings, "histories" | "members">) {
-  const lastMembers = getLatestMembers({ histories });
-  const restMembers = lastMembers
-    ? getRestMembers({ members }, lastMembers)
-    : [];
-  return restMembers.reduce((counts, id) => {
-    counts[id] = getContinuousRestCount(histories, id);
-    return counts;
-  }, {} as CountPerMember);
-}
-
-function getTotalRestCount(histories: History[], memberId: number): number {
-  return histories.filter(
-    (history) => !history.members.flat().includes(memberId),
-  ).length;
-}
-
-export function getTotalRestCounts({
-  members,
-  histories,
-}: Pick<CurrentSettings, "histories" | "members">) {
-  return members.reduce((counts, id) => {
-    counts[id] = getTotalRestCount(histories, id);
-    return counts;
-  }, {} as CountPerMember);
-}

@@ -1,12 +1,12 @@
-import {
-  array,
-  type CountPerMember,
-  type CurrentSettings,
-  getContinuousRestCounts,
-  getTotalRestCounts,
-  type PlayCountPerMember,
-} from "@doubles-member-generator/manager";
 import { match } from "ts-pattern";
+import type { CurrentSettings, History, PlayCountPerMember } from "./types";
+import type { CountPerMember } from "./util";
+import {
+  getContinuousRestCount,
+  getLatestMembers,
+  getRestMembers,
+} from "./util";
+import { array } from "./array";
 
 export const memberCountVariants = [
   "playCount",
@@ -32,6 +32,36 @@ function toCountPerMember(gameCounts: PlayCountPerMember): CountPerMember {
 
 function getAllCounts(members: number[], counts: CountPerMember) {
   return members.map((id) => counts[id] || 0);
+}
+
+function getContinuousRestCounts({
+  members,
+  histories,
+}: Pick<CurrentSettings, "histories" | "members">) {
+  const lastMembers = getLatestMembers({ histories });
+  const restMembers = lastMembers
+    ? getRestMembers({ members }, lastMembers)
+    : [];
+  return restMembers.reduce((counts, id) => {
+    counts[id] = getContinuousRestCount(histories, id);
+    return counts;
+  }, {} as CountPerMember);
+}
+
+function getTotalRestCount(histories: History[], memberId: number): number {
+  return histories.filter(
+    (history) => !history.members.flat().includes(memberId),
+  ).length;
+}
+
+function getTotalRestCounts({
+  members,
+  histories,
+}: Pick<CurrentSettings, "histories" | "members">) {
+  return members.reduce((counts, id) => {
+    counts[id] = getTotalRestCount(histories, id);
+    return counts;
+  }, {} as CountPerMember);
 }
 
 function getOutlierLevel(diff: number): OutlierLevel {

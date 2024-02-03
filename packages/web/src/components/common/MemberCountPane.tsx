@@ -8,11 +8,12 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
-import { type CurrentSettings, array } from "@doubles-member-generator/manager";
 import {
+  type CurrentSettings,
+  array,
   type MemberCountVariant,
   OutlierLevelProvider,
-} from "./MemberCount.ts";
+} from "@doubles-member-generator/manager";
 import { useSettings } from "@components/state";
 
 type Props = {
