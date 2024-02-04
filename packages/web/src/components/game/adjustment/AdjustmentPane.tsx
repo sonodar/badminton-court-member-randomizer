@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import {
   array,
   type CourtMembers,
@@ -16,6 +16,8 @@ import {
 import {
   Box,
   Center,
+  Grid,
+  GridItem,
   Heading,
   SimpleGrid,
   Stack,
@@ -179,6 +181,8 @@ export function AdjustmentPane({
     const sourceType = e.active.data.current.type;
     const destType = e.over.data.current.type;
 
+    console.log({ sourceType, destType });
+
     // 休憩メンバーを参加させる場合
     if (sourceType === "restMember") {
       if (destType !== "courtMember") return;
@@ -231,6 +235,8 @@ export function AdjustmentPane({
         const destIndex = e.over.data.current.index;
         const destMemberId = gameMembers[destCourtId][destIndex];
 
+        if (sourceMemberId === destMemberId) return;
+
         const newPlayMemberIds = gameMembers.map((courtMembers, courtId) => {
           if (courtId !== sourceCourtId && courtId !== destCourtId) {
             return courtMembers;
@@ -255,20 +261,17 @@ export function AdjustmentPane({
     <DndContext onDragEnd={onDragEnd} autoScroll={false}>
       <Stack spacing={4} w={"100%"}>
         <Text fontSize={"sm"}>↓ ドラッグ＆ドロップで調整できます ↓</Text>
-        <SimpleGrid columns={2} spacingX={4}>
+        <Grid
+          templateColumns={"repeat(3, 1fr)"}
+          templateRows={`repeat(${courtCount}, 1fr)`}
+          gap={1}
+        >
           {restMembers.length > 0 && (
-            <Stack px={2}>
-              <Heading as={"label"} size={"sm"}>
-                休憩メンバー
-              </Heading>
-              <Box
-                py={2}
-                pl={3}
-                borderStyle={"solid"}
-                borderWidth={1}
-                borderRadius={"md"}
-                h={"100%"}
-              >
+            <GridItem colSpan={1} rowSpan={courtCount}>
+              <Stack>
+                <Heading as={"label"} size={"sm"} pl={2}>
+                  休憩
+                </Heading>
                 <SimpleGrid columns={2} spacing={0}>
                   {restMembers.map((memberId, index) => (
                     <RestMemberDroppable
@@ -279,42 +282,40 @@ export function AdjustmentPane({
                     </RestMemberDroppable>
                   ))}
                 </SimpleGrid>
-              </Box>
-            </Stack>
+              </Stack>
+            </GridItem>
           )}
-          <Stack spacing={3}>
-            {courtIds.map((courtId) => (
-              <Fragment key={`court-${courtId}`}>
-                <Heading as={"label"} size={"sm"}>
-                  コート {courtId + 1}
-                </Heading>
-                <Box
-                  borderStyle={"solid"}
-                  borderWidth={1}
-                  borderRadius={"md"}
-                  py={1}
-                  pl={5}
-                >
-                  <SimpleGrid columns={2} spacing={0}>
-                    {gameMembers[courtId].map((memberId, index) => (
-                      <CourtMemberDroppable
+          {courtIds.map((courtId) => (
+            <GridItem colSpan={2} rowSpan={1} key={`court-${courtId}`}>
+              <Heading as={"label"} size={"sm"}>
+                コート {courtId + 1}
+              </Heading>
+              <Box
+                borderStyle={"solid"}
+                borderWidth={1}
+                borderRadius={"md"}
+                py={1}
+                pl={1}
+              >
+                <SimpleGrid columns={4} spacing={0}>
+                  {gameMembers[courtId].map((memberId, index) => (
+                    <CourtMemberDroppable
+                      courtId={courtId}
+                      index={index}
+                      key={`courtMemberDroppable-${memberId}`}
+                    >
+                      <CourtMemberBox
                         courtId={courtId}
+                        memberId={memberId}
                         index={index}
-                        key={`courtMemberDroppable-${memberId}`}
-                      >
-                        <CourtMemberBox
-                          courtId={courtId}
-                          memberId={memberId}
-                          index={index}
-                        />
-                      </CourtMemberDroppable>
-                    ))}
-                  </SimpleGrid>
-                </Box>
-              </Fragment>
-            ))}
-          </Stack>
-        </SimpleGrid>
+                      />
+                    </CourtMemberDroppable>
+                  ))}
+                </SimpleGrid>
+              </Box>
+            </GridItem>
+          ))}
+        </Grid>
       </Stack>
     </DndContext>
   );
