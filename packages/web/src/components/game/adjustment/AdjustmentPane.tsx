@@ -257,17 +257,21 @@ export function AdjustmentPane({
     }
   };
 
+  const leftSpan = 3;
+  const rightSpan = 5;
+  const columnGap = 5;
+
   return (
     <DndContext onDragEnd={onDragEnd} autoScroll={false}>
       <Stack spacing={4} w={"100%"}>
         <Text fontSize={"sm"}>↓ ドラッグ＆ドロップで調整できます ↓</Text>
         <Grid
-          templateColumns={"repeat(3, 1fr)"}
+          templateColumns={`repeat(${leftSpan + rightSpan}, 1fr)`}
           templateRows={`repeat(${courtCount}, 1fr)`}
-          gap={1}
+          columnGap={columnGap}
         >
           {restMembers.length > 0 && (
-            <GridItem colSpan={1} rowSpan={courtCount}>
+            <GridItem colSpan={leftSpan} rowSpan={courtCount}>
               <Stack>
                 <Heading as={"label"} size={"sm"} pl={2}>
                   休憩
@@ -286,7 +290,7 @@ export function AdjustmentPane({
             </GridItem>
           )}
           {courtIds.map((courtId) => (
-            <GridItem colSpan={2} rowSpan={1} key={`court-${courtId}`}>
+            <GridItem colSpan={rightSpan} rowSpan={1} key={`court-${courtId}`}>
               <Heading as={"label"} size={"sm"}>
                 コート {courtId + 1}
               </Heading>
