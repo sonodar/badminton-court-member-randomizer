@@ -1,5 +1,5 @@
-import type { CurrentSettings, GameMembers, PlayCountPerMember } from "./types";
-import { getLatestMembers, toHistoryKey } from "./util";
+import type { CurrentSettings, GameMembers } from "./types";
+import { getLatestMembers, removeLatestHistory, toHistoryKey } from "./util";
 import { addHistory, generate } from "./generate";
 
 export function retry(settings: CurrentSettings): CurrentSettings {
@@ -21,29 +21,7 @@ export function retry(settings: CurrentSettings): CurrentSettings {
   return newSettings;
 }
 
-export function removeLatestHistory(settings: CurrentSettings) {
-  const newSettings = structuredClone(settings);
-  const latestHistory = newSettings.histories.pop()!;
-  newSettings.gameCounts = decrement(
-    newSettings.gameCounts,
-    latestHistory.members,
-  );
-  return newSettings;
-}
 export function replayRetry(settings: CurrentSettings, members: GameMembers) {
   const prevSettings = removeLatestHistory(settings);
   return addHistory(prevSettings, members);
-}
-
-function decrement(
-  gameCounts: PlayCountPerMember,
-  members: GameMembers,
-): PlayCountPerMember {
-  const result = { ...gameCounts };
-  for (const id of members.flat()) {
-    const playCount = Math.max(0, (result[id]?.playCount || 0) - 1);
-    const baseCount = result[id]?.baseCount || 0;
-    result[id] = { playCount, baseCount };
-  }
-  return result;
 }

@@ -1,4 +1,9 @@
-import type { CurrentSettings, GameMembers, History } from "./types";
+import type {
+  CurrentSettings,
+  GameMembers,
+  History,
+  PlayCountPerMember,
+} from "./types";
 import { array } from "./array";
 import { COURT_CAPACITY } from "./consts";
 
@@ -61,4 +66,28 @@ export function getContinuousRestCount(
     history.members.flat().includes(memberId),
   );
   return histories.length - 1 - lastIndex;
+}
+
+// 最後の履歴を削除してプレイ回数を再計算する
+export function removeLatestHistory(settings: CurrentSettings) {
+  const newSettings = structuredClone(settings);
+  const latestHistory = newSettings.histories.pop()!;
+  newSettings.gameCounts = decrement(
+    newSettings.gameCounts,
+    latestHistory.members,
+  );
+  return newSettings;
+}
+
+function decrement(
+  gameCounts: PlayCountPerMember,
+  members: GameMembers,
+): PlayCountPerMember {
+  const result = { ...gameCounts };
+  for (const id of members.flat()) {
+    const playCount = Math.max(0, (result[id]?.playCount || 0) - 1);
+    const baseCount = result[id]?.baseCount || 0;
+    result[id] = { playCount, baseCount };
+  }
+  return result;
 }

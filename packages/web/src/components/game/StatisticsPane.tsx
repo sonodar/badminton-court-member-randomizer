@@ -1,16 +1,28 @@
 import { type CurrentSettings } from "@doubles-member-generator/manager";
 import { Button, Stack, Center, useDisclosure } from "@chakra-ui/react";
-import React from "react";
+import React, { type ComponentProps } from "react";
 import { COURT_CAPACITY } from "@doubles-member-generator/manager";
-import { TbUsers } from "react-icons/tb";
+import { RiEditLine } from "react-icons/ri";
 import HistoryPane from "@components/common/HistoryPane.tsx";
-import { MemberDialog } from "@components/common/MemberDialog.tsx";
+import { AdjustmentDialog } from "@components/game/adjustment/AdjustmentDialog.tsx";
 
-export function StatisticsPane({ settings }: { settings: CurrentSettings }) {
+type AdjustedHandler = ComponentProps<typeof AdjustmentDialog>["onChange"];
+
+type Props = {
+  settings: CurrentSettings;
+  onAdjusted: AdjustedHandler;
+};
+
+export function StatisticsPane({ settings, onAdjusted }: Props) {
   const histories = settings.histories.slice(settings.histories.length - 2);
   const showStatistics =
     settings.members.length > settings.courtCount * COURT_CAPACITY;
   const { onOpen, onClose, isOpen } = useDisclosure();
+
+  const handleChange: AdjustedHandler = (settings) => {
+    onAdjusted(settings);
+    onClose();
+  };
 
   return (
     <Stack spacing={3}>
@@ -21,17 +33,17 @@ export function StatisticsPane({ settings }: { settings: CurrentSettings }) {
             w={"80%"}
             size={"sm"}
             variant={"outline"}
-            leftIcon={<TbUsers />}
+            leftIcon={<RiEditLine />}
             color={"gray.600"}
             onClick={onOpen}
           >
-            プレイ回数を確認
+            メンバーを調整する
           </Button>
-          <MemberDialog
+          <AdjustmentDialog
             settings={settings}
             isOpen={isOpen}
             onClose={onClose}
-            small={true}
+            onChange={handleChange}
           />
         </Center>
       )}
