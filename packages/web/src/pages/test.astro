@@ -1,0 +1,10 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Test from "@components/Test.tsx";
+---
+
+<Layout title="テスト">
+  <main>
+    <Test client:only="react" />
+  </main>
+</Layout>

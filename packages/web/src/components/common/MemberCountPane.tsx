@@ -6,21 +6,25 @@ import {
   Heading,
   SimpleGrid,
   Text,
+  Tabs,
+  TabList,
+  Tab,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import {
   type CurrentSettings,
   array,
   type MemberCountVariant,
   OutlierLevelProvider,
+  memberCountVariantLabels,
+  memberCountVariants,
 } from "@doubles-member-generator/manager";
 import { useSettings } from "@components/state";
 
 type Props = {
-  settings?: CurrentSettings;
-  small?: boolean;
+  settings?: Pick<CurrentSettings, "histories" | "members" | "gameCounts">;
   showLeftMember?: boolean;
-  variant: MemberCountVariant;
+  defaultTabIndex?: number;
 };
 
 const outlierLevelColors = {
@@ -31,11 +35,13 @@ const outlierLevelColors = {
 } as const;
 
 export default function MemberCountPane({
-  small,
   settings,
   showLeftMember,
-  variant,
+  defaultTabIndex,
 }: Props) {
+  const [tabIndex, setTabIndex] = useState(defaultTabIndex || 0);
+  const memberCountVariant = memberCountVariants[tabIndex];
+
   const { histories, members, gameCounts } = settings || useSettings();
   const playMemberIds = Object.keys(gameCounts).map(Number);
   const memberIds = array.sort(
@@ -59,14 +65,13 @@ export default function MemberCountPane({
     const value = getValue(variant, id);
     const level = getLevel(variant, id);
     const color = !members.includes(id) ? "gray" : outlierLevelColors[level];
-    const size = small ? "sm" : "md";
 
     return (
       <Box bg={color} color={members.includes(id) ? "" : "white"}>
         <Center>
           <HStack spacing={3}>
-            <Heading as={"label"} size={size}>{`${id} :`}</Heading>
-            <Text fontSize={size}>{value} 回</Text>
+            <Heading as={"label"} size={"md"}>{`${id} :`}</Heading>
+            <Text fontSize={"md"}>{value} 回</Text>
           </HStack>
         </Center>
         {members.includes(id) && <Divider />}
@@ -75,10 +80,19 @@ export default function MemberCountPane({
   }
 
   return (
-    <SimpleGrid minChildWidth="110px" spacing={0} color={"gray.600"}>
-      {memberIds.map((id) => (
-        <CountPain key={id} id={id} variant={variant} />
-      ))}
-    </SimpleGrid>
+    <Tabs index={tabIndex} onChange={setTabIndex} variant={"enclosed"}>
+      <TabList mb="1em">
+        {Object.values(memberCountVariantLabels).map((label, index) => (
+          <Tab key={index}>
+            <Heading size="xs">{label}</Heading>
+          </Tab>
+        ))}
+      </TabList>
+      <SimpleGrid minChildWidth="110px" spacing={0} color={"gray.600"}>
+        {memberIds.map((id) => (
+          <CountPain key={id} id={id} variant={memberCountVariant} />
+        ))}
+      </SimpleGrid>
+    </Tabs>
   );
 }

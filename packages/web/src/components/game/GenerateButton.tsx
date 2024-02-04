@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { IoDiceOutline } from "react-icons/io5";
-import type { CurrentSettings } from "@doubles-member-generator/manager";
+import { type CurrentSettings } from "@doubles-member-generator/manager";
 import { generate, retry } from "@doubles-member-generator/manager";
 import { CheckIcon, RepeatClockIcon } from "@chakra-ui/icons";
 import { StatisticsPane } from "@components/game/StatisticsPane.tsx";
@@ -81,7 +81,10 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
           <ModalCloseButton />
           <ModalBody p={0} mb={1}>
             <Center>
-              <StatisticsPane settings={newSettings || settings} />
+              <StatisticsPane
+                settings={newSettings || settings}
+                onAdjusted={setNewSettings}
+              />
             </Center>
           </ModalBody>
           <ModalFooter>
@@ -90,6 +93,7 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
               colorScheme={"brand"}
               leftIcon={<CheckIcon />}
               onClick={handleOk}
+              size={"sm"}
             >
               決定
             </Button>
@@ -101,6 +105,7 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
               leftIcon={<RepeatClockIcon />}
               onClick={handleRetry}
               isDisabled={!newSettings}
+              size={"sm"}
             >
               やり直し
             </Button>
