@@ -162,9 +162,11 @@ export function AdjustmentPane({
 
     const sourceType = e.active.data.current.type;
     const destType = e.over.data.current.type;
-    if (sourceType === destType) return;
 
+    // 休憩メンバーを参加させる場合
     if (sourceType === "restMember") {
+      if (destType !== "courtMember") return;
+
       const sourceMemberId = e.active.data.current.memberId;
 
       const destCourtId = e.over.data.current.courtId;
@@ -178,23 +180,55 @@ export function AdjustmentPane({
         ) as CourtMembers;
       });
 
-      onChange(newPlayMemberIds);
-    } else if (sourceType === "courtMember") {
-      const sourceCourtId = e.active.data.current.courtId;
-      const sourceIndex = e.active.data.current.index;
-      const sourceMemberId = gameMembers[sourceCourtId][sourceIndex];
+      return onChange(newPlayMemberIds);
+    }
 
-      const destIndex = e.over.data.current.index;
-      const destMemberId = restMembers[destIndex];
+    if (sourceType === "courtMember") {
+      // 参加メンバーを休憩させる場合
+      if (destType === "restMember") {
+        const sourceCourtId = e.active.data.current.courtId;
+        const sourceIndex = e.active.data.current.index;
+        const sourceMemberId = gameMembers[sourceCourtId][sourceIndex];
 
-      const newPlayMemberIds = gameMembers.map((courtMembers, courtId) => {
-        if (courtId !== sourceCourtId) return courtMembers;
-        return courtMembers.map((id) =>
-          id === sourceMemberId ? destMemberId : id,
-        ) as CourtMembers;
-      });
+        const destIndex = e.over.data.current.index;
+        const destMemberId = restMembers[destIndex];
 
-      onChange(newPlayMemberIds);
+        const newPlayMemberIds = gameMembers.map((courtMembers, courtId) => {
+          if (courtId !== sourceCourtId) return courtMembers;
+          return courtMembers.map((id) =>
+            id === sourceMemberId ? destMemberId : id,
+          ) as CourtMembers;
+        });
+
+        return onChange(newPlayMemberIds);
+      }
+
+      // 参加メンバー同士を入れ替える場合
+      if (destType === "courtMember") {
+        const sourceCourtId = e.active.data.current.courtId;
+        const sourceIndex = e.active.data.current.index;
+        const sourceMemberId = gameMembers[sourceCourtId][sourceIndex];
+
+        const destCourtId = e.over.data.current.courtId;
+        const destIndex = e.over.data.current.index;
+        const destMemberId = gameMembers[destCourtId][destIndex];
+
+        const newPlayMemberIds = gameMembers.map((courtMembers, courtId) => {
+          if (courtId !== sourceCourtId && courtId !== destCourtId) {
+            return courtMembers;
+          }
+          if (courtId === sourceCourtId) {
+            return courtMembers.map((id) =>
+              id === sourceMemberId ? destMemberId : id,
+            ) as CourtMembers;
+          }
+          return courtMembers.map((id) =>
+            id === destMemberId ? sourceMemberId : id,
+          ) as CourtMembers;
+        });
+
+        return onChange(newPlayMemberIds);
+      }
     }
   };
 
