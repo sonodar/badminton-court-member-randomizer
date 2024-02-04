@@ -18,8 +18,8 @@ import {
   type GameMembers,
   replace,
 } from "@doubles-member-generator/manager";
-import { CheckIcon } from "@chakra-ui/icons";
-import { MdCancel } from "react-icons/md";
+import { MdOutlineCancel } from "react-icons/md";
+import { IoMdDownload } from "react-icons/io";
 import { AdjustmentPane } from "@components/game/adjustment/AdjustmentPane.tsx";
 import MemberCountPane from "@components/common/MemberCountPane.tsx";
 
@@ -56,17 +56,17 @@ export function AdjustmentDialog({
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleCancel}
       scrollBehavior={"inside"}
       isCentered
       motionPreset={"slideInTop"}
     >
       <ModalOverlay />
-      <ModalContent maxW={"350px"} minH={"480px"} maxH={"100dvh"}>
+      <ModalContent maxW={"350px"} maxH={"100dvh"}>
         <ModalHeader>
           <Stack spacing={3}>
             <Heading as={"h3"} size={"md"}>
-              メンバー調整
+              プレイ回数
             </Heading>
           </Stack>
         </ModalHeader>
@@ -83,20 +83,21 @@ export function AdjustmentDialog({
           <Button
             w={"45%"}
             colorScheme={"brand"}
-            leftIcon={<CheckIcon />}
+            leftIcon={<IoMdDownload />}
             onClick={handleOk}
             size={"sm"}
+            rounded={"full"}
           >
-            決定
+            調整反映
           </Button>
           <Spacer />
           <Button
             w={"45%"}
-            colorScheme={"brand"}
             variant={"outline"}
-            leftIcon={<MdCancel />}
+            leftIcon={<MdOutlineCancel />}
             onClick={handleCancel}
             size={"sm"}
+            rounded={"full"}
           >
             キャンセル
           </Button>

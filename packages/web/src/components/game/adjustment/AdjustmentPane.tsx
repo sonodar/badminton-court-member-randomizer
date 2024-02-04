@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import {
   array,
   type CourtMembers,
@@ -20,6 +20,7 @@ import {
   SimpleGrid,
   Stack,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 
 function RestMemberBox({
@@ -44,7 +45,7 @@ function RestMemberBox({
       w="8"
       h="8"
       pt={1}
-      bg="red.100"
+      bg="danger.100"
       borderRadius="full"
       boxShadow={isDragging ? undefined : "sm"}
       ref={setNodeRef}
@@ -155,6 +156,21 @@ export function AdjustmentPane({
   const restMembers = getRestMembers({ members }, gameMembers);
   const courtIds = array.generate(courtCount, 0);
 
+  const toast = useToast({
+    status: "success",
+    duration: 2000,
+    isClosable: false,
+    colorScheme: "brand",
+    variant: "subtle",
+    position: "top",
+  });
+
+  const showToast = (sourceMemberId: number, destMemberId: number) => {
+    toast({
+      title: `${sourceMemberId} 番と ${destMemberId} 番を入れ替えました`,
+    });
+  };
+
   const onDragEnd = (e: DragEndEvent) => {
     if (!e.active.data.current || !e.over?.data.current) {
       return;
@@ -180,7 +196,8 @@ export function AdjustmentPane({
         ) as CourtMembers;
       });
 
-      return onChange(newPlayMemberIds);
+      onChange(newPlayMemberIds);
+      return showToast(sourceMemberId, destMemberId);
     }
 
     if (sourceType === "courtMember") {
@@ -200,7 +217,8 @@ export function AdjustmentPane({
           ) as CourtMembers;
         });
 
-        return onChange(newPlayMemberIds);
+        onChange(newPlayMemberIds);
+        return showToast(sourceMemberId, destMemberId);
       }
 
       // 参加メンバー同士を入れ替える場合
@@ -227,7 +245,8 @@ export function AdjustmentPane({
           ) as CourtMembers;
         });
 
-        return onChange(newPlayMemberIds);
+        onChange(newPlayMemberIds);
+        return showToast(sourceMemberId, destMemberId);
       }
     }
   };
@@ -236,50 +255,65 @@ export function AdjustmentPane({
     <DndContext onDragEnd={onDragEnd} autoScroll={false}>
       <Stack spacing={4} w={"100%"}>
         <Text fontSize={"sm"}>↓ ドラッグ＆ドロップで調整できます ↓</Text>
-        {restMembers.length > 0 && (
-          <Box p={2} borderStyle={"solid"} borderWidth={1} borderRadius={"md"}>
-            <Heading as={"label"} size={"sm"}>
-              休憩メンバー
-            </Heading>
-            <SimpleGrid columns={6} spacingX={0}>
-              {restMembers.map((memberId, index) => (
-                <RestMemberDroppable
-                  index={index}
-                  key={`restMemberDroppable-${memberId}`}
-                >
-                  <RestMemberBox memberId={memberId} index={index} />
-                </RestMemberDroppable>
-              ))}
-            </SimpleGrid>
-          </Box>
-        )}
-        <SimpleGrid columns={courtCount === 1 ? 1 : 2} spacing={3}>
-          {courtIds.map((courtId) => (
-            <Box
-              key={`court-${courtId}`}
-              borderStyle={"solid"}
-              borderWidth={1}
-              borderRadius={"md"}
-              p={2}
-            >
-              コート {courtId + 1}
-              <SimpleGrid columns={2} spacing={1} pl={2}>
-                {gameMembers[courtId].map((memberId, index) => (
-                  <CourtMemberDroppable
-                    courtId={courtId}
-                    index={index}
-                    key={`courtMemberDroppable-${memberId}`}
-                  >
-                    <CourtMemberBox
-                      courtId={courtId}
-                      memberId={memberId}
+        <SimpleGrid columns={2} spacingX={4}>
+          {restMembers.length > 0 && (
+            <Stack px={2}>
+              <Heading as={"label"} size={"sm"}>
+                休憩メンバー
+              </Heading>
+              <Box
+                py={2}
+                pl={3}
+                borderStyle={"solid"}
+                borderWidth={1}
+                borderRadius={"md"}
+                h={"100%"}
+              >
+                <SimpleGrid columns={2} spacing={0}>
+                  {restMembers.map((memberId, index) => (
+                    <RestMemberDroppable
                       index={index}
-                    />
-                  </CourtMemberDroppable>
-                ))}
-              </SimpleGrid>
-            </Box>
-          ))}
+                      key={`restMemberDroppable-${memberId}`}
+                    >
+                      <RestMemberBox memberId={memberId} index={index} />
+                    </RestMemberDroppable>
+                  ))}
+                </SimpleGrid>
+              </Box>
+            </Stack>
+          )}
+          <Stack spacing={3}>
+            {courtIds.map((courtId) => (
+              <Fragment key={`court-${courtId}`}>
+                <Heading as={"label"} size={"sm"}>
+                  コート {courtId + 1}
+                </Heading>
+                <Box
+                  borderStyle={"solid"}
+                  borderWidth={1}
+                  borderRadius={"md"}
+                  py={1}
+                  pl={5}
+                >
+                  <SimpleGrid columns={2} spacing={0}>
+                    {gameMembers[courtId].map((memberId, index) => (
+                      <CourtMemberDroppable
+                        courtId={courtId}
+                        index={index}
+                        key={`courtMemberDroppable-${memberId}`}
+                      >
+                        <CourtMemberBox
+                          courtId={courtId}
+                          memberId={memberId}
+                          index={index}
+                        />
+                      </CourtMemberDroppable>
+                    ))}
+                  </SimpleGrid>
+                </Box>
+              </Fragment>
+            ))}
+          </Stack>
         </SimpleGrid>
       </Stack>
     </DndContext>

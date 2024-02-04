@@ -59,15 +59,9 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
       >
         メンバー決め
       </Button>
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        scrollBehavior={"inside"}
-        isCentered
-        motionPreset={"slideInTop"}
-      >
+      <Modal isOpen={isOpen} onClose={onClose} size={"full"}>
         <ModalOverlay />
-        <ModalContent maxW={"350px"} minH={"480px"}>
+        <ModalContent maxW={"350px"}>
           <ModalHeader>
             <Stack spacing={3}>
               <Heading as={"h3"} size={"md"}>
@@ -90,12 +84,11 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
           <ModalFooter>
             <Button
               w={"45%"}
-              colorScheme={"brand"}
+              colorScheme={"primary"}
               leftIcon={<CheckIcon />}
               onClick={handleOk}
-              size={"sm"}
             >
-              決定
+              確定
             </Button>
             <Spacer />
             <Button
@@ -105,7 +98,6 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
               leftIcon={<RepeatClockIcon />}
               onClick={handleRetry}
               isDisabled={!newSettings}
-              size={"sm"}
             >
               やり直し
             </Button>
