@@ -228,10 +228,13 @@ export function AdjustmentPane({
       // 参加メンバー同士を入れ替える場合
       if (destType === "courtMember") {
         const sourceCourtId = e.active.data.current.courtId;
+        const destCourtId = e.over.data.current.courtId;
+
+        if (sourceCourtId === destCourtId) return;
+
         const sourceIndex = e.active.data.current.index;
         const sourceMemberId = gameMembers[sourceCourtId][sourceIndex];
 
-        const destCourtId = e.over.data.current.courtId;
         const destIndex = e.over.data.current.index;
         const destMemberId = gameMembers[destCourtId][destIndex];
 
