@@ -2,17 +2,17 @@ projects:
   DoublesMemberGenerator:
     schemaPath: amplify/backend/api/DoublesMemberGenerator/build/schema.graphql
     includes:
-      - packages/api/src/graphql/**/*.ts
+      - src/api/graphql/**/*.ts
     excludes:
       - ./amplify/**
       # https://github.com/aws-amplify/amplify-codegen/issues/734
-      - packages/api/src/graphql/index.ts
-      - packages/api/src/API.ts
+      - src/api/graphql/index.ts
+      - src/api/API.ts
     extensions:
       amplify:
         codeGenTarget: typescript
-        generatedFileName: packages/api/src/API.ts
-        docsFilePath: packages/api/src/graphql
+        generatedFileName: src/api/API.ts
+        docsFilePath: src/api/graphql
         maxDepth: 4
 extensions:
   amplify:

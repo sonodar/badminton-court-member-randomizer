@@ -35,6 +35,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# generated types
+.astro/
+
 team-provider-info.json
 
 #amplify-do-not-edit-begin
@@ -48,7 +51,7 @@ amplify/backend/.temp
 build/
 dist/
 node_modules/
-aws-exports.js
+src/aws-exports.js
 awsconfiguration.json
 amplifyconfiguration.json
 amplifyconfiguration.dart

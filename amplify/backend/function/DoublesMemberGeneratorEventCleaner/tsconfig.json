@@ -1,5 +1,4 @@
 {
-  "extends": "@doubles-member-generator/tsconfig/base.json",
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",

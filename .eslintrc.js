@@ -9,10 +9,11 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "plugin:import/recommended",
     "plugin:import/typescript",
+    "plugin:react/recommended",
     "prettier",
   ],
   parserOptions: { project },
-  plugins: ["@typescript-eslint", "import", "unused-imports"],
+  plugins: ["@typescript-eslint", "import", "unused-imports", "react"],
   settings: {
     "import/resolver": {
       node: {
@@ -20,8 +21,17 @@ module.exports = {
       },
       typescript: { project },
     },
+    react: { version: "detect" },
   },
-  ignorePatterns: ["node_modules/", "dist/", "src/*.js", "src/*.d.ts"],
+  ignorePatterns: [
+    "node_modules/",
+    "coverage/",
+    ".eslintrc.js",
+    "**/*.js",
+    "src/api/API.ts",
+    "src/api/models/",
+    "src/api/graphql/*.ts",
+  ],
   rules: {
     "import/no-named-as-default": "off",
     "@typescript-eslint/no-unused-vars": [
