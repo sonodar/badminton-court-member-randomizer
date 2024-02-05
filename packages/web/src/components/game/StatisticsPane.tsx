@@ -2,7 +2,7 @@ import { type CurrentSettings } from "@doubles-member-generator/manager";
 import { Button, Stack, Center, useDisclosure } from "@chakra-ui/react";
 import React, { type ComponentProps } from "react";
 import { COURT_CAPACITY } from "@doubles-member-generator/manager";
-import { RiEditLine } from "react-icons/ri";
+import { TbUsers } from "react-icons/tb";
 import HistoryPane from "@components/common/HistoryPane.tsx";
 import { AdjustmentDialog } from "@components/game/adjustment/AdjustmentDialog.tsx";
 
@@ -33,11 +33,11 @@ export function StatisticsPane({ settings, onAdjusted }: Props) {
             w={"80%"}
             size={"sm"}
             variant={"outline"}
-            leftIcon={<RiEditLine />}
+            leftIcon={<TbUsers />}
             color={"gray.600"}
             onClick={onOpen}
           >
-            メンバーを調整する
+            プレイ回数を確認する
           </Button>
           <AdjustmentDialog
             settings={settings}
