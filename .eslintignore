@@ -1,3 +1,4 @@
+src/env.d.ts
 src/api/API.ts
 src/api/graphql/queries.ts
 src/api/graphql/mutations.ts

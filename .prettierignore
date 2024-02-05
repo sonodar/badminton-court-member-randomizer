@@ -1,8 +1,1 @@
-src/api/API.ts
-src/api/graphql/queries.ts
-src/api/graphql/mutations.ts
-src/api/graphql/subscriptions.ts
-src/api/models
-src/aws-exports.js
-src/amplifyconfiguration.json
-amplify
+.eslintignore

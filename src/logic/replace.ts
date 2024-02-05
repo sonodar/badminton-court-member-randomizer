@@ -1,6 +1,6 @@
-import type {CurrentSettings, GameMembers} from "./types";
-import {addHistory} from "./generate";
-import {removeLatestHistory} from "./util";
+import type { CurrentSettings, GameMembers } from "./types";
+import { addHistory } from "./generate";
+import { removeLatestHistory } from "./util";
 
 export function replace(
   settings: CurrentSettings,
