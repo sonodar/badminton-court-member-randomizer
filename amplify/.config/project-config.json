@@ -1,15 +1,13 @@
 {
-  "providers": [
-    "awscloudformation"
-  ],
+  "providers": ["awscloudformation"],
   "projectName": "DoublesMemberGenerat",
   "version": "3.1",
   "frontend": "javascript",
   "javascript": {
     "framework": "none",
     "config": {
-      "SourceDir": "packages/api/src",
-      "DistributionDir": "packages/web/dist",
+      "SourceDir": "src",
+      "DistributionDir": "dist",
       "BuildCommand": "yarn run build",
       "StartCommand": "yarn run dev"
     }

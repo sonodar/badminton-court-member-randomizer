@@ -4,7 +4,10 @@
   "description": "",
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write '**/*.{js,mjs,ts,md,json}'"
   },
   "dependencies": {
     "@aws-amplify/cli-extensibility-helper": "^2.4.4"

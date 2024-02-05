@@ -13,9 +13,17 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@aws-sdk/client-dynamodb": "3.450.0",
-    "@aws-sdk/lib-dynamodb": "3.450.0",
-    "@types/aws-lambda": "8.10.92",
-    "esbuild": "0.19.5"
+    "@aws-sdk/client-dynamodb": "3.506.0",
+    "@aws-sdk/lib-dynamodb": "3.506.0",
+    "@types/aws-lambda": "8.10.133",
+    "@typescript-eslint/eslint-plugin": "6.20.0",
+    "@typescript-eslint/parser": "6.20.0",
+    "esbuild": "0.19.5",
+    "eslint": "8.56.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-config-turbo": "1.12.2",
+    "eslint-plugin-import": "2.29.1",
+    "eslint-plugin-unused-imports": "3.0.0",
+    "prettier": "3.2.5"
   }
 }

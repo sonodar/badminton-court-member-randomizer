@@ -28,17 +28,12 @@
         {
           "category": "api",
           "resourceName": "DoublesMemberGenerator",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ]
+          "attributes": ["GraphQLAPIIdOutput", "GraphQLAPIEndpointOutput"]
         },
         {
           "category": "api",
           "resourceName": "DoublesMemberGenerator",
-          "attributes": [
-            "GraphQLAPIIdOutput"
-          ]
+          "attributes": ["GraphQLAPIIdOutput"]
         }
       ]
     }
