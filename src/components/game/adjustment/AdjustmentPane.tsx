@@ -18,25 +18,21 @@ import {
 } from "@chakra-ui/react";
 import {
   array,
-  type CourtMembers,
   type CurrentSettings,
   type GameMembers,
   getLatestMembers,
   getRestMembers,
+  isMemberType,
+  type RestOrCourtMember,
+  swapGameMember,
 } from "@logic";
 
-function RestMemberBox({
-  memberId,
-  index,
-}: {
-  memberId: number;
-  index: number;
-}) {
+function MemberBox({
+  color,
+  ...member
+}: RestOrCourtMember & { color: string }) {
   const { isDragging, attributes, listeners, setNodeRef, transform } =
-    useDraggable({
-      id: `restMember-${memberId}`,
-      data: { type: "restMember", memberId, index },
-    });
+    useDraggable({ id: `${member.type}-${member.memberId}`, data: member });
   const style = transform
     ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
@@ -47,7 +43,7 @@ function RestMemberBox({
       w="8"
       h="8"
       pt={1}
-      bg="danger.100"
+      bg={color}
       borderRadius="full"
       boxShadow={isDragging ? undefined : "sm"}
       ref={setNodeRef}
@@ -55,21 +51,18 @@ function RestMemberBox({
       {...listeners}
       {...attributes}
     >
-      <Center>{memberId}</Center>
+      <Center>{member.memberId}</Center>
     </Box>
   );
 }
 
-function RestMemberDroppable({
-  index,
+function MemberDroppable({
   children,
-}: {
-  index: number;
-  children: React.ReactNode;
-}) {
+  ...member
+}: RestOrCourtMember & { children: React.ReactNode }) {
   const { isOver, setNodeRef } = useDroppable({
-    id: `restMemberDroppable-${index}`,
-    data: { type: "restMember", index },
+    id: `${member.type}Droppable-${member.memberId}`,
+    data: member,
   });
   const style = {
     background: isOver ? "var(--chakra-colors-gray-100)" : "transparent",
@@ -77,66 +70,6 @@ function RestMemberDroppable({
   return (
     <Box w={12} h={12} p={2} rounded={"sm"} ref={setNodeRef} style={style}>
       {children}
-    </Box>
-  );
-}
-
-function CourtMemberBox({
-  courtId,
-  memberId,
-  index,
-}: {
-  courtId: number;
-  memberId: number;
-  index: number;
-}) {
-  const { isDragging, attributes, listeners, setNodeRef, transform } =
-    useDraggable({
-      id: `courtMember-${memberId}`,
-      data: { type: "courtMember", courtId, memberId, index },
-    });
-  const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
-    : undefined;
-  return (
-    <Box
-      w="8"
-      h="8"
-      pt={1}
-      bg="brand.300"
-      borderRadius="full"
-      boxShadow={isDragging ? undefined : "sm"}
-      ref={setNodeRef}
-      style={style}
-      {...listeners}
-      {...attributes}
-    >
-      <Center>{memberId}</Center>
-    </Box>
-  );
-}
-
-function CourtMemberDroppable({
-  courtId,
-  index,
-  children,
-}: {
-  courtId: number;
-  index: number;
-  children: React.ReactNode;
-}) {
-  const { isOver, setNodeRef } = useDroppable({
-    id: `courtMemberDroppable-${courtId}-${index}`,
-    data: { type: "courtMember", courtId, index },
-  });
-  const style = {
-    background: isOver ? "var(--chakra-colors-gray-100)" : "transparent",
-  };
-  return (
-    <Box w={12} h={12} p={2} rounded={"sm"} ref={setNodeRef} style={style}>
-      <Center>{children}</Center>
     </Box>
   );
 }
@@ -181,83 +114,18 @@ export function AdjustmentPane({
     const sourceType = e.active.data.current.type;
     const destType = e.over.data.current.type;
 
-    console.log({ sourceType, destType });
-
-    // 休憩メンバーを参加させる場合
-    if (sourceType === "restMember") {
-      if (destType !== "courtMember") return;
-
-      const sourceMemberId = e.active.data.current.memberId;
-
-      const destCourtId = e.over.data.current.courtId;
-      const destIndex = e.over.data.current.index;
-      const destMemberId = gameMembers[destCourtId][destIndex];
-
-      const newPlayMemberIds = gameMembers.map((courtMembers, courtId) => {
-        if (courtId !== destCourtId) return courtMembers;
-        return courtMembers.map((id) =>
-          id === destMemberId ? sourceMemberId : id,
-        ) as CourtMembers;
-      });
-
-      onChange(newPlayMemberIds);
-      return showToast(sourceMemberId, destMemberId);
+    if (!isMemberType(sourceType) || !isMemberType(destType)) {
+      throw new Error("Invalid member type");
     }
 
-    if (sourceType === "courtMember") {
-      // 参加メンバーを休憩させる場合
-      if (destType === "restMember") {
-        const sourceCourtId = e.active.data.current.courtId;
-        const sourceIndex = e.active.data.current.index;
-        const sourceMemberId = gameMembers[sourceCourtId][sourceIndex];
+    const source = e.active.data.current as RestOrCourtMember;
+    const dest = e.over.data.current as RestOrCourtMember;
 
-        const destIndex = e.over.data.current.index;
-        const destMemberId = restMembers[destIndex];
+    const newGameMembers = swapGameMember(gameMembers, source, dest);
+    if (!newGameMembers) return;
 
-        const newPlayMemberIds = gameMembers.map((courtMembers, courtId) => {
-          if (courtId !== sourceCourtId) return courtMembers;
-          return courtMembers.map((id) =>
-            id === sourceMemberId ? destMemberId : id,
-          ) as CourtMembers;
-        });
-
-        onChange(newPlayMemberIds);
-        return showToast(sourceMemberId, destMemberId);
-      }
-
-      // 参加メンバー同士を入れ替える場合
-      if (destType === "courtMember") {
-        const sourceCourtId = e.active.data.current.courtId;
-        const destCourtId = e.over.data.current.courtId;
-
-        if (sourceCourtId === destCourtId) return;
-
-        const sourceIndex = e.active.data.current.index;
-        const sourceMemberId = gameMembers[sourceCourtId][sourceIndex];
-
-        const destIndex = e.over.data.current.index;
-        const destMemberId = gameMembers[destCourtId][destIndex];
-
-        if (sourceMemberId === destMemberId) return;
-
-        const newPlayMemberIds = gameMembers.map((courtMembers, courtId) => {
-          if (courtId !== sourceCourtId && courtId !== destCourtId) {
-            return courtMembers;
-          }
-          if (courtId === sourceCourtId) {
-            return courtMembers.map((id) =>
-              id === sourceMemberId ? destMemberId : id,
-            ) as CourtMembers;
-          }
-          return courtMembers.map((id) =>
-            id === destMemberId ? sourceMemberId : id,
-          ) as CourtMembers;
-        });
-
-        onChange(newPlayMemberIds);
-        return showToast(sourceMemberId, destMemberId);
-      }
-    }
+    onChange(newGameMembers);
+    showToast(source.memberId, dest.memberId);
   };
 
   const leftSpan = 3;
@@ -280,13 +148,18 @@ export function AdjustmentPane({
                   休憩
                 </Heading>
                 <SimpleGrid columns={2} spacing={0}>
-                  {restMembers.map((memberId, index) => (
-                    <RestMemberDroppable
-                      index={index}
-                      key={`restMemberDroppable-${memberId}`}
+                  {restMembers.map((memberId) => (
+                    <MemberDroppable
+                      key={memberId}
+                      type={"restMember"}
+                      memberId={memberId}
                     >
-                      <RestMemberBox memberId={memberId} index={index} />
-                    </RestMemberDroppable>
+                      <MemberBox
+                        type={"restMember"}
+                        color={"danger.100"}
+                        memberId={memberId}
+                      />
+                    </MemberDroppable>
                   ))}
                 </SimpleGrid>
               </Stack>
@@ -305,18 +178,20 @@ export function AdjustmentPane({
                 pl={1}
               >
                 <SimpleGrid columns={4} spacing={0}>
-                  {gameMembers[courtId].map((memberId, index) => (
-                    <CourtMemberDroppable
+                  {gameMembers[courtId].map((memberId) => (
+                    <MemberDroppable
+                      key={memberId}
+                      type={"courtMember"}
                       courtId={courtId}
-                      index={index}
-                      key={`courtMemberDroppable-${memberId}`}
+                      memberId={memberId}
                     >
-                      <CourtMemberBox
+                      <MemberBox
+                        type={"courtMember"}
+                        color={"brand.300"}
                         courtId={courtId}
                         memberId={memberId}
-                        index={index}
                       />
-                    </CourtMemberDroppable>
+                    </MemberDroppable>
                   ))}
                 </SimpleGrid>
               </Box>
