@@ -17,6 +17,7 @@
     "amplify:DoublesMemberGeneratorEventCleaner": "yarn install; yarn --cwd amplify/backend/function/DoublesMemberGeneratorEventCleaner run build"
   },
   "dependencies": {
+    "@astrojs/node": "^8.2.0",
     "@astrojs/react": "3.0.9",
     "@chakra-ui/icons": "2.1.1",
     "@chakra-ui/react": "2.8.2",
