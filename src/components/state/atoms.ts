@@ -3,7 +3,7 @@ import { atomWithStorage, RESET, useReducerAtom } from "jotai/utils";
 import { settingsReducer } from "./reducer";
 import { Algorithms, type CurrentSettings } from "@logic";
 
-const emptySettings: CurrentSettings = {
+export const emptySettings: CurrentSettings = {
   courtCount: 0,
   members: [],
   histories: [],
