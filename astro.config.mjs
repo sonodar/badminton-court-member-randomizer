@@ -5,7 +5,7 @@ import { defineConfig } from "astro/config";
 // https://astro.build/config
 export default defineConfig({
   output: 'server',
-  addons: node({ mode: 'standalone' }),
+  adapter: node({ mode: 'standalone' }),
   integrations: [react()],
   vite: {
     define: {
