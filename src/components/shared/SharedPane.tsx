@@ -15,6 +15,8 @@ import {
 } from "@chakra-ui/react";
 import { MdRefresh } from "react-icons/md";
 import { match } from "ts-pattern";
+import { atom } from "jotai";
+import { useReducerAtom } from "jotai/utils";
 import HistoryPane from "../common/HistoryPane.tsx";
 import {
   EventType,
@@ -24,7 +26,13 @@ import {
   subscribeEvent,
 } from "@api";
 import { MemberButton } from "@components/common/MemberButton.tsx";
-import { useSettingsReducer } from "@components/state";
+import { emptySettings, settingsReducer } from "@components/state";
+import type { CurrentSettings } from "@logic";
+
+// ゲーム画面と違い、オンメモリの atom を利用する。
+// こうしないと同一ブラウザで共有画面を開いたときに同じ localStorage に書き込みをしてしまう。
+// 実際の利用シーンでは困らないが、開発・テストで困るので。
+const settingsAtom = atom<CurrentSettings>(emptySettings);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const messages: Record<EventType, (value: any) => string> = {
@@ -50,7 +58,10 @@ const messageColors: Record<
 };
 
 export default function SharedPane({ sharedId }: { sharedId: string }) {
-  const [settings, dispatch] = useSettingsReducer();
+  const [currentSettings, dispatch] = useReducerAtom(
+    settingsAtom,
+    settingsReducer,
+  );
 
   const [finished, setFinished] = useState(false);
   const [event, setEvent] = useState<Event | null>(null);
@@ -140,7 +151,9 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
           </Alert>
         ) : (
           <HStack>
-            <Heading size={"md"}>{settings.members.length} 人が参加中</Heading>
+            <Heading size={"md"}>
+              {currentSettings.members.length} 人が参加中
+            </Heading>
             <Spacer />
             <MemberButton />
             <IconButton
@@ -158,7 +171,7 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
       </CardHeader>
       <CardBody>
         <Center>
-          <HistoryPane />
+          <HistoryPane histories={currentSettings.histories} />
         </Center>
       </CardBody>
     </Card>

@@ -1,4 +1,5 @@
 export {
+  emptySettings,
   settingsAtom,
   previousSettingsAtom,
   shareIdAtom,
@@ -8,3 +9,5 @@ export {
   useSettingsReducer,
   getPreviousSettings,
 } from "./atoms";
+
+export { settingsReducer } from "./reducer";
