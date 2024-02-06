@@ -14,3 +14,10 @@ mv dist/client .amplify-hosting/static
 mv dist/server .amplify-hosting/compute/default
 
 cp deploy-manifest.json .amplify-hosting/deploy-manifest.json
+
+# external module である sharp は node_modules に含める必要がある
+if [ -d node_modules/sharp ]; then
+  rm -rf .amplify-hosting/compute/default/node_modules
+  mkdir -p .amplify-hosting/compute/default/node_modules
+  cp -r node_modules/sharp .amplify-hosting/compute/default/node_modules/
+fi
