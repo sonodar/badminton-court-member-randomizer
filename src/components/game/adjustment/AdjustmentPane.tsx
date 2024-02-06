@@ -1,17 +1,9 @@
 import React from "react";
+import { DndContext, type DragEndEvent } from "@dnd-kit/core";
 import {
-  DndContext,
-  type DragEndEvent,
-  useDraggable,
-  useDroppable,
-} from "@dnd-kit/core";
-import {
-  Box,
-  Center,
   Grid,
   GridItem,
   Heading,
-  SimpleGrid,
   Stack,
   Text,
   useToast,
@@ -26,53 +18,8 @@ import {
   type RestOrCourtMember,
   swapGameMember,
 } from "@logic";
-
-function MemberBox({
-  color,
-  ...member
-}: RestOrCourtMember & { color: string }) {
-  const { isDragging, attributes, listeners, setNodeRef, transform } =
-    useDraggable({ id: `${member.type}-${member.memberId}`, data: member });
-  const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
-    : undefined;
-  return (
-    <Box
-      w="8"
-      h="8"
-      pt={1}
-      bg={color}
-      borderRadius="full"
-      boxShadow={isDragging ? undefined : "sm"}
-      ref={setNodeRef}
-      style={style}
-      {...listeners}
-      {...attributes}
-    >
-      <Center>{member.memberId}</Center>
-    </Box>
-  );
-}
-
-function MemberDroppable({
-  children,
-  ...member
-}: RestOrCourtMember & { children: React.ReactNode }) {
-  const { isOver, setNodeRef } = useDroppable({
-    id: `${member.type}Droppable-${member.memberId}`,
-    data: member,
-  });
-  const style = {
-    background: isOver ? "var(--chakra-colors-gray-100)" : "transparent",
-  };
-  return (
-    <Box w={12} h={12} p={2} rounded={"sm"} ref={setNodeRef} style={style}>
-      {children}
-    </Box>
-  );
-}
+import { RestMembersPane } from "@components/game/adjustment/RestMembersPane.tsx";
+import { CourtMembersBox } from "@components/game/adjustment/CourtMembersBox.tsx";
 
 type Props = Pick<CurrentSettings, "courtCount" | "members" | "histories"> & {
   onChange: (gameMembers: GameMembers) => void;
@@ -143,26 +90,7 @@ export function AdjustmentPane({
         >
           {restMembers.length > 0 && (
             <GridItem colSpan={leftSpan} rowSpan={courtCount}>
-              <Stack>
-                <Heading as={"label"} size={"sm"} pl={2}>
-                  休憩
-                </Heading>
-                <SimpleGrid columns={2} spacing={0}>
-                  {restMembers.map((memberId) => (
-                    <MemberDroppable
-                      key={memberId}
-                      type={"restMember"}
-                      memberId={memberId}
-                    >
-                      <MemberBox
-                        type={"restMember"}
-                        color={"danger.100"}
-                        memberId={memberId}
-                      />
-                    </MemberDroppable>
-                  ))}
-                </SimpleGrid>
-              </Stack>
+              <RestMembersPane restMembers={restMembers} />
             </GridItem>
           )}
           {courtIds.map((courtId) => (
@@ -170,31 +98,10 @@ export function AdjustmentPane({
               <Heading as={"label"} size={"sm"}>
                 コート {courtId + 1}
               </Heading>
-              <Box
-                borderStyle={"solid"}
-                borderWidth={1}
-                borderRadius={"md"}
-                py={1}
-                pl={1}
-              >
-                <SimpleGrid columns={4} spacing={0}>
-                  {gameMembers[courtId].map((memberId) => (
-                    <MemberDroppable
-                      key={memberId}
-                      type={"courtMember"}
-                      courtId={courtId}
-                      memberId={memberId}
-                    >
-                      <MemberBox
-                        type={"courtMember"}
-                        color={"brand.300"}
-                        courtId={courtId}
-                        memberId={memberId}
-                      />
-                    </MemberDroppable>
-                  ))}
-                </SimpleGrid>
-              </Box>
+              <CourtMembersBox
+                courtId={courtId}
+                courtMembers={gameMembers[courtId]}
+              />
             </GridItem>
           ))}
         </Grid>
