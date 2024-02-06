@@ -11,4 +11,9 @@ mv dist/client .amplify-hosting/static
 mv dist/server .amplify-hosting/compute/default
 
 cp deploy-manifest.json .amplify-hosting/deploy-manifest.json
-cp -r node_modules .amplify-hosting/compute/default/node_modules
+
+# node_modules を軽量化する（ただし、node_modules はキャッシュするのでそのままにしておく）
+yarn install --production --modules-folder node_modules_production
+
+rm -rf .amplify-hosting/compute/default/node_modules
+mv node_modules_production .amplify-hosting/compute/default/node_modules

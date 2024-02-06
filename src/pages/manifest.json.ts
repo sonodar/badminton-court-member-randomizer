@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
-import maskable from "../assets/pwa-512x512-maskable.png";
-import rounded from "../assets/pwa-512x512-rounded.png";
+import maskable from "@assets/pwa-512x512-maskable.png";
+import rounded from "@assets/pwa-512x512-rounded.png";
 
 export const GET: APIRoute = () => {
   return new Response(
