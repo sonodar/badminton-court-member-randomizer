@@ -41,6 +41,10 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
     onClose();
   };
 
+  const handleAdjust = (settings: CurrentSettings) => {
+    setNewSettings(settings);
+  };
+
   const handleRetry = () => {
     setNewSettings(retry(newSettings!));
     onOpen();
@@ -77,7 +81,7 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
             <Center>
               <StatisticsPane
                 settings={newSettings || settings}
-                onAdjusted={setNewSettings}
+                onAdjusted={handleAdjust}
               />
             </Center>
           </ModalBody>

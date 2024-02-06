@@ -16,7 +16,7 @@ export function ShareButton({ sharedId, onIssue, isDisabled }: Props) {
 
   const {
     isOpen: isIssueOpen,
-    onOpen: _onIssueOpen,
+    onOpen: onIssueOpen,
     onClose: onIssueClose,
   } = useDisclosure();
   const {
@@ -29,18 +29,11 @@ export function ShareButton({ sharedId, onIssue, isDisabled }: Props) {
   const toastRef = useRef<string | number>();
 
   const handleClick = () => {
-    toast({
-      title: "共有機能にバグが見つかったので無効化しています",
-      status: "error",
-      duration: 2000,
-      isClosable: true,
-      colorScheme: "danger",
-    });
-    // if (sharedId) {
-    //   onShareOpen();
-    // } else {
-    //   onIssueOpen();
-    // }
+    if (sharedId) {
+      onShareOpen();
+    } else {
+      onIssueOpen();
+    }
   };
 
   const handleOk = async () => {
