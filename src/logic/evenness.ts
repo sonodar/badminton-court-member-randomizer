@@ -91,7 +91,7 @@ export function isEvenness(
 ) {
   const restMembers = getRestMembers({ members }, generated);
   for (const memberId of restMembers) {
-    const count = getContinuousRestCount(histories, memberId);
+    const count = getContinuousRestCount(histories, memberId) + 1; // 今回休憩の 1 を追加
     if (count > threshold) {
       return false;
     }
