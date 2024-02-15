@@ -1,7 +1,6 @@
 import { IconButton, useDisclosure, useToast } from "@chakra-ui/react";
 import React, { Fragment, useMemo, useRef } from "react";
 import { HiLink } from "react-icons/hi2";
-import { makeShareLink } from "../../util/shareLink";
 import { ShareDialog } from "./ShareDialog";
 import ConfirmDialog from "@components/common/ConfirmDialog.tsx";
 
@@ -10,6 +9,11 @@ type Props = {
   onIssue: () => Promise<void>;
   isDisabled?: boolean;
 };
+
+function makeShareLink(sharedId?: string) {
+  if (!sharedId) return sharedId;
+  return new URL(`/share/${sharedId}`, location.origin).toString();
+}
 
 export function ShareButton({ sharedId, onIssue, isDisabled }: Props) {
   const shareLink = useMemo(() => makeShareLink(sharedId), [sharedId]);

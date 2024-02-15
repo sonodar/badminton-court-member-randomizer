@@ -1,8 +1,6 @@
 import { ChakraProvider, Container } from "@chakra-ui/react";
 import React from "react";
 import { Provider, createStore, useAtom, useSetAtom } from "jotai";
-import { parseShareLink } from "../util/shareLink";
-import SharedPane from "./shared/SharedPane.tsx";
 import {
   settingsAtom,
   previousSettingsAtom,
@@ -15,19 +13,6 @@ import customTheme from "@components/theme";
 
 export default function Main() {
   const store = createStore();
-  const sharedId = parseShareLink(window.location);
-
-  if (sharedId) {
-    return (
-      <ChakraProvider theme={customTheme}>
-        <Provider store={store}>
-          <Container maxW={"sm"} minW={"sm"}>
-            <SharedPane sharedId={sharedId} />
-          </Container>
-        </Provider>
-      </ChakraProvider>
-    );
-  }
 
   const [settings, setSettings] = useAtom(settingsAtom);
   const setPreviousSettings = useSetAtom(previousSettingsAtom);

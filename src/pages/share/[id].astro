@@ -1,0 +1,18 @@
+---
+const { id } = Astro.params;
+import Layout from "@layouts/Layout.astro";
+import Share from "@components/Share.tsx";
+import Main from "@components/Main.tsx";
+---
+
+<Layout title="ダブルスメンバー決めるくん">
+  <main>
+    {
+      id ? (
+        <Share client:only="react" sharedId={id} />
+      ) : (
+        <Main client:only="react" />
+      )
+    }
+  </main>
+</Layout>
