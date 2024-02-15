@@ -106,26 +106,29 @@ export function generate(settings: CurrentSettings): CurrentSettings {
       continue;
     }
 
-    // 均等モードの場合、連続休憩回数が許容回数を超える場合はやり直し
-    if (
-      settings.algorithm === Algorithms.EVENNESS &&
-      !isEvenness(settings, restLimit, generated)
-    ) {
-      console.log(
-        `連続休憩回数が上限である${restLimit}回を超えたメンバーがいるためやり直し`,
-      );
-      retryCount++;
-      historyKeys.add(toHistoryKey(generated));
-      continue;
-    }
-
-    if (settings.algorithm === Algorithms.DISCRETENESS && range > diffLimit) {
-      console.log(
-        `プレイ回数の差が ${range} で上限の ${diffLimit} より大きいためやり直し`,
-      );
-      historyKeys.add(toHistoryKey(generated));
-      retryCount++;
-      continue;
+    switch (settings.algorithm) {
+      case Algorithms.EVENNESS:
+        console.log(`連続休憩回数の上限: ${restLimit}`);
+        // 均等モードの場合、連続休憩回数が許容回数を超える場合はやり直し
+        if (!isEvenness(settings, restLimit, generated)) {
+          console.log(
+            `連続休憩回数が上限である${restLimit}回を超えたメンバーがいるためやり直し`,
+          );
+          retryCount++;
+          historyKeys.add(toHistoryKey(generated));
+          continue;
+        }
+        break;
+      case Algorithms.DISCRETENESS:
+        if (range > diffLimit) {
+          console.log(
+            `プレイ回数の差が ${range} で上限の ${diffLimit} より大きいためやり直し`,
+          );
+          historyKeys.add(toHistoryKey(generated));
+          retryCount++;
+          continue;
+        }
+        break;
     }
 
     // 参加メンバーの参加回数の標準偏差を算出（あとでソートに使う）
