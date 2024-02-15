@@ -29,7 +29,7 @@
   "computeResources": [
     {
       "name": "default",
-      "entrypoint": "entry.mjs",
+      "entrypoint": "index.mjs",
       "runtime": "nodejs20.x"
     }
   ],
