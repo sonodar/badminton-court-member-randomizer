@@ -98,6 +98,19 @@ export function needsUsageAlert(settings: CurrentSettings) {
     return false;
   }
 
+  const restMemberCount =
+    settings.members.length - settings.courtCount * COURT_CAPACITY;
+
+  // 余剰メンバーがいなければ不公平にならないので警告しない
+  if (restMemberCount === 0) {
+    return false;
+  }
+
+  // 均等性重視の場合は、余剰人数が 4 人以内であれば連続休憩回数が 1 を超えることはないので許容する
+  if (settings.algorithm === Algorithms.EVENNESS && restMemberCount <= 4) {
+    return false;
+  }
+
   const latestHistory = settings.histories[settings.histories.length - 1];
 
   if (!latestHistory) {
@@ -107,15 +120,8 @@ export function needsUsageAlert(settings: CurrentSettings) {
   const timeDiff =
     new Date().getTime() - new Date(latestHistory.time).getTime();
 
+  // 直近の履歴から 1 分以上経過していれば警告しない
   if (timeDiff / 60_000 >= 1) {
-    return false;
-  }
-
-  // 均等性重視の場合は、余剰人数が 4 人以内であれば連続休憩回数が 1 を超えることはないので許容する
-  if (
-    settings.algorithm === Algorithms.EVENNESS &&
-    settings.members.length - settings.courtCount * COURT_CAPACITY <= 4
-  ) {
     return false;
   }
 
