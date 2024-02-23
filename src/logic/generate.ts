@@ -162,7 +162,7 @@ export function addHistory(
   members: GameMembers,
 ): CurrentSettings {
   const newSettings = structuredClone(settings);
-  newSettings.histories.push({ members });
+  newSettings.histories.push({ members, time: new Date().toLocaleString() });
   newSettings.gameCounts = increment(settings.gameCounts, members);
   return newSettings;
 }
