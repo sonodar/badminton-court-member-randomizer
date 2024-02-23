@@ -21,5 +21,5 @@ export type CurrentSettings = {
   members: MemberId[];
   histories: History[];
   gameCounts: PlayCountPerMember;
-  algorithm?: Algorithm;
+  algorithm: Algorithm;
 };

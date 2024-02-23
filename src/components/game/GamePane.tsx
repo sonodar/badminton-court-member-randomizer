@@ -49,7 +49,7 @@ export default function GamePane({ onReset }: Props) {
   const [progress, setProgress] = useState(false);
 
   const latestMembers = getLatestMembers(settings) || [];
-  const badgeLabel = badgeLabels[settings.algorithm!];
+  const badgeLabel = badgeLabels[settings.algorithm];
 
   const openProgress = () => setProgress(true);
   const closeProgress = () => setProgress(false);
