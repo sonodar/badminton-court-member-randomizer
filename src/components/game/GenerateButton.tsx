@@ -17,21 +17,37 @@ import {
 import React, { useState } from "react";
 import { IoDiceOutline } from "react-icons/io5";
 import { CheckIcon, RepeatClockIcon } from "@chakra-ui/icons";
+import { UsageAlertDialog } from "./UsageAlertDialog";
 import { type CurrentSettings } from "@logic";
 import { generate, retry } from "@logic";
 import { StatisticsPane } from "@components/game/StatisticsPane.tsx";
+import { needsUsageAlert } from "src/logic/util";
 
 type Props = {
   settings: CurrentSettings;
   onGenerate: (settings: CurrentSettings) => void;
+  onIgnoreUsageAlert: () => void;
   isDisabled?: boolean;
 };
 
-export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
+export function GenerateButton({
+  settings,
+  onGenerate,
+  isDisabled,
+  onIgnoreUsageAlert,
+}: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure();
   const [newSettings, setNewSettings] = useState<CurrentSettings | undefined>();
 
   const handleClick = () => {
+    if (needsUsageAlert(settings)) {
+      return onAlertOpen();
+    }
     setNewSettings(generate(settings));
     onOpen();
   };
@@ -63,6 +79,12 @@ export function GenerateButton({ settings, onGenerate, isDisabled }: Props) {
       >
         メンバー決め
       </Button>
+      <UsageAlertDialog
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        onDismiss={onIgnoreUsageAlert}
+        algorithm={settings.algorithm}
+      />
       <Modal isOpen={isOpen} onClose={onClose} size={"full"}>
         <ModalOverlay />
         <ModalContent maxW={"350px"}>

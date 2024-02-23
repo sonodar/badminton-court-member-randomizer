@@ -12,9 +12,9 @@ import {
   useToast,
   Stack,
   Spacer,
+  Heading,
 } from "@chakra-ui/react";
 import React, { useRef } from "react";
-import { prettyFont } from "@components/theme";
 import LineShareButton from "@components/common/LineShareButton.tsx";
 
 type Props = {
@@ -45,8 +45,10 @@ export function ShareDialog({ isOpen, onClose, value }: Props) {
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
       <ModalOverlay />
       <ModalContent maxW={"350px"}>
-        <ModalHeader maxH={"xs"} style={{ ...prettyFont }}>
-          共有
+        <ModalHeader maxH={"xs"}>
+          <Heading as={"label"} size={"md"}>
+            共有
+          </Heading>
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={4}>

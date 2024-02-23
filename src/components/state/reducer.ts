@@ -10,7 +10,7 @@ import type { EventPayload } from "@api";
 
 export function settingsReducer(
   settings: CurrentSettings,
-  action: EventPayload,
+  action: EventPayload | "IGNORE_USAGE_ALERT",
 ): CurrentSettings {
   return match(action)
     .with({ type: "INITIALIZE" }, ({ payload }) => payload)
@@ -23,5 +23,6 @@ export function settingsReducer(
       replayRetry(settings, payload.members),
     )
     .with({ type: "FINISH" }, () => settings)
+    .with("IGNORE_USAGE_ALERT", () => ({ ...settings, ignoreUsageAlert: true }))
     .exhaustive();
 }
