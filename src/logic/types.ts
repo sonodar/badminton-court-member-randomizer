@@ -3,6 +3,7 @@ export type CourtMembers = [MemberId, MemberId, MemberId, MemberId];
 export type GameMembers = CourtMembers[];
 export type History = {
   members: GameMembers;
+  time: string;
   deleted?: true;
 };
 export type PlayCount = { playCount: number; baseCount: number };
@@ -20,5 +21,6 @@ export type CurrentSettings = {
   members: MemberId[];
   histories: History[];
   gameCounts: PlayCountPerMember;
-  algorithm?: Algorithm;
+  algorithm: Algorithm;
+  ignoreUsageAlert?: boolean;
 };

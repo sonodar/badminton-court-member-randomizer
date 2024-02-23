@@ -49,7 +49,7 @@ export default function GamePane({ onReset }: Props) {
   const [progress, setProgress] = useState(false);
 
   const latestMembers = getLatestMembers(settings) || [];
-  const badgeLabel = badgeLabels[settings.algorithm!];
+  const badgeLabel = badgeLabels[settings.algorithm];
 
   const openProgress = () => setProgress(true);
   const closeProgress = () => setProgress(false);
@@ -76,6 +76,8 @@ export default function GamePane({ onReset }: Props) {
       eventEmitter(environmentId).generate(members);
     }
   };
+
+  const handleIgnoreUsageAlert = () => dispatch("IGNORE_USAGE_ALERT");
 
   const toast = useToast();
   const toastRef = useRef<string | number>();
@@ -128,6 +130,7 @@ export default function GamePane({ onReset }: Props) {
             <GenerateButton
               settings={settings}
               onGenerate={handleGenerate}
+              onIgnoreUsageAlert={handleIgnoreUsageAlert}
               isDisabled={progress}
             />
             {latestMembers.length > 0 && (
