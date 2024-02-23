@@ -77,6 +77,8 @@ export default function GamePane({ onReset }: Props) {
     }
   };
 
+  const handleIgnoreUsageAlert = () => dispatch("IGNORE_USAGE_ALERT");
+
   const toast = useToast();
   const toastRef = useRef<string | number>();
 
@@ -128,6 +130,7 @@ export default function GamePane({ onReset }: Props) {
             <GenerateButton
               settings={settings}
               onGenerate={handleGenerate}
+              onIgnoreUsageAlert={handleIgnoreUsageAlert}
               isDisabled={progress}
             />
             {latestMembers.length > 0 && (
