@@ -19,9 +19,8 @@ import { IoDiceOutline } from "react-icons/io5";
 import { CheckIcon, RepeatClockIcon } from "@chakra-ui/icons";
 import { UsageAlertDialog } from "./UsageAlertDialog";
 import { type CurrentSettings } from "@logic";
-import { generate, retry } from "@logic";
+import { generate, retry, isRecent } from "@logic";
 import { StatisticsPane } from "@components/game/StatisticsPane.tsx";
-import { needsUsageAlert } from "src/logic/util";
 
 type Props = {
   settings: CurrentSettings;
@@ -44,12 +43,16 @@ export function GenerateButton({
   } = useDisclosure();
   const [newSettings, setNewSettings] = useState<CurrentSettings | undefined>();
 
-  const handleClick = () => {
-    if (needsUsageAlert(settings)) {
-      return onAlertOpen();
-    }
+  const openGeneratePane = () => {
     setNewSettings(generate(settings));
     onOpen();
+  };
+
+  const handleClick = () => {
+    if (settings.ignoreUsageAlert || !isRecent(settings)) {
+      return openGeneratePane();
+    }
+    onAlertOpen();
   };
 
   const handleOk = () => {
@@ -83,7 +86,6 @@ export function GenerateButton({
         isOpen={isAlertOpen}
         onClose={onAlertClose}
         onDismiss={onIgnoreUsageAlert}
-        algorithm={settings.algorithm}
       />
       <Modal isOpen={isOpen} onClose={onClose} size={"full"}>
         <ModalOverlay />

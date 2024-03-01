@@ -12,35 +12,31 @@ import {
   Alert,
   AlertIcon,
   AlertTitle,
+  Link,
 } from "@chakra-ui/react";
-import { match } from "ts-pattern";
-import { Algorithms, type Algorithm } from "@logic";
+import { ExternalLinkIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { Algorithms, type Algorithm, isUnfair } from "@logic";
+import { useSettings } from "@components/state";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   onDismiss: () => void;
-  algorithm: Algorithm;
 };
 
-export function UsageAlertDialog({
-  isOpen,
-  onClose,
-  onDismiss,
-  algorithm,
-}: Props) {
-  const message = match(algorithm)
-    .with(
-      Algorithms.DISCRETENESS,
-      () =>
-        "ばらつき重視の場合、連続で試合に入れないメンバーが出てくる可能性が高くなります。",
-    )
-    .with(
-      Algorithms.EVENNESS,
-      () =>
-        "均等性重視で、かつコートに入れない余剰メンバーの数が 5 人以上の場合、連続で試合に入れないメンバーが出てくる可能性があります。",
-    )
-    .exhaustive();
+const unfairMessages: Record<Algorithm, string> = {
+  [Algorithms.DISCRETENESS]:
+    "ばらつき重視の場合、連続で試合に入れないメンバーが出てくる可能性が高くなります。",
+  [Algorithms.EVENNESS]:
+    "均等性重視で、かつコートに入れない余剰メンバーの数が 5 人以上の場合、連続で試合に入れないメンバーが出てくる可能性があります。",
+};
+
+const link = `https://www.google.com/search?q=${encodeURIComponent("ダブルス 組み合わせ アプリ")}`;
+
+export function UsageAlertDialog({ isOpen, onClose, onDismiss }: Props) {
+  const settings = useSettings();
+  const unfair = isUnfair(settings);
+  const unfairMessage = unfairMessages[settings.algorithm];
 
   const handleOk = () => {
     onClose();
@@ -52,9 +48,14 @@ export function UsageAlertDialog({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size={"full"}
+      scrollBehavior={"inside"}
+    >
       <ModalOverlay />
-      <ModalContent maxW={"350px"}>
+      <ModalContent>
         <ModalHeader maxH={"xs"} p={0}>
           <Alert status="error">
             <AlertIcon />
@@ -66,13 +67,20 @@ export function UsageAlertDialog({
             <Text>
               前回の組み合わせを決定してからほとんど時間が経過していません。試合が終わる前に連続で組み合わせを決定しようとしていませんか？
             </Text>
-            <Text fontSize={"lg"} color={"red.500"}>
-              プレイ回数の公平性が保証できなくなるため、連続での組み合わせ決定はやらないことを強くお勧めします。
-            </Text>
-            <Text>{message}</Text>
+            <Text>連続で試合を決定すると途中参加や途中離脱ができません。</Text>
+            {unfair && (
+              <Text fontSize={"lg"} color={"red.500"}>
+                さらに、プレイ回数の公平性が保証できなくなるため、連続での組み合わせ決定はやらないことを強くお勧めします。
+              </Text>
+            )}
+            {unfair && <Text>{unfairMessage}</Text>}
             <Text>
               もしどうしても連続で組み合わせを決定したい場合は、他のアプリの利用を検討してください。
             </Text>
+            <Link href={link} isExternal>
+              検索 <ChevronRightIcon mx="2px" /> ダブルス 組み合わせ アプリ{" "}
+              <ExternalLinkIcon mx="2px" />
+            </Link>
           </Stack>
         </ModalBody>
         <ModalFooter>
@@ -81,17 +89,13 @@ export function UsageAlertDialog({
               組み合わせ決定をやめる
             </Button>
             <Button
-              size={"lg"}
+              size={"xs"}
               fontSize={"xs"}
-              variant={"outline"}
-              color={"gray.400"}
+              variant={"ghost"}
+              color={"gray.300"}
               onClick={handleDismiss}
             >
-              はい、私はこのアプリの「テスト目的のため」
-              <br />
-              連続での組み合わせ決定を行っています。
-              <br />
-              次からこの警告を表示しません。
+              テスト目的のためリスクを許容します
             </Button>
           </Stack>
         </ModalFooter>

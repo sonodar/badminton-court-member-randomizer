@@ -1,12 +1,7 @@
 export * from "./types";
 export * from "./consts";
 export * from "./array";
-export {
-  getLatestMembers,
-  type CountPerMember,
-  getContinuousRestCount,
-  getRestMembers,
-} from "./util";
+export * from "./util";
 export { generate, replayGenerate } from "./generate";
 export { retry, replayRetry } from "./retry";
 export * from "./join";
