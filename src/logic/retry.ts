@@ -3,25 +3,25 @@ import { getLatestMembers, removeLatestHistory, toHistoryKey } from "./util";
 import { addHistory, generate } from "./generate";
 
 export function retry(settings: CurrentSettings): CurrentSettings {
-  if (settings.histories.length === 0) {
-    throw new Error("履歴がないためリトライできません");
-  }
+	if (settings.histories.length === 0) {
+		throw new Error("履歴がないためリトライできません");
+	}
 
-  const latestMembers = getLatestMembers(settings)!;
-  const previousSettings = removeLatestHistory(settings);
+	const latestMembers = getLatestMembers(settings)!;
+	const previousSettings = removeLatestHistory(settings);
 
-  const newSettings = generate(previousSettings);
-  const members = getLatestMembers(newSettings)!;
+	const newSettings = generate(previousSettings);
+	const members = getLatestMembers(newSettings)!;
 
-  // 同じだったらリトライの意味がないので再帰
-  if (toHistoryKey(latestMembers) === toHistoryKey(members)) {
-    return retry(settings);
-  }
+	// 同じだったらリトライの意味がないので再帰
+	if (toHistoryKey(latestMembers) === toHistoryKey(members)) {
+		return retry(settings);
+	}
 
-  return newSettings;
+	return newSettings;
 }
 
 export function replayRetry(settings: CurrentSettings, members: GameMembers) {
-  const prevSettings = removeLatestHistory(settings);
-  return addHistory(prevSettings, members);
+	const prevSettings = removeLatestHistory(settings);
+	return addHistory(prevSettings, members);
 }
