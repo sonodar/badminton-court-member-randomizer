@@ -93,11 +93,19 @@ function decrement(
   return result;
 }
 
-export function needsUsageAlert(settings: CurrentSettings) {
-  if (settings.ignoreUsageAlert) {
+export function isRecent(settings: CurrentSettings) {
+  if (settings.histories.length === 0) {
     return false;
   }
+  const latestHistory = settings.histories[settings.histories.length - 1];
 
+  const timeDiff =
+    new Date().getTime() - new Date(latestHistory.time).getTime();
+
+  return timeDiff / 60_000 < 1;
+}
+
+export function isUnfair(settings: CurrentSettings) {
   const restMemberCount =
     settings.members.length - settings.courtCount * COURT_CAPACITY;
 
@@ -111,19 +119,13 @@ export function needsUsageAlert(settings: CurrentSettings) {
     return false;
   }
 
-  const latestHistory = settings.histories[settings.histories.length - 1];
-
-  if (!latestHistory) {
-    return false;
-  }
-
-  const timeDiff =
-    new Date().getTime() - new Date(latestHistory.time).getTime();
-
-  // 直近の履歴から 1 分以上経過していれば警告しない
-  if (timeDiff / 60_000 >= 1) {
-    return false;
-  }
-
   return true;
+}
+
+export function needsUsageAlert(settings: CurrentSettings) {
+  if (settings.ignoreUsageAlert) {
+    return false;
+  }
+
+  return isRecent(settings);
 }
