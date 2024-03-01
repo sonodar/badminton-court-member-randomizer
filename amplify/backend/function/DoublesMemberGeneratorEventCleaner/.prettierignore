@@ -1,7 +1,0 @@
-dist
-src/*.js
-src/*.d.ts
-src/*.map
-*.json
-!package.json
-!tsconfig.json
