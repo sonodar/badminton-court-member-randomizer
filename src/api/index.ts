@@ -6,9 +6,9 @@ Amplify.configure(awsconfig);
 
 // https://github.com/aws-amplify/amplify-js/issues/5130
 DataStore.start().catch(() => {
-  DataStore.clear().then(() => {
-    DataStore.start();
-  });
+	DataStore.clear().then(() => {
+		DataStore.start();
+	});
 });
 
 export * from "./environment";
