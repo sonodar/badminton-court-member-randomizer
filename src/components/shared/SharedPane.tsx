@@ -28,6 +28,7 @@ import {
 import { MemberButton } from "@components/common/MemberButton.tsx";
 import { emptySettings, settingsReducer } from "@components/state";
 import type { CurrentSettings } from "@logic";
+import { AlgorithmBadge } from "@components/common/AlgorithmBadge.tsx";
 
 // ゲーム画面と違い、オンメモリの atom を利用する。
 // こうしないと同一ブラウザで共有画面を開いたときに同じ localStorage に書き込みをしてしまう。
@@ -174,6 +175,9 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
 				)}
 			</CardHeader>
 			<CardBody>
+				<Center mb={4}>
+					<AlgorithmBadge algorithm={currentSettings.algorithm} />
+				</Center>
 				<Center>
 					<HistoryPane histories={currentSettings.histories} />
 				</Center>
