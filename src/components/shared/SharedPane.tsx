@@ -10,6 +10,7 @@ import {
 	HStack,
 	Heading,
 	IconButton,
+	Link,
 	Spacer,
 	useToast,
 } from "@chakra-ui/react";
@@ -28,6 +29,8 @@ import {
 import { MemberButton } from "@components/common/MemberButton.tsx";
 import { emptySettings, settingsReducer } from "@components/state";
 import type { CurrentSettings } from "@logic";
+import { AlgorithmBadge } from "@components/common/AlgorithmBadge.tsx";
+import { MdHome } from "react-icons/md";
 
 // ゲーム画面と違い、オンメモリの atom を利用する。
 // こうしないと同一ブラウザで共有画面を開いたときに同じ localStorage に書き込みをしてしまう。
@@ -65,10 +68,7 @@ function getMessageStatus(
 }
 
 export default function SharedPane({ sharedId }: { sharedId: string }) {
-	const [currentSettings, dispatch] = useReducerAtom(
-		settingsAtom,
-		settingsReducer,
-	);
+	const [settings, dispatch] = useReducerAtom(settingsAtom, settingsReducer);
 
 	const [finished, setFinished] = useState(false);
 	const [event, setEvent] = useState<Event | null>(null);
@@ -147,19 +147,20 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
 
 	return (
 		<Card my={1} py={4}>
+			{finished && (
+				<Alert status="error" mb={2}>
+					<AlertIcon />
+					<AlertTitle>すでに終了しています</AlertTitle>
+				</Alert>
+			)}
 			<CardHeader my={0} py={0}>
-				{finished ? (
-					<Alert status="error">
-						<AlertIcon />
-						<AlertTitle>すでに終了しています</AlertTitle>
-					</Alert>
-				) : (
-					<HStack>
-						<Heading size={"md"}>
-							{currentSettings.members.length} 人が参加中
-						</Heading>
-						<Spacer />
-						<MemberButton />
+				<HStack>
+					<Heading size={"md"}>
+						{settings.members.length} 人が参加{!finished && "中"}
+					</Heading>
+					<Spacer />
+					{!finished && <MemberButton />}
+					{!finished && (
 						<IconButton
 							size={"sm"}
 							isRound={true}
@@ -170,12 +171,26 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
 							onClick={() => window.location.reload()}
 							aria-label={"reload"}
 						/>
-					</HStack>
-				)}
+					)}
+					{finished && (
+						<Link href={"/"}>
+							<IconButton
+								size={"sm"}
+								variant={"solid"}
+								fontSize={"md"}
+								aria-label={"Home"}
+								icon={<MdHome />}
+							/>
+						</Link>
+					)}
+				</HStack>
 			</CardHeader>
 			<CardBody>
+				<Center mb={4}>
+					<AlgorithmBadge algorithm={settings.algorithm} />
+				</Center>
 				<Center>
-					<HistoryPane histories={currentSettings.histories} />
+					<HistoryPane histories={settings.histories} />
 				</Center>
 			</CardBody>
 		</Card>

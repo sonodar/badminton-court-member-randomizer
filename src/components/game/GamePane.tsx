@@ -1,5 +1,4 @@
 import {
-	Badge,
 	Box,
 	Card,
 	CardBody,
@@ -19,12 +18,7 @@ import {
 	eventEmitter,
 	finishEnvironment,
 } from "@api";
-import {
-	getLatestMembers,
-	type CurrentSettings,
-	type Algorithm,
-	Algorithms,
-} from "@logic";
+import { getLatestMembers, type CurrentSettings } from "@logic";
 import CourtMembersPane from "@components/game/CourtMembersPane";
 import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput";
 import { HistoryButton } from "@components/common/HistoryButton.tsx";
@@ -32,14 +26,10 @@ import { MemberButton } from "@components/common/MemberButton.tsx";
 import { ResetButton } from "@components/game/ResetButton";
 import { useSettingsReducer, shareIdAtom } from "@components/state";
 import { GenerateButton } from "@components/game/GenerateButton.tsx";
+import { AlgorithmBadge } from "@components/common/AlgorithmBadge";
 
 type Props = {
 	onReset: () => void;
-};
-
-const badgeLabels: Record<Algorithm, string> = {
-	[Algorithms.DISCRETENESS]: "ばらつき重視",
-	[Algorithms.EVENNESS]: "均等性重視",
 };
 
 export default function GamePane({ onReset }: Props) {
@@ -49,7 +39,6 @@ export default function GamePane({ onReset }: Props) {
 	const [progress, setProgress] = useState(false);
 
 	const latestMembers = getLatestMembers(settings) || [];
-	const badgeLabel = badgeLabels[settings.algorithm];
 
 	const openProgress = () => setProgress(true);
 	const closeProgress = () => setProgress(false);
@@ -115,18 +104,9 @@ export default function GamePane({ onReset }: Props) {
 							onDecrement={handleLeave}
 							isDisabled={progress}
 						/>
-						{badgeLabel && (
-							<Center>
-								<Badge
-									borderRadius={"md"}
-									w={"80%"}
-									variant="subtle"
-									colorScheme={"brand"}
-								>
-									<Center>{badgeLabel}</Center>
-								</Badge>
-							</Center>
-						)}
+						<Center>
+							<AlgorithmBadge algorithm={settings.algorithm} />
+						</Center>
 						<GenerateButton
 							settings={settings}
 							onGenerate={handleGenerate}
