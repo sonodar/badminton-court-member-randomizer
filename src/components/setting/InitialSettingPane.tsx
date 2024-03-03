@@ -95,7 +95,7 @@ export default function InitialSettingPane({ onStart }: Props) {
 						<Divider />
 						<Flex>
 							<Link
-								target={"_blank"}
+								isExternal={true}
 								href={
 									"https://github.com/sonodar/badminton-court-member-randomizer"
 								}
