@@ -1,23 +1,8 @@
-import {
-	Box,
-	Card,
-	CardBody,
-	CardFooter,
-	Center,
-	Divider,
-	Spacer,
-	Stack,
-	useToast,
-} from "@chakra-ui/react";
+import { Box, Card, CardBody, CardFooter, Center, Divider, Spacer, Stack, useToast } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { useAtom } from "jotai";
 import { ShareButton } from "./ShareButton";
-import {
-	EventType,
-	createEnvironment,
-	eventEmitter,
-	finishEnvironment,
-} from "@api";
+import { EventType, createEnvironment, eventEmitter, finishEnvironment } from "@api";
 import { getLatestMembers, type CurrentSettings } from "@logic";
 import CourtMembersPane from "@components/game/CourtMembersPane";
 import { CurrentMemberCountInput } from "@components/game/CurrentMemberCountInput";
@@ -99,11 +84,7 @@ export default function GamePane({ onReset }: Props) {
 			<CardBody p={0} pt={3}>
 				<Center>
 					<Stack spacing={2}>
-						<CurrentMemberCountInput
-							onIncrement={handleJoin}
-							onDecrement={handleLeave}
-							isDisabled={progress}
-						/>
+						<CurrentMemberCountInput onIncrement={handleJoin} onDecrement={handleLeave} isDisabled={progress} />
 						<Center>
 							<AlgorithmBadge algorithm={settings.algorithm} />
 						</Center>
@@ -127,11 +108,7 @@ export default function GamePane({ onReset }: Props) {
 				<Spacer />
 				<MemberButton isDisabled={progress} />
 				<Spacer />
-				<ShareButton
-					sharedId={environmentId}
-					onIssue={issueShareLink}
-					isDisabled={progress}
-				/>
+				<ShareButton sharedId={environmentId} onIssue={issueShareLink} isDisabled={progress} />
 				<Spacer />
 				<ResetButton onReset={clear} isDisabled={progress} />
 			</CardFooter>

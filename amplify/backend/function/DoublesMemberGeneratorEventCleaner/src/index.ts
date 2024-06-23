@@ -7,11 +7,7 @@
 Amplify Params - DO NOT EDIT */
 import type { DynamoDBStreamHandler } from "aws-lambda";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import {
-	DynamoDBDocumentClient,
-	QueryCommand,
-	DeleteCommand,
-} from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, QueryCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 
 const EVENT_TABLE = process.env.API_DOUBLESMEMBERGENERATOR_EVENTTABLE_NAME;
 
@@ -39,9 +35,7 @@ export const handler: DynamoDBStreamHandler = async (event) => {
 	}
 };
 
-async function getEventIdsByEnvironmentId(
-	environmentID: string,
-): Promise<string[]> {
+async function getEventIdsByEnvironmentId(environmentID: string): Promise<string[]> {
 	const output = await doc.send(
 		new QueryCommand({
 			TableName: EVENT_TABLE,

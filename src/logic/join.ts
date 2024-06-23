@@ -8,9 +8,7 @@ export function join(settings: CurrentSettings): CurrentSettings {
 	newSettings.members.push(newId);
 
 	// 参加時点での最頻プレイ回数を補正値として保持する
-	const baseCount = array.mode(
-		Object.values(newSettings.gameCounts).map(({ playCount }) => playCount),
-	);
+	const baseCount = array.mode(Object.values(newSettings.gameCounts).map(({ playCount }) => playCount));
 
 	newSettings.gameCounts[newId] = { playCount: 0, baseCount };
 

@@ -1,12 +1,4 @@
-import {
-	Center,
-	Modal,
-	ModalBody,
-	ModalCloseButton,
-	ModalContent,
-	ModalHeader,
-	ModalOverlay,
-} from "@chakra-ui/react";
+import { Center, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
 import HistoryPane from "./HistoryPane.tsx";
 import { prettyFont } from "@components/theme.ts";
 

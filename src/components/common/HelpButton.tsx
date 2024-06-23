@@ -53,12 +53,7 @@ export default function HelpButton({ title, items }: Props) {
 				icon={<QuestionOutlineIcon />}
 				onClick={onOpen}
 			/>
-			<Modal
-				onClose={onClose}
-				size={"full"}
-				isOpen={isOpen}
-				scrollBehavior={"inside"}
-			>
+			<Modal onClose={onClose} size={"full"} isOpen={isOpen} scrollBehavior={"inside"}>
 				<ModalOverlay />
 				<ModalContent>
 					<ModalHeader>

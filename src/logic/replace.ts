@@ -2,10 +2,7 @@ import type { CurrentSettings, GameMembers } from "./types";
 import { addHistory } from "./generate";
 import { removeLatestHistory } from "./util";
 
-export function replace(
-	settings: CurrentSettings,
-	gameMembers: GameMembers,
-): CurrentSettings {
+export function replace(settings: CurrentSettings, gameMembers: GameMembers): CurrentSettings {
 	if (settings.histories.length === 0) {
 		return addHistory(settings, gameMembers);
 	}

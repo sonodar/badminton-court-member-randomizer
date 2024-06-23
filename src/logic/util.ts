@@ -1,10 +1,4 @@
-import {
-	Algorithms,
-	type CurrentSettings,
-	type GameMembers,
-	type History,
-	type PlayCountPerMember,
-} from "./types";
+import { Algorithms, type CurrentSettings, type GameMembers, type History, type PlayCountPerMember } from "./types";
 import { array } from "./array";
 import { COURT_CAPACITY } from "./consts";
 
@@ -15,9 +9,7 @@ export function toHistoryKey(members: GameMembers): string {
 }
 
 export function makeHistoryKeys(settings: CurrentSettings): Set<string> {
-	return new Set(
-		settings.histories.map((history) => toHistoryKey(history.members)),
-	);
+	return new Set(settings.histories.map((history) => toHistoryKey(history.members)));
 }
 
 export function selectRandomMembers({
@@ -27,12 +19,8 @@ export function selectRandomMembers({
 	courtCount: number;
 	members: number[];
 }): GameMembers {
-	const playMembers = array
-		.shuffle(members)
-		.slice(0, courtCount * COURT_CAPACITY);
-	return array.sortInnerItems(
-		array.chunks(playMembers, COURT_CAPACITY),
-	) as GameMembers;
+	const playMembers = array.shuffle(members).slice(0, courtCount * COURT_CAPACITY);
+	return array.sortInnerItems(array.chunks(playMembers, COURT_CAPACITY)) as GameMembers;
 }
 
 export function rotateFirstHistory(settings: CurrentSettings): CurrentSettings {
@@ -42,30 +30,20 @@ export function rotateFirstHistory(settings: CurrentSettings): CurrentSettings {
 	return newSettings;
 }
 
-export function getLatestMembers({
-	histories,
-}: Pick<CurrentSettings, "histories">) {
+export function getLatestMembers({ histories }: Pick<CurrentSettings, "histories">) {
 	if (histories.length === 0) return;
 	const history = histories[histories.length - 1];
 	return structuredClone(history.members);
 }
 
-export function getRestMembers(
-	{ members }: { members: number[] },
-	current: GameMembers,
-): number[] {
+export function getRestMembers({ members }: { members: number[] }, current: GameMembers): number[] {
 	const playMembers = current.flat();
 	return members.filter((id) => !playMembers.includes(id));
 }
 
 // 履歴を直近から走査し、連続で休憩している回数を算出する
-export function getContinuousRestCount(
-	histories: History[],
-	memberId: number,
-): number {
-	const lastIndex = histories.findLastIndex((history) =>
-		history.members.flat().includes(memberId),
-	);
+export function getContinuousRestCount(histories: History[], memberId: number): number {
+	const lastIndex = histories.findLastIndex((history) => history.members.flat().includes(memberId));
 	return histories.length - 1 - lastIndex;
 }
 
@@ -73,17 +51,11 @@ export function getContinuousRestCount(
 export function removeLatestHistory(settings: CurrentSettings) {
 	const newSettings = structuredClone(settings);
 	const latestHistory = newSettings.histories.pop()!;
-	newSettings.gameCounts = decrement(
-		newSettings.gameCounts,
-		latestHistory.members,
-	);
+	newSettings.gameCounts = decrement(newSettings.gameCounts, latestHistory.members);
 	return newSettings;
 }
 
-function decrement(
-	gameCounts: PlayCountPerMember,
-	members: GameMembers,
-): PlayCountPerMember {
+function decrement(gameCounts: PlayCountPerMember, members: GameMembers): PlayCountPerMember {
 	const result = { ...gameCounts };
 	for (const id of members.flat()) {
 		const playCount = Math.max(0, (result[id]?.playCount || 0) - 1);
@@ -99,15 +71,13 @@ export function isRecent(settings: CurrentSettings) {
 	}
 	const latestHistory = settings.histories[settings.histories.length - 1];
 
-	const timeDiff =
-		new Date().getTime() - new Date(latestHistory.time).getTime();
+	const timeDiff = new Date().getTime() - new Date(latestHistory.time).getTime();
 
 	return timeDiff / 60_000 < 1;
 }
 
 export function isUnfair(settings: CurrentSettings) {
-	const restMemberCount =
-		settings.members.length - settings.courtCount * COURT_CAPACITY;
+	const restMemberCount = settings.members.length - settings.courtCount * COURT_CAPACITY;
 
 	// 余剰メンバーがいなければ不公平にならないので警告しない
 	if (restMemberCount === 0) {

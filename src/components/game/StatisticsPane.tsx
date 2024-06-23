@@ -15,8 +15,7 @@ type Props = {
 
 export function StatisticsPane({ settings, onAdjusted }: Props) {
 	const histories = settings.histories.slice(settings.histories.length - 2);
-	const showStatistics =
-		settings.members.length > settings.courtCount * COURT_CAPACITY;
+	const showStatistics = settings.members.length > settings.courtCount * COURT_CAPACITY;
 	const { onOpen, onClose, isOpen } = useDisclosure();
 
 	const handleChange: AdjustedHandler = (settings) => {
@@ -29,22 +28,10 @@ export function StatisticsPane({ settings, onAdjusted }: Props) {
 			<HistoryPane histories={histories} />
 			{showStatistics && (
 				<Center mt={4}>
-					<Button
-						w={"80%"}
-						size={"sm"}
-						variant={"outline"}
-						leftIcon={<TbUsers />}
-						color={"gray.600"}
-						onClick={onOpen}
-					>
+					<Button w={"80%"} size={"sm"} variant={"outline"} leftIcon={<TbUsers />} color={"gray.600"} onClick={onOpen}>
 						プレイ回数を確認する
 					</Button>
-					<AdjustmentDialog
-						settings={settings}
-						isOpen={isOpen}
-						onClose={onClose}
-						onChange={handleChange}
-					/>
+					<AdjustmentDialog settings={settings} isOpen={isOpen} onClose={onClose} onChange={handleChange} />
 				</Center>
 			)}
 		</Stack>

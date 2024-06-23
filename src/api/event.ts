@@ -1,14 +1,7 @@
 import { DataStore } from "@aws-amplify/datastore";
 import { match } from "ts-pattern";
 import { Event as EventEntity } from "./models";
-import {
-	type CurrentSettings,
-	type GameMembers,
-	join,
-	leave,
-	replayGenerate,
-	replayRetry,
-} from "@logic";
+import { type CurrentSettings, type GameMembers, join, leave, replayGenerate, replayRetry } from "@logic";
 
 export const EventType = {
 	Initialize: "INITIALIZE",
@@ -77,26 +70,19 @@ async function emit(environmentID: string, event: EventPayload) {
 
 export function eventEmitter(envId: string) {
 	return {
-		initialize: (payload: CurrentSettings) =>
-			emit(envId, { type: EventType.Initialize, payload }),
+		initialize: (payload: CurrentSettings) => emit(envId, { type: EventType.Initialize, payload }),
 		join: () => emit(envId, { type: EventType.Join }),
-		leave: (memberId: number) =>
-			emit(envId, { type: EventType.Leave, payload: { memberId } }),
-		generate: (members: GameMembers) =>
-			emit(envId, { type: EventType.Generate, payload: { members } }),
-		retry: (members: GameMembers) =>
-			emit(envId, { type: EventType.Retry, payload: { members } }),
+		leave: (memberId: number) => emit(envId, { type: EventType.Leave, payload: { memberId } }),
+		generate: (members: GameMembers) => emit(envId, { type: EventType.Generate, payload: { members } }),
+		retry: (members: GameMembers) => emit(envId, { type: EventType.Retry, payload: { members } }),
 		finish: () => emit(envId, { type: EventType.Finish }),
 	};
 }
 
-export function subscribeEvent(
-	environmentID: string,
-	handler: (event: Event) => void,
-) {
-	const observer = DataStore.observeQuery(EventEntity, (c) =>
-		c.environmentID.eq(environmentID),
-	).subscribe(({ items }) => items.map(toEvent).forEach(handler));
+export function subscribeEvent(environmentID: string, handler: (event: Event) => void) {
+	const observer = DataStore.observeQuery(EventEntity, (c) => c.environmentID.eq(environmentID)).subscribe(
+		({ items }) => items.map(toEvent).forEach(handler),
+	);
 
 	const unsubscribe = () => {
 		if (!observer.closed) observer.unsubscribe();
@@ -106,9 +92,7 @@ export function subscribeEvent(
 }
 
 export async function findAllEvents(id: string): Promise<Event[]> {
-	const items = await DataStore.query(EventEntity, (c) =>
-		c.environmentID.eq(id),
-	);
+	const items = await DataStore.query(EventEntity, (c) => c.environmentID.eq(id));
 	return items.map(toEvent).sort((e1, e2) => {
 		if (e1.type === EventType.Initialize) return -1;
 		if (e1.type === EventType.Finish) return 1;
@@ -127,21 +111,12 @@ function toPayload<E>(payload: string | object): E {
 	return JSON.parse(payload);
 }
 
-export function replayEvent(
-	settings: CurrentSettings,
-	event: Exclude<Event, InitializeEventPayload>,
-): CurrentSettings {
+export function replayEvent(settings: CurrentSettings, event: Exclude<Event, InitializeEventPayload>): CurrentSettings {
 	return match(event)
-		.with({ type: EventType.Generate }, ({ payload }) =>
-			replayGenerate(settings, payload.members),
-		)
-		.with({ type: EventType.Retry }, ({ payload }) =>
-			replayRetry(settings, payload.members),
-		)
+		.with({ type: EventType.Generate }, ({ payload }) => replayGenerate(settings, payload.members))
+		.with({ type: EventType.Retry }, ({ payload }) => replayRetry(settings, payload.members))
 		.with({ type: EventType.Join }, () => join(settings))
-		.with({ type: EventType.Leave }, ({ payload }) =>
-			leave(settings, payload.memberId),
-		)
+		.with({ type: EventType.Leave }, ({ payload }) => leave(settings, payload.memberId))
 		.with({ type: EventType.Finish }, () => settings)
 		.exhaustive();
 }

@@ -2,12 +2,11 @@ import { useDraggable } from "@dnd-kit/core";
 import { Box, Center } from "@chakra-ui/react";
 import type { RestOrCourtMember } from "@logic";
 
-export function MemberBox({
-	color,
-	...member
-}: RestOrCourtMember & { color: string }) {
-	const { isDragging, attributes, listeners, setNodeRef, transform } =
-		useDraggable({ id: `${member.type}-${member.memberId}`, data: member });
+export function MemberBox({ color, ...member }: RestOrCourtMember & { color: string }) {
+	const { isDragging, attributes, listeners, setNodeRef, transform } = useDraggable({
+		id: `${member.type}-${member.memberId}`,
+		data: member,
+	});
 	const style = transform
 		? {
 				transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,

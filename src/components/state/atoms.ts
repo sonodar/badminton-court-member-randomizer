@@ -13,10 +13,7 @@ export const emptySettings: CurrentSettings = {
 
 // const onBoardingAtom = atomWithStorage("onBoarding", { step: 0 });
 export const settingsAtom = atomWithStorage("currentSettings", emptySettings);
-export const previousSettingsAtom = atomWithStorage<CurrentSettings | null>(
-	"previousSettings",
-	null,
-);
+export const previousSettingsAtom = atomWithStorage<CurrentSettings | null>("previousSettings", null);
 export const shareIdAtom = atomWithStorage("shareId", "");
 
 export function useResetAll() {
@@ -29,9 +26,7 @@ export function useResetAll() {
 }
 
 export const useSettings = () => useAtomValue(settingsAtom);
-export const setSettings = (settings: CurrentSettings) =>
-	useSetAtom(settingsAtom)(settings);
-export const useSettingsReducer = () =>
-	useReducerAtom(settingsAtom, settingsReducer);
+export const setSettings = (settings: CurrentSettings) => useSetAtom(settingsAtom)(settings);
+export const useSettingsReducer = () => useReducerAtom(settingsAtom, settingsReducer);
 
 export const getPreviousSettings = () => useAtomValue(previousSettingsAtom);

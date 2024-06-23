@@ -1,12 +1,4 @@
-import {
-	Box,
-	Divider,
-	Flex,
-	Heading,
-	Spacer,
-	Stack,
-	Text,
-} from "@chakra-ui/react";
+import { Box, Divider, Flex, Heading, Spacer, Stack, Text } from "@chakra-ui/react";
 import type { History } from "@logic";
 import CourtMembersPane from "@components/game/CourtMembersPane.tsx";
 import { useSettings } from "@components/state";
@@ -19,9 +11,7 @@ function formatDate(date: string) {
 export default function HistoryPane(props: { histories?: History[] }) {
 	const rawHistories = props.histories || useSettings().histories;
 
-	const [current, previous, ...olds] = rawHistories
-		.map((history, index) => ({ index, history }))
-		.reverse();
+	const [current, previous, ...olds] = rawHistories.map((history, index) => ({ index, history })).reverse();
 
 	const CurrentHistoryPane = ({ members, time }: History) => (
 		<Box key={members.flat().join(",")} px={2}>
@@ -83,9 +73,7 @@ export default function HistoryPane(props: { histories?: History[] }) {
 			{previous && <PreviousHistoryPane {...previous.history} />}
 			{olds &&
 				olds.length > 0 &&
-				olds.map(({ history, index }) => (
-					<OlderHistoryPane key={index} {...history} index={index} />
-				))}
+				olds.map(({ history, index }) => <OlderHistoryPane key={index} {...history} index={index} />)}
 		</Stack>
 	);
 }

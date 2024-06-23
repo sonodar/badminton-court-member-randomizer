@@ -48,10 +48,7 @@ export function CourtCountInput({ value, onChange }: Props) {
 	return (
 		<HStack {...getRootProps()}>
 			{COURT_IDS.map((courtId) => (
-				<CourtCountButton
-					key={courtId}
-					{...getRadioProps({ value: courtId })}
-				/>
+				<CourtCountButton key={courtId} {...getRadioProps({ value: courtId })} />
 			))}
 		</HStack>
 	);

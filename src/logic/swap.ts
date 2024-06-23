@@ -27,24 +27,17 @@ export function swapGameMember(
 		.with([{ type: "courtMember" }, { type: "restMember" }], ([source, dest]) =>
 			swapCourtMember(gameMembers, dest.memberId, source),
 		)
-		.with(
-			[{ type: "courtMember" }, { type: "courtMember" }],
-			([source, dest]) => swapOtherCourtMember(gameMembers, source, dest),
+		.with([{ type: "courtMember" }, { type: "courtMember" }], ([source, dest]) =>
+			swapOtherCourtMember(gameMembers, source, dest),
 		)
 		.exhaustive();
 }
 
 // 休憩メンバーと参加メンバーを入れ替える
-function swapCourtMember(
-	gameMembers: GameMembers,
-	restMemberId: number,
-	dest: CourtMember,
-): GameMembers {
+function swapCourtMember(gameMembers: GameMembers, restMemberId: number, dest: CourtMember): GameMembers {
 	return gameMembers.map((courtMembers, courtId) => {
 		if (courtId === dest.courtId) {
-			return courtMembers.map((id) =>
-				id === dest.memberId ? restMemberId : id,
-			) as CourtMembers;
+			return courtMembers.map((id) => (id === dest.memberId ? restMemberId : id)) as CourtMembers;
 		}
 		return courtMembers;
 	});
@@ -64,15 +57,11 @@ function swapOtherCourtMember(
 	return gameMembers.map((courtMembers, courtId) => {
 		// 交換元のコートのメンバーを交換先のメンバーに変更
 		if (courtId === source.courtId) {
-			return courtMembers.map((id) =>
-				id === source.memberId ? dest.memberId : id,
-			) as CourtMembers;
+			return courtMembers.map((id) => (id === source.memberId ? dest.memberId : id)) as CourtMembers;
 		}
 		// 交換先のコートのメンバーを交換元のメンバーに変更
 		if (courtId === dest.courtId) {
-			return courtMembers.map((id) =>
-				id === dest.memberId ? source.memberId : id,
-			) as CourtMembers;
+			return courtMembers.map((id) => (id === dest.memberId ? source.memberId : id)) as CourtMembers;
 		}
 		// どっちのコートとも関係ない場合は無視 (3コート以上で発生)
 		return courtMembers;

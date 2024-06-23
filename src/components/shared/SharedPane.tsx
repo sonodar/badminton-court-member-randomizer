@@ -19,13 +19,7 @@ import { match } from "ts-pattern";
 import { atom } from "jotai";
 import { useReducerAtom } from "jotai/utils";
 import HistoryPane from "../common/HistoryPane.tsx";
-import {
-	EventType,
-	type Event,
-	findAllEvents,
-	replayEvent,
-	subscribeEvent,
-} from "@api";
+import { EventType, type Event, findAllEvents, replayEvent, subscribeEvent } from "@api";
 import { MemberButton } from "@components/common/MemberButton.tsx";
 import { emptySettings, settingsReducer } from "@components/state";
 import type { CurrentSettings } from "@logic";
@@ -54,9 +48,7 @@ function getMessage(type: EventType): (payload: any) => string {
 		.exhaustive();
 }
 
-function getMessageStatus(
-	type: EventType,
-): "success" | "warning" | "info" | "error" {
+function getMessageStatus(type: EventType): "success" | "warning" | "info" | "error" {
 	return match(type)
 		.with(EventType.Initialize, () => "info" as const)
 		.with(EventType.Join, () => "success" as const)
@@ -121,18 +113,10 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
 			setFinished(true);
 		} else {
 			match(event)
-				.with({ type: EventType.Generate }, ({ payload }) =>
-					dispatch({ type: EventType.Generate, payload }),
-				)
-				.with({ type: EventType.Retry }, ({ payload }) =>
-					dispatch({ type: EventType.Retry, payload }),
-				)
-				.with({ type: EventType.Join }, () =>
-					dispatch({ type: EventType.Join }),
-				)
-				.with({ type: EventType.Leave }, ({ payload }) =>
-					dispatch({ type: EventType.Leave, payload }),
-				)
+				.with({ type: EventType.Generate }, ({ payload }) => dispatch({ type: EventType.Generate, payload }))
+				.with({ type: EventType.Retry }, ({ payload }) => dispatch({ type: EventType.Retry, payload }))
+				.with({ type: EventType.Join }, () => dispatch({ type: EventType.Join }))
+				.with({ type: EventType.Leave }, ({ payload }) => dispatch({ type: EventType.Leave, payload }))
 				.exhaustive();
 		}
 
@@ -174,13 +158,7 @@ export default function SharedPane({ sharedId }: { sharedId: string }) {
 					)}
 					{finished && (
 						<Link href={"/"}>
-							<IconButton
-								size={"sm"}
-								variant={"solid"}
-								fontSize={"md"}
-								aria-label={"Home"}
-								icon={<MdHome />}
-							/>
+							<IconButton size={"sm"} variant={"solid"} fontSize={"md"} aria-label={"Home"} icon={<MdHome />} />
 						</Link>
 					)}
 				</HStack>

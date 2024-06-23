@@ -1,24 +1,12 @@
-import type {
-	CurrentSettings,
-	GameMembers,
-	MemberId,
-	PlayCountPerMember,
-} from "./types";
+import type { CurrentSettings, GameMembers, MemberId, PlayCountPerMember } from "./types";
 import { array } from "./array";
 import { COURT_CAPACITY } from "./consts";
-import {
-	selectRandomMembers,
-	getContinuousRestCount,
-	getRestMembers,
-} from "./util";
+import { selectRandomMembers, getContinuousRestCount, getRestMembers } from "./util";
 
 type PlayCount = { id: number; count: number };
 
 // 均等性重視の場合は参加回数でソートして少ない順に選出
-export function getEvennessRandomMembers({
-	courtCount,
-	...settings
-}: CurrentSettings): GameMembers {
+export function getEvennessRandomMembers({ courtCount, ...settings }: CurrentSettings): GameMembers {
 	const members = sortMembers(settings);
 
 	const playMembers = members.slice(0, courtCount * COURT_CAPACITY);
@@ -40,14 +28,10 @@ export function getEvennessRandomMembers({
 	const threshold = lastPlayMember.count;
 
 	// 絶対に参加可能なメンバー
-	const exactlyPlayMemberIds = playMembers
-		.filter(({ count }) => count < threshold)
-		.map(id);
+	const exactlyPlayMemberIds = playMembers.filter(({ count }) => count < threshold).map(id);
 
 	// 必ず参加できるかどうかグレーなメンバー
-	const sameCountMemberIds = members
-		.filter(({ count }) => count === threshold)
-		.map(id);
+	const sameCountMemberIds = members.filter(({ count }) => count === threshold).map(id);
 
 	// 最終的なメンバーは必ず参加可能なメンバー + 同回数のメンバー内からランダム選出されたメンバー
 	const finallySelectedMembers = exactlyPlayMemberIds
@@ -58,13 +42,8 @@ export function getEvennessRandomMembers({
 }
 
 // 参加回数でメンバーをソート
-function sortMembers({
-	members,
-	gameCounts,
-}: Pick<CurrentSettings, "members" | "gameCounts">): PlayCount[] {
-	return members
-		.map((id) => ({ id, count: getPlayCount(gameCounts, id) }))
-		.sort((i1, i2) => i1.count - i2.count);
+function sortMembers({ members, gameCounts }: Pick<CurrentSettings, "members" | "gameCounts">): PlayCount[] {
+	return members.map((id) => ({ id, count: getPlayCount(gameCounts, id) })).sort((i1, i2) => i1.count - i2.count);
 }
 
 function getPlayCount(gameCounts: PlayCountPerMember, id: MemberId) {

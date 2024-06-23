@@ -39,9 +39,7 @@ export default function InitialSettingPane({ onStart }: Props) {
 
 	const [courtCount, setCourtCount] = useState(2);
 	const [memberCount, setMemberCount] = useState(2 * COURT_CAPACITY);
-	const [algorithm, setAlgorithm] = useState<Algorithm>(
-		Algorithms.DISCRETENESS,
-	);
+	const [algorithm, setAlgorithm] = useState<Algorithm>(Algorithms.DISCRETENESS);
 
 	useEffect(() => {
 		setCourtCount(initialSettings?.courtCount || 2);
@@ -80,11 +78,7 @@ export default function InitialSettingPane({ onStart }: Props) {
 						<Heading as="h3" size="md">
 							メンバー数
 						</Heading>
-						<InitMemberCountInput
-							min={courtCount * COURT_CAPACITY}
-							value={memberCount}
-							onChange={setMemberCount}
-						/>
+						<InitMemberCountInput min={courtCount * COURT_CAPACITY} value={memberCount} onChange={setMemberCount} />
 						<HStack>
 							<Heading as="h3" size="md">
 								アルゴリズム
@@ -94,12 +88,7 @@ export default function InitialSettingPane({ onStart }: Props) {
 						<AlgorithmInput value={algorithm} onChange={setAlgorithm} />
 						<Divider />
 						<Flex>
-							<Link
-								isExternal={true}
-								href={
-									"https://github.com/sonodar/badminton-court-member-randomizer"
-								}
-							>
+							<Link isExternal={true} href={"https://github.com/sonodar/badminton-court-member-randomizer"}>
 								<IconButton aria-label={"github"} icon={<ImGithub />} />
 							</Link>
 							<Spacer />

@@ -14,16 +14,8 @@ export function RestMembersPane({ restMembers }: Props) {
 			</Heading>
 			<SimpleGrid columns={2} spacing={0}>
 				{restMembers.map((memberId) => (
-					<MemberDroppable
-						key={memberId}
-						type={"restMember"}
-						memberId={memberId}
-					>
-						<MemberBox
-							type={"restMember"}
-							color={"danger.100"}
-							memberId={memberId}
-						/>
+					<MemberDroppable key={memberId} type={"restMember"} memberId={memberId}>
+						<MemberBox type={"restMember"} color={"danger.100"} memberId={memberId} />
 					</MemberDroppable>
 				))}
 			</SimpleGrid>

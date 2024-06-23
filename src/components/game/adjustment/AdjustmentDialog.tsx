@@ -26,12 +26,7 @@ type Props = {
 	onChange: (settings: CurrentSettings) => void;
 };
 
-export function AdjustmentDialog({
-	settings,
-	isOpen,
-	onClose,
-	onChange,
-}: Props) {
+export function AdjustmentDialog({ settings, isOpen, onClose, onChange }: Props) {
 	const [newSettings, setNewSettings] = useState(settings);
 
 	const handleAdjust = (gameMembers: GameMembers) => {
@@ -50,13 +45,7 @@ export function AdjustmentDialog({
 	};
 
 	return (
-		<Modal
-			isOpen={isOpen}
-			onClose={handleCancel}
-			scrollBehavior={"inside"}
-			isCentered
-			motionPreset={"slideInTop"}
-		>
+		<Modal isOpen={isOpen} onClose={handleCancel} scrollBehavior={"inside"} isCentered motionPreset={"slideInTop"}>
 			<ModalOverlay />
 			<ModalContent maxW={"350px"} maxH={"100dvh"}>
 				<ModalHeader>

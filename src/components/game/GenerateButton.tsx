@@ -29,18 +29,9 @@ type Props = {
 	isDisabled?: boolean;
 };
 
-export function GenerateButton({
-	settings,
-	onGenerate,
-	isDisabled,
-	onIgnoreUsageAlert,
-}: Props) {
+export function GenerateButton({ settings, onGenerate, isDisabled, onIgnoreUsageAlert }: Props) {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const {
-		isOpen: isAlertOpen,
-		onOpen: onAlertOpen,
-		onClose: onAlertClose,
-	} = useDisclosure();
+	const { isOpen: isAlertOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure();
 	const [newSettings, setNewSettings] = useState<CurrentSettings | undefined>();
 
 	const openGeneratePane = () => {
@@ -82,11 +73,7 @@ export function GenerateButton({
 			>
 				メンバー決め
 			</Button>
-			<UsageAlertDialog
-				isOpen={isAlertOpen}
-				onClose={onAlertClose}
-				onDismiss={onIgnoreUsageAlert}
-			/>
+			<UsageAlertDialog isOpen={isAlertOpen} onClose={onAlertClose} onDismiss={onIgnoreUsageAlert} />
 			<Modal isOpen={isOpen} onClose={onClose} size={"full"}>
 				<ModalOverlay />
 				<ModalContent maxW={"350px"}>
@@ -95,27 +82,17 @@ export function GenerateButton({
 							<Heading as={"h3"} size={"md"}>
 								メンバー選出
 							</Heading>
-							<Text fontSize={"sm"}>
-								以下の内容で確定します。よろしいですか？
-							</Text>
+							<Text fontSize={"sm"}>以下の内容で確定します。よろしいですか？</Text>
 						</Stack>
 					</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody p={0} mb={1}>
 						<Center>
-							<StatisticsPane
-								settings={newSettings || settings}
-								onAdjusted={handleAdjust}
-							/>
+							<StatisticsPane settings={newSettings || settings} onAdjusted={handleAdjust} />
 						</Center>
 					</ModalBody>
 					<ModalFooter>
-						<Button
-							w={"45%"}
-							colorScheme={"primary"}
-							leftIcon={<CheckIcon />}
-							onClick={handleOk}
-						>
+						<Button w={"45%"} colorScheme={"primary"} leftIcon={<CheckIcon />} onClick={handleOk}>
 							確定
 						</Button>
 						<Spacer />

@@ -1,18 +1,8 @@
 import { array } from "./array";
-import type {
-	CurrentSettings,
-	GameMembers,
-	PlayCountPerMember,
-	MemberId,
-} from "./types";
+import type { CurrentSettings, GameMembers, PlayCountPerMember, MemberId } from "./types";
 import { Algorithms } from "./types";
 import { COURT_CAPACITY } from "./consts";
-import {
-	toHistoryKey,
-	makeHistoryKeys,
-	selectRandomMembers,
-	rotateFirstHistory,
-} from "./util";
+import { toHistoryKey, makeHistoryKeys, selectRandomMembers, rotateFirstHistory } from "./util";
 import { getDiscretenessRandomMembers } from "./discreteness";
 import { getEvennessRandomMembers, isEvenness } from "./evenness";
 
@@ -41,10 +31,7 @@ export function generate(settings: CurrentSettings): CurrentSettings {
 	}
 
 	// すべての組み合わせの数を算出
-	const combinationCount = calcCombination(
-		settings.courtCount,
-		settings.members.length,
-	);
+	const combinationCount = calcCombination(settings.courtCount, settings.members.length);
 
 	// 履歴数が組み合わせ数以上の場合は、これ以上ランダムに選出しても意味がないため
 	// ランダム選出を終了し、履歴を最初から繰り返す
@@ -56,10 +43,7 @@ export function generate(settings: CurrentSettings): CurrentSettings {
 	}
 
 	// 最大組み合わせ数 - 履歴数の数だけ組み合わせを払い出す (上限 20)
-	const generateSize = Math.min(
-		20,
-		combinationCount - settings.histories.length,
-	);
+	const generateSize = Math.min(20, combinationCount - settings.histories.length);
 
 	const historyKeys = makeHistoryKeys(settings);
 
@@ -111,9 +95,7 @@ export function generate(settings: CurrentSettings): CurrentSettings {
 				console.log(`連続休憩回数の上限: ${restLimit}`);
 				// 均等モードの場合、連続休憩回数が許容回数を超える場合はやり直し
 				if (!isEvenness(settings, restLimit, generated)) {
-					console.log(
-						`連続休憩回数が上限である${restLimit}回を超えたメンバーがいるためやり直し`,
-					);
+					console.log(`連続休憩回数が上限である${restLimit}回を超えたメンバーがいるためやり直し`);
 					retryCount++;
 					historyKeys.add(toHistoryKey(generated));
 					continue;
@@ -121,9 +103,7 @@ export function generate(settings: CurrentSettings): CurrentSettings {
 				break;
 			case Algorithms.DISCRETENESS:
 				if (range > diffLimit) {
-					console.log(
-						`プレイ回数の差が ${range} で上限の ${diffLimit} より大きいためやり直し`,
-					);
+					console.log(`プレイ回数の差が ${range} で上限の ${diffLimit} より大きいためやり直し`);
 					historyKeys.add(toHistoryKey(generated));
 					retryCount++;
 					continue;
@@ -157,10 +137,7 @@ function getRandomMembers(settings: CurrentSettings) {
 	}
 }
 
-export function addHistory(
-	settings: CurrentSettings,
-	members: GameMembers,
-): CurrentSettings {
+export function addHistory(settings: CurrentSettings, members: GameMembers): CurrentSettings {
 	const newSettings = structuredClone(settings);
 	newSettings.histories.push({ members, time: new Date().toLocaleString() });
 	newSettings.gameCounts = increment(settings.gameCounts, members);
@@ -169,21 +146,13 @@ export function addHistory(
 
 export const replayGenerate = addHistory;
 
-function averageEditDistance(
-	histories: CurrentSettings["histories"],
-	members: GameMembers,
-): number {
+function averageEditDistance(histories: CurrentSettings["histories"], members: GameMembers): number {
 	return array.average(
-		histories
-			.filter((history) => !history.deleted)
-			.map((history) => array.editDistance2D(history.members, members)),
+		histories.filter((history) => !history.deleted).map((history) => array.editDistance2D(history.members, members)),
 	);
 }
 
-function increment(
-	gameCounts: PlayCountPerMember,
-	members: GameMembers,
-): PlayCountPerMember {
+function increment(gameCounts: PlayCountPerMember, members: GameMembers): PlayCountPerMember {
 	const result = structuredClone(gameCounts);
 	for (const id of members.flat()) {
 		const playCount = (result[id]?.playCount || 0) + 1;
@@ -220,10 +189,7 @@ function calcCombination(courtCount: number, memberCount: number): number {
 		return result;
 	}
 
-	result *= binomialCoefficient(
-		memberCount - COURT_CAPACITY * courtCount,
-		memberCount % COURT_CAPACITY,
-	);
+	result *= binomialCoefficient(memberCount - COURT_CAPACITY * courtCount, memberCount % COURT_CAPACITY);
 	return result;
 }
 
@@ -238,10 +204,7 @@ function getContinuousRestCountLimit(settings: CurrentSettings) {
 // メンバー全員の参加回数を返す（どのメンバーの回数かという情報は削除）
 // すでにいない人のカウントは参照しないように除外
 // 遅れて参加したメンバーには補正値を加算する
-function getAllPlayCount(
-	members: MemberId[],
-	gameCounts: PlayCountPerMember,
-): number[] {
+function getAllPlayCount(members: MemberId[], gameCounts: PlayCountPerMember): number[] {
 	return members
 		.map((id) => gameCounts[id])
 		.filter(Boolean)

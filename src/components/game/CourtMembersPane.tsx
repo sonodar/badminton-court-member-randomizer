@@ -1,12 +1,4 @@
-import {
-	Card,
-	Center,
-	Divider,
-	HStack,
-	Heading,
-	SimpleGrid,
-	Stack,
-} from "@chakra-ui/react";
+import { Card, Center, Divider, HStack, Heading, SimpleGrid, Stack } from "@chakra-ui/react";
 import type { CourtMembers, GameMembers } from "@logic";
 import { array } from "@logic";
 
@@ -16,24 +8,12 @@ type ParentProps = {
 	archive?: boolean;
 };
 
-export default function CourtMembersPane({
-	members,
-	single = true,
-	archive = false,
-}: ParentProps) {
+export default function CourtMembersPane({ members, single = true, archive = false }: ParentProps) {
 	const courtIds = array.generate(members.length, 0);
 	return (
 		<SimpleGrid columns={single ? 1 : 2} spacing={4} justifyItems={"center"}>
 			{members.length > 0 &&
-				courtIds.map((id) => (
-					<CourtCard
-						key={id}
-						id={id}
-						members={members[id]}
-						single={single}
-						archive={archive}
-					/>
-				))}
+				courtIds.map((id) => <CourtCard key={id} id={id} members={members[id]} single={single} archive={archive} />)}
 		</SimpleGrid>
 	);
 }
@@ -56,9 +36,7 @@ function CourtCard({ id, members, single, archive }: ChildProps) {
 			<Center>
 				<Stack>
 					<Center>
-						<Heading as={"label"} size={"sm"} color={headColor}>{`コート${
-							id + 1
-						}`}</Heading>
+						<Heading as={"label"} size={"sm"} color={headColor}>{`コート${id + 1}`}</Heading>
 					</Center>
 					<Divider />
 					<HStack spacing={s} color={color}>

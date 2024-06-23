@@ -34,11 +34,7 @@ export default function ConfirmDialog({
 }: Props) {
 	const cancel = useRef<HTMLButtonElement | null>(null);
 	return (
-		<AlertDialog
-			isOpen={isOpen}
-			leastDestructiveRef={cancel}
-			onClose={onCancel}
-		>
+		<AlertDialog isOpen={isOpen} leastDestructiveRef={cancel} onClose={onCancel}>
 			<AlertDialogOverlay>
 				<AlertDialogContent maxW={"350px"}>
 					<AlertDialogHeader fontSize="lg" fontWeight="bold" {...prettyFont}>

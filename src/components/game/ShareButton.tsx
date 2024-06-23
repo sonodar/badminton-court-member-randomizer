@@ -18,16 +18,8 @@ function makeShareLink(sharedId?: string) {
 export function ShareButton({ sharedId, onIssue, isDisabled }: Props) {
 	const shareLink = useMemo(() => makeShareLink(sharedId), [sharedId]);
 
-	const {
-		isOpen: isIssueOpen,
-		onOpen: onIssueOpen,
-		onClose: onIssueClose,
-	} = useDisclosure();
-	const {
-		isOpen: isShareOpen,
-		onOpen: onShareOpen,
-		onClose: onShareClose,
-	} = useDisclosure();
+	const { isOpen: isIssueOpen, onOpen: onIssueOpen, onClose: onIssueClose } = useDisclosure();
+	const { isOpen: isShareOpen, onOpen: onShareOpen, onClose: onShareClose } = useDisclosure();
 
 	const toast = useToast();
 	const toastRef = useRef<string | number>();
@@ -65,19 +57,10 @@ export function ShareButton({ sharedId, onIssue, isDisabled }: Props) {
 				onClick={handleClick}
 				isDisabled={isDisabled}
 			/>
-			<ConfirmDialog
-				isOpen={isIssueOpen}
-				onCancel={onIssueClose}
-				onOk={handleOk}
-				title={"共有リンクの発行"}
-			>
+			<ConfirmDialog isOpen={isIssueOpen} onCancel={onIssueClose} onOk={handleOk} title={"共有リンクの発行"}>
 				共有リンクを発行すると、現在の状態を他の人とリアルタイムで共有できます。共有リンクを発行しますか？
 			</ConfirmDialog>
-			<ShareDialog
-				value={shareLink}
-				isOpen={isShareOpen}
-				onClose={onShareClose}
-			/>
+			<ShareDialog value={shareLink} isOpen={isShareOpen} onClose={onShareClose} />
 		</Fragment>
 	);
 }

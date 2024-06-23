@@ -1,14 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { array } from "./array";
 import { getLatestMembers } from "./util";
-import {
-	type CurrentSettings,
-	generate,
-	join,
-	retry,
-	leave,
-	Algorithms,
-} from "./";
+import { type CurrentSettings, generate, join, retry, leave, Algorithms } from "./";
 
 describe("main", () => {
 	test("generate random members", () => {

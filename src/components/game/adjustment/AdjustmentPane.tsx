@@ -1,12 +1,5 @@
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
-import {
-	Grid,
-	GridItem,
-	Heading,
-	Stack,
-	Text,
-	useToast,
-} from "@chakra-ui/react";
+import { Grid, GridItem, Heading, Stack, Text, useToast } from "@chakra-ui/react";
 import {
 	array,
 	type CurrentSettings,
@@ -24,12 +17,7 @@ type Props = Pick<CurrentSettings, "courtCount" | "members" | "histories"> & {
 	onChange: (gameMembers: GameMembers) => void;
 };
 
-export function AdjustmentPane({
-	courtCount,
-	members,
-	histories,
-	onChange,
-}: Props) {
+export function AdjustmentPane({ courtCount, members, histories, onChange }: Props) {
 	const gameMembers = getLatestMembers({ histories });
 
 	if (!gameMembers) return null;
@@ -97,10 +85,7 @@ export function AdjustmentPane({
 							<Heading as={"label"} size={"sm"}>
 								コート {courtId + 1}
 							</Heading>
-							<CourtMembersBox
-								courtId={courtId}
-								courtMembers={gameMembers[courtId]}
-							/>
+							<CourtMembersBox courtId={courtId} courtMembers={gameMembers[courtId]} />
 						</GridItem>
 					))}
 				</Grid>

@@ -24,15 +24,12 @@ type Props = {
 };
 
 const unfairMessages: Record<Algorithm, string> = {
-	[Algorithms.DISCRETENESS]:
-		"ばらつき重視の場合、連続で試合に入れないメンバーが出てくる可能性が高くなります。",
+	[Algorithms.DISCRETENESS]: "ばらつき重視の場合、連続で試合に入れないメンバーが出てくる可能性が高くなります。",
 	[Algorithms.EVENNESS]:
 		"均等性重視で、かつコートに入れない余剰メンバーの数が 5 人以上の場合、連続で試合に入れないメンバーが出てくる可能性があります。",
 };
 
-const link = `https://www.google.com/search?q=${encodeURIComponent(
-	"ダブルス 組み合わせ アプリ",
-)}`;
+const link = `https://www.google.com/search?q=${encodeURIComponent("ダブルス 組み合わせ アプリ")}`;
 
 export function UsageAlertDialog({ isOpen, onClose, onDismiss }: Props) {
 	const settings = useSettings();
@@ -49,12 +46,7 @@ export function UsageAlertDialog({ isOpen, onClose, onDismiss }: Props) {
 	};
 
 	return (
-		<Modal
-			isOpen={isOpen}
-			onClose={onClose}
-			size={"full"}
-			scrollBehavior={"inside"}
-		>
+		<Modal isOpen={isOpen} onClose={onClose} size={"full"} scrollBehavior={"inside"}>
 			<ModalOverlay />
 			<ModalContent>
 				<ModalHeader maxH={"xs"} p={0}>
@@ -75,12 +67,9 @@ export function UsageAlertDialog({ isOpen, onClose, onDismiss }: Props) {
 							</Text>
 						)}
 						{unfair && <Text>{unfairMessage}</Text>}
-						<Text>
-							もしどうしても連続で組み合わせを決定したい場合は、他のアプリの利用を検討してください。
-						</Text>
+						<Text>もしどうしても連続で組み合わせを決定したい場合は、他のアプリの利用を検討してください。</Text>
 						<Link href={link} isExternal>
-							検索 <ChevronRightIcon mx="2px" /> ダブルス 組み合わせ アプリ{" "}
-							<ExternalLinkIcon mx="2px" />
+							検索 <ChevronRightIcon mx="2px" /> ダブルス 組み合わせ アプリ <ExternalLinkIcon mx="2px" />
 						</Link>
 					</Stack>
 				</ModalBody>
@@ -89,13 +78,7 @@ export function UsageAlertDialog({ isOpen, onClose, onDismiss }: Props) {
 						<Button colorScheme="primary" size={"lg"} onClick={handleOk}>
 							組み合わせ決定をやめる
 						</Button>
-						<Button
-							size={"xs"}
-							fontSize={"xs"}
-							variant={"ghost"}
-							color={"gray.300"}
-							onClick={handleDismiss}
-						>
+						<Button size={"xs"} fontSize={"xs"} variant={"ghost"} color={"gray.300"} onClick={handleDismiss}>
 							テスト目的のためリスクを許容します
 						</Button>
 					</Stack>

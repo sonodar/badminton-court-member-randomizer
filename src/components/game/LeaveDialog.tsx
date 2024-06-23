@@ -1,12 +1,4 @@
-import {
-	Button,
-	HStack,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalOverlay,
-	Select,
-} from "@chakra-ui/react";
+import { Button, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Select } from "@chakra-ui/react";
 import React, { useState } from "react";
 
 type Props = {
@@ -34,22 +26,14 @@ export function LeaveDialog({ members, isOpen, onClose, onLeave }: Props) {
 			<ModalContent>
 				<ModalBody py={4}>
 					<HStack>
-						<Select
-							placeholder="番号を選択してください"
-							onChange={handleSelect}
-						>
+						<Select placeholder="番号を選択してください" onChange={handleSelect}>
 							{members.map((id) => (
 								<option key={id} value={id}>
 									{id}
 								</option>
 							))}
 						</Select>
-						<Button
-							colorScheme={"brand"}
-							variant={"outline"}
-							size={"sm"}
-							onClick={handleLeave}
-						>
+						<Button colorScheme={"brand"} variant={"outline"} size={"sm"} onClick={handleLeave}>
 							離脱
 						</Button>
 					</HStack>

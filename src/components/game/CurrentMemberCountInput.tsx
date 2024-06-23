@@ -10,11 +10,7 @@ type Props = {
 	isDisabled?: boolean;
 };
 
-export function CurrentMemberCountInput({
-	onIncrement,
-	onDecrement,
-	isDisabled,
-}: Props) {
+export function CurrentMemberCountInput({ onIncrement, onDecrement, isDisabled }: Props) {
 	const { members, courtCount } = useSettings();
 	const min = courtCount * COURT_CAPACITY;
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -55,12 +51,7 @@ export function CurrentMemberCountInput({
 			>
 				離脱
 			</Button>
-			<LeaveDialog
-				members={members}
-				isOpen={isOpen}
-				onClose={onClose}
-				onLeave={onDecrement}
-			/>
+			<LeaveDialog members={members} isOpen={isOpen} onClose={onClose} onLeave={onDecrement} />
 		</HStack>
 	);
 }

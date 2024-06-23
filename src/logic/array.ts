@@ -89,11 +89,7 @@ function editDistance(arr1: number[], arr2: number[]): number {
 			if (arr1[i - 1] === arr2[j - 1]) {
 				dp[i][j] = dp[i - 1][j - 1];
 			} else {
-				dp[i][j] = Math.min(
-					dp[i - 1][j] + 1,
-					dp[i][j - 1] + 1,
-					dp[i - 1][j - 1] + 1,
-				);
+				dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + 1);
 			}
 		}
 	}
@@ -117,14 +113,8 @@ function average(array: number[]): number {
 }
 
 // 最頻値を求める (未使用: 平均とどちらがいいか)
-function mode(
-	array: number[],
-	ifIsEquals: (a: number, b: number) => number = (a, b) => (a > b ? a : b),
-): number {
-	const counts = array.reduce(
-		(acc, item) => acc.set(item, (acc.get(item) || 0) + 1),
-		new Map<number, number>(),
-	);
+function mode(array: number[], ifIsEquals: (a: number, b: number) => number = (a, b) => (a > b ? a : b)): number {
+	const counts = array.reduce((acc, item) => acc.set(item, (acc.get(item) || 0) + 1), new Map<number, number>());
 
 	const { maxItem } = Array.from(counts.entries()).reduce(
 		(acc, [item, count]) => {

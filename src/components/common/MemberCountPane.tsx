@@ -1,15 +1,4 @@
-import {
-	Box,
-	Center,
-	Divider,
-	HStack,
-	Heading,
-	SimpleGrid,
-	Text,
-	Tabs,
-	TabList,
-	Tab,
-} from "@chakra-ui/react";
+import { Box, Center, Divider, HStack, Heading, SimpleGrid, Text, Tabs, TabList, Tab } from "@chakra-ui/react";
 import { useState } from "react";
 import {
 	type CurrentSettings,
@@ -34,19 +23,13 @@ const outlierLevelColors = {
 	high: "red.200",
 } as const;
 
-export default function MemberCountPane({
-	settings,
-	showLeftMember,
-	defaultTabIndex,
-}: Props) {
+export default function MemberCountPane({ settings, showLeftMember, defaultTabIndex }: Props) {
 	const [tabIndex, setTabIndex] = useState(defaultTabIndex || 0);
 	const memberCountVariant = memberCountVariants[tabIndex];
 
 	const { histories, members, gameCounts } = settings || useSettings();
 	const playMemberIds = Object.keys(gameCounts).map(Number);
-	const memberIds = array.sort(
-		array.unique(members.concat(showLeftMember ? playMemberIds : [])),
-	);
+	const memberIds = array.sort(array.unique(members.concat(showLeftMember ? playMemberIds : [])));
 
 	const { getLevel, getValue } = OutlierLevelProvider({
 		histories,

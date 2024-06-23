@@ -58,12 +58,7 @@ export function ShareDialog({ isOpen, onClose, value }: Props) {
 							<Center>
 								<LineShareButton url={value} />
 								<Spacer />
-								<Button
-									size={"sm"}
-									w={"8rem"}
-									leftIcon={<CopyIcon />}
-									onClick={handleCopy}
-								>
+								<Button size={"sm"} w={"8rem"} leftIcon={<CopyIcon />} onClick={handleCopy}>
 									URLコピー
 								</Button>
 							</Center>

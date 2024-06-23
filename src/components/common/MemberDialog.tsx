@@ -1,12 +1,4 @@
-import {
-	Heading,
-	Modal,
-	ModalBody,
-	ModalCloseButton,
-	ModalContent,
-	ModalHeader,
-	ModalOverlay,
-} from "@chakra-ui/react";
+import { Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
 import MemberCountPane from "./MemberCountPane.tsx";
 import { type CurrentSettings } from "@logic";
 
@@ -18,21 +10,9 @@ type Props = {
 	showLeftMember?: boolean;
 };
 
-export function MemberDialog({
-	settings,
-	defaultTabIndex,
-	isOpen,
-	onClose,
-	showLeftMember,
-}: Props) {
+export function MemberDialog({ settings, defaultTabIndex, isOpen, onClose, showLeftMember }: Props) {
 	return (
-		<Modal
-			isOpen={isOpen}
-			onClose={onClose}
-			scrollBehavior={"inside"}
-			isCentered
-			motionPreset={"slideInTop"}
-		>
+		<Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"} isCentered motionPreset={"slideInTop"}>
 			<ModalOverlay />
 			<ModalContent maxW={"350px"}>
 				<ModalHeader>
@@ -42,11 +22,7 @@ export function MemberDialog({
 				</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pt={0} px={2} mt={-2}>
-					<MemberCountPane
-						settings={settings}
-						showLeftMember={showLeftMember}
-						defaultTabIndex={defaultTabIndex}
-					/>
+					<MemberCountPane settings={settings} showLeftMember={showLeftMember} defaultTabIndex={defaultTabIndex} />
 				</ModalBody>
 			</ModalContent>
 		</Modal>
