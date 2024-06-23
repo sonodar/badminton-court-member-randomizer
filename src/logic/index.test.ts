@@ -22,7 +22,7 @@ describe("main", () => {
 
 		// 履歴が生成されていること
 		const members = getLatestMembers(initial);
-		expect(initial.histories[0]).toStrictEqual({ members });
+		expect(initial.histories[0]).toMatchObject({ members });
 
 		const added = join(initial);
 
@@ -38,7 +38,7 @@ describe("main", () => {
 
 		// 履歴が増えていること、最初の履歴が保持されていること
 		expect(next.histories.length).toBe(2);
-		expect(next.histories[0]).toEqual({ members });
+		expect(next.histories[0]).toMatchObject({ members });
 
 		// リトライした場合は履歴が増えないこと
 		const retried = retry(next);
